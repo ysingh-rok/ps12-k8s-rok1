@@ -11,6 +11,9 @@
 *.sln.docstates
 *.env
 
+key.agekey
+**/*.tmp.[extension]
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
