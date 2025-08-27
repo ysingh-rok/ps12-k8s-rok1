@@ -44,7 +44,7 @@ micka:
           zzuqQhFkoJ2UOQIReVx7Hfpkue4WQrO/isIJxOzksU0CMQDpKmFHjFJKS04YcPbW
           RNZu9YO6bVi9JNlWSOrvxKJGgYhqOkbRqZtNyWHa0V1Xahg=
           -----END CERTIFICATE-----
-        username: ysingh-rok
+        username: "ysingh-rok"
         email: "yogendra.singh@rockwellautomation.com"
         password: "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"
     sops:
