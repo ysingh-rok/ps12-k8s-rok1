@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Customer specific log configuration file for Audit trail report Server
+This file is watched on changes -->
+<Configuration>
+  <Loggers>
+    <!-- only logging on startup/shutdown -->
+    <Logger name="com.rockwell.mes.apps.audittrailreport" level="INFO"/>
+  </Loggers>
+</Configuration>

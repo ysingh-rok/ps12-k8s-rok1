@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<routeTemplates xmlns="http://camel.apache.org/schema/spring" xmlns:b2mml="http://www.mesa.org/xml/B2MML">
+	<routeTemplate id="receiveB2mml7ProcessPojoFromFtpcConvertToXmlTemplate">
+		<route id="receiveB2mml7ProcessPojoFromFtpcConvertToXml">
+			<description>Receives JTOs from FTPC and transforms them to B2MML data</description>
+			<from id="b2mmlProcessPojoToErpQueue" uri="activemq:queue:{{queue-name.to-erp.process}}" />
+			<to id="unwrapJmsObject" pattern="InOut" uri="language:groovy:resourceUri?exchangePattern=InOut&amp;script={{groovyScript.path.process}}UnwrapPayload.groovy" />
+			<log id="logPayload" message="payload: ${body}" />
+			<log id="logPayload_eventId" message="EventId: ${body.getEventId()}" />
+			<choice id="b2mmlProcessPojoChoice">
+				<description>Process B2mml Pojo to ERP Choice</description>
+				<when id="operationsPerformanceInfoPojo">
+					<simple>${body} is 'com.rockwell.integration.b2mml.B2mmlProductionPerformance'</simple>
+					<process id="operationsPerformnceJavaToJsonid" ref="operationsPerformanceJavaToJson" />
+					<toD id="atlasMapOutboundId" uri="atlasmap://file:{{atlasmap.adm.outbound}}" />
+					<to id="vmProductionPerformanceInfoConversion" pattern="InOut" uri="seda:transformedOutFile" />
+				</when>
+				<otherwise id="unknownMsg_b2mmlProcessPojoChoice">
+					<to id="unknownMsgCaught_ProcessReceiveFromFTPC" uri="seda:unknownMsgOutCaught?exchangePattern=InOut" />
+				</otherwise>
+			</choice>
+			<onException id="onJMSException_pojoFromJms">
+				<exception>jakarta.jms.JMSException</exception>
+				<redeliveryPolicy maximumRedeliveries="2" />
+				<to id="jmsExceptionHandling_pojoFromJms" pattern="InOut" uri="seda:jmsErrorOutMsgCaught" />
+			</onException>
+			<onException id="onCommunicationException_pojoFromJms">
+				<exception>org.apache.camel.ExchangeTimedOutException</exception>
+				<redeliveryPolicy maximumRedeliveries="2" />
+				<to id="communicationExceptionHandling_pojoFromJms" pattern="InOut" uri="seda:jmsErrorOutMsgCaught" />
+			</onException>
+			<onException id="onTransformerException_pojoFromJms">
+				<exception>org.apache.camel.RuntimeTransformException</exception>
+				<to id="transformerExceptionHandling_pojoFromJms" pattern="InOut" uri="seda:transformerErrorOutMsgCaught" />
+			</onException>
+			<onException id="onRouteException_pojoFromJms">
+				<exception>java.lang.Exception</exception>
+				<redeliveryPolicy maximumRedeliveries="2" />
+				<to id="onRouteExceptionHandling_pojoFromJms" pattern="InOut" uri="seda:onRouteErrorOutMsgCaught" />
+			</onException>
+		</route>
+	</routeTemplate>
+</routeTemplates>

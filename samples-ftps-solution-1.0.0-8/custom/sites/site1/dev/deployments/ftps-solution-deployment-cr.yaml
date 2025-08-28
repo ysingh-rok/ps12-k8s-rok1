@@ -1,0 +1,45 @@
+apiVersion: com.rockwell.mes.micka.deploymentcontroller.helm/v1
+kind: HelmOperation
+metadata:
+  name: ftps-solution-deployment-cr
+spec:
+  kubeconfigSecretRef: site1-dev-ftps-solution-deployment-secrets
+  namespace:
+  releaseName:
+  templateValues:
+    alertmanagerReceiverEmail:
+    appServerReplicas:
+    clusterName:
+    databaseName:
+    databasePort:
+    databaseServer:
+    databaseServerType:
+    domain:
+    ebrServiceReplicas:
+    externalIP:
+    externalStorageDriver:
+    externalStorageMountOptions:
+    externalStorageServer:
+    externalStorageShare:
+    externalStorageVolumeHandle:
+    fteiActiveMQPort:
+    fteiBatchDatabaseName:
+    fteiBatchDbDomainName:
+    fteiBatchServerUrl:
+    fteiOutboundServerURL:
+    fteiSMTPHost:
+    fteiSMTPPort:
+    fteiSMTPReceiver:
+    fteiSMTPSender:
+    fullQualifiedDomainName:
+    instanceSecret: site1-dev-ftps-solution-deployment-secrets
+    keyStore: keystore
+    mailSessionDefinitionsHost:
+    mailSessionDefinitionsPort:
+    namespace:
+    organizationName:
+    registry:
+    storageClassName:
+    timezone:
+    triggerTool: idle
+    trustStore: ftpc-truststore

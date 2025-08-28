@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>failure_notification</title>
+</head>
+<body>
+	Hi
+	<span th:text="${username}"></span>,
+	<p>We have detected failure in your transaction due to some error.
+		Please find below details to troubleshoot.</p>
+	<p style="color: red;" th:text="${errorText}"></p>
+	<p>
+		Regards, <br /> <em th:text="${regards}"></em>
+	</p>
+</body>
+</html>

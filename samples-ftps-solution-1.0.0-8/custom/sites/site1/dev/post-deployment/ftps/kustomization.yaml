@@ -1,0 +1,79 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Common labels applied to all resources
+labels:
+  - includeSelectors: true
+    pairs:
+      app.kubernetes.io/part-of: "mes"
+      app.kubernetes.io/name: "sample-configuration"
+      helm.sh/chart: "sample-configuration-1.0.0"
+      app.kubernetes.io/managed-by: "Flux"
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+configMapGenerator:
+  # JMX configurations
+  - name: ftps-sos-ai-jmx-conf
+    files:
+      - jmx_messagetypes_custom_local.properties=sos/jmx_conf/jmx_messagetypes_custom_local_ai_Server.properties
+  - name: ftps-sos-audittrail-jmx-conf
+    files:
+      - jmx_messagetypes_custom_local.properties=sos/jmx_conf/jmx_messagetypes_custom_local_audittrail_Server.properties
+  - name: ftps-sos-ebr-jmx-conf
+    files:
+      - jmx_messagetypes_custom_local.properties=sos/jmx_conf/jmx_messagetypes_custom_local_ebr_Server.properties
+  - name: ftps-sos-oe-jmx-conf
+    files:
+      - jmx_messagetypes_custom_local.properties=sos/jmx_conf/jmx_messagetypes_custom_local_oe_Server.properties
+  - name: ftps-sos-tom-jmx-conf
+    files:
+      - jmx_messagetypes_custom_local.properties=sos/jmx_conf/jmx_messagetypes_custom_local_tom_Server.properties
+  - name: ftps-sos-transition-jmx-conf
+    files:
+      - jmx_messagetypes_custom_local.properties=sos/jmx_conf/jmx_messagetypes_custom_local_transition_Server.properties
+  # JVM args
+  - name: ftps-sos-ai-jvm-public-args
+    files:
+      - sos/jvm_args/default-public-args.properties
+      - sos/jvm_args/public-args-ai-Server.properties
+  - name: ftps-sos-audittrail-jvm-public-args
+    files:
+      - sos/jvm_args/default-public-args.properties
+      - sos/jvm_args/public-args-audittrail-Server.properties
+  - name: ftps-sos-ebr-jvm-public-args
+    files:
+      - sos/jvm_args/default-public-args.properties
+      - sos/jvm_args/public-args-ebr-Server.properties
+  - name: ftps-sos-oe-jvm-public-args
+    files:
+      - sos/jvm_args/default-public-args.properties
+      - sos/jvm_args/public-args-oe-Server.properties
+  - name: ftps-sos-tom-jvm-public-args
+    files:
+      - sos/jvm_args/default-public-args.properties
+      - sos/jvm_args/public-args-tom-Server.properties
+  - name: ftps-sos-transition-jvm-public-args
+    files:
+      - sos/jvm_args/default-public-args.properties
+      - sos/jvm_args/public-args-transition-Server.properties
+  # Log4j configurations
+  - name: ftps-sos-ai-log4j-config
+    files:
+      - log4j2_ftps_custom_local.xml=sos/log4j_conf/log4j2_PharmaSuite_ai_Server.xml
+  - name: ftps-sos-audittrail-log4j-config
+    files:
+      - log4j2_ftps_custom_local.xml=sos/log4j_conf/log4j2_PharmaSuite_audittrail_Server.xml
+  - name: ftps-sos-ebr-log4j-config
+    files:
+      - log4j2_ftps_custom_local.xml=sos/log4j_conf/log4j2_PharmaSuite_ebr_Server.xml
+  - name: ftps-sos-oe-log4j-config
+    files:
+      - log4j2_ftps_custom_local.xml=sos/log4j_conf/log4j2_PharmaSuite_oe_Server.xml
+  - name: ftps-sos-tom-log4j-config
+    files:
+      - log4j2_ftps_custom_local.xml=sos/log4j_conf/log4j2_PharmaSuite_tom_Server.xml
+  - name: ftps-sos-transition-log4j-config
+    files:
+      - log4j2_ftps_custom_local.xml=sos/log4j_conf/log4j2_PharmaSuite_transition_Server.xml

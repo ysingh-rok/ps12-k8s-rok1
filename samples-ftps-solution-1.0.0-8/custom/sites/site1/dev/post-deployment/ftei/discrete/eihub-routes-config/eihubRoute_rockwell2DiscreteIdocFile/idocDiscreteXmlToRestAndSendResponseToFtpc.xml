@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+	license agreements. See the NOTICE file distributed with this work for additional 
+	information regarding copyright ownership. The ASF licenses this file to 
+	You under the Apache License, Version 2.0 (the "License"); you may not use 
+	this file except in compliance with the License. You may obtain a copy of 
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
+	by applicable law or agreed to in writing, software distributed under the 
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. See the License for the specific 
+	language governing permissions and limitations under the License. -->
+<routeTemplates
+	xmlns="http://camel.apache.org/schema/spring"
+	xmlns:camel="http://camel.apache.org/schema/spring">
+	<routeTemplate
+		id="idocDiscreteXmlToRestAndSendResponseToFtpcTemplate">
+		<route id="idocDiscreteXmlToRestAndSendResponseToFtpc">
+			<description>Send the Discrete IDoc data To rest and send a
+				confirmation response back to FTPC.
+			</description>
+			<from id="transformedFileToErpId" uri="seda:transformedFileToErp" />
+			<log id="logFileContent_xmlToFile"
+				message="Data content: EventId header: $simple{header[EventId]}, content: ${body}" />
+			<choice id="idocDiscreteOutboundChoice">
+				<description>Choice</description>
+				<when id="operationCompletionInfo">
+					<xpath logNamespaces="true">/WMMBID02/E1MBXYH/E1MBXYI/LGORT</xpath>
+					<to id="httpPostRequest_operationCompletion" pattern="InOut"
+						uri="{{outboundserver.url}}?sslContextParameters=#sslConfiguration&amp;httpMethod=POST&amp;sslcontextauthMethod={{outboundserver.authenticationMethod}}&amp;authUsername={{outboundserver.user}}&amp;authPassword={{outboundserver.password}}" />
+					<log id="outbound_log_response_OperationCompletion"
+				        message="received response from rest endpoint: ${body}" />	
+					<to id="wrapConfResp2MsgEnvelope_OperationCompletionInfo"
+						pattern="InOut"
+						uri="language:groovy:resourceUri?script={{groovyScript.path.discrete}}WrapConfirmationResponseToMessageEnvelope.groovy" />
+					<to id="operationCompletionInfoResponseToFTPC" pattern="InOnly"
+						uri="activemq:queue:{{queue-name.response.to-ftpc.discrete}}" />
+				</when>
+				<when id="consumedPartInfo">
+					<xpath logNamespaces="true">/WMMBID02</xpath>
+					<to id="httpPostRequest_consumedPar" pattern="InOut"
+						uri="{{outboundserver.url}}?sslContextParameters=#sslConfiguration&amp;httpMethod=POST&amp;sslcontextauthMethod={{outboundserver.authenticationMethod}}&amp;authUsername={{outboundserver.user}}&amp;authPassword={{outboundserver.password}}" />
+					<log id="outbound_log_response_ConsumedPart"
+				        message="received response from rest endpoint: ${body}" />	
+					<to id="wrapConfResp2MsgEnvelope_ConsumedPartInfo"
+						pattern="InOut"
+						uri="language:groovy:resourceUri?script={{groovyScript.path.discrete}}WrapConfirmationResponseToMessageEnvelope.groovy" />
+					<to id="consumedPartInfoResponseToFTPC" pattern="InOnly"
+						uri="activemq:queue:{{queue-name.response.to-ftpc.discrete}}" />
+				</when>
+				<when id="workOrderCompletionInfo">
+					<xpath logNamespaces="true">/CONF21</xpath>
+					<log id="logOrderNumber"
+						message="OrderNumber: ${header[orderNumber]}" />
+					<to id="httpPostRequest_workOrderCompletion" pattern="InOut"
+						uri="{{outboundserver.url}}?sslContextParameters=#sslConfiguration&amp;httpMethod=POST&amp;sslcontextauthMethod={{outboundserver.authenticationMethod}}&amp;authUsername={{outboundserver.user}}&amp;authPassword={{outboundserver.password}}" />
+					<log id="outbound_log_response_workOrderCompletion"
+				        message="received response from rest endpoint: ${body}" />
+					<to id="wrapConfResp2MsgEnvelope_OperationCompletionInfo"
+						pattern="InOut"
+						uri="language:groovy:resourceUri?script={{groovyScript.path.discrete}}WrapConfirmationResponseToMessageEnvelope.groovy" />
+					<to id="workOrderCompletionInfoResponseToFTPC" pattern="InOnly"
+						uri="activemq:queue:{{queue-name.response.to-ftpc.discrete}}" />
+				</when>
+				<otherwise
+					id="idocDiscreteOutboundChoice_unknownMsgCaught">
+					<to id="unknownMsgCaught_discreteSendToErp"
+						uri="seda:unknownMsgCaughtToErp?exchangePattern=InOut" />
+				</otherwise>
+			</choice>
+			<onException id="jmsException_sendResponseToFtpc">
+				<exception>jakarta.jms.JMSException</exception>
+				<redeliveryPolicy maximumRedeliveries="2" />
+				<to id="jmsExceptionHandling_sendResponseToFtpc"
+					pattern="InOut" uri="seda:jmsErrorOutMsgCaught" />
+			</onException>
+			<onException
+				id="onCommunicationException_sendResponseToFtpc">
+				<exception>org.apache.camel.ExchangeTimedOutException</exception>
+				<redeliveryPolicy maximumRedeliveries="2" />
+				<to id="communicationExceptionHandling_sendResponseToFtpc"
+					pattern="InOut" uri="seda:jmsErrorOutMsgCaught" />
+			</onException>
+			<onException id="routeException_sendResponseToFtpc">
+				<exception>java.lang.Exception</exception>
+				<redeliveryPolicy maximumRedeliveries="2" />
+				<to id="routeExceptionHandling_sendResponseToFtpc"
+					pattern="InOut" uri="seda:onRouteErrorOutMsgCaught" />
+			</onException>
+		</route>
+	</routeTemplate>
+</routeTemplates>

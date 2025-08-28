@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<routeTemplates xmlns="http://camel.apache.org/schema/spring">
+	<routeTemplate id="outboundAtlasMapRouteTemplate">
+		<route id="outboundAtlasMapRoute">
+			<description>This route will process the incoming data using
+				atlasmap and incoming transformer .adm file</description>
+			<from id="outboundAtlasMapProcessorEndPoint"
+				uri="seda:outboundAtlasMapProcessor" />
+			<toD id="OutboundAtlasMapId"
+				uri="atlasmap://file:${header[transformerFile]}" />
+			<to id="transferFile" pattern="InOut" uri="seda:transformedOutFile" />
+			<onException id="onRouteException_FileNotFound">
+				<exception>java.io.FileNotFoundException</exception>
+				<setHeader name="status">
+					<simple>TOTAL_FAILURE</simple>
+				</setHeader>
+				<setHeader name="errorCode">
+					<constant resultType="int">1002</constant>
+				</setHeader>	
+				<to id="generateResponseFailure1" uri="seda:generateResponseJson" />
+			</onException>
+			<onException id="onTransformerException_outboundAtlasMapRoute">
+				<exception>org.apache.camel.RuntimeTransformException</exception>
+				<to id="transformerExceptionHandling" pattern="InOut"
+					uri="seda:transformerErrorMsgCaught" />
+			</onException>
+			<onException id="onCommunicationException_outboundAtlasMapRoute">
+				<exception>org.apache.camel.ExchangeTimedOutException</exception>
+				<to id="communicationExceptionHandling" pattern="InOut"
+					uri="seda:jmsErrorMsgCaught" />
+			</onException>
+		</route>
+	</routeTemplate>
+</routeTemplates>

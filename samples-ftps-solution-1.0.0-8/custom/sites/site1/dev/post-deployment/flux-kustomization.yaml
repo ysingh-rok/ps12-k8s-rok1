@@ -1,0 +1,19 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: site1-dev-post-deployment-kustomization
+spec:
+  interval: 2m0s
+  # Fill/Change path as monitored my micka/flux installation
+  path: <TBD>/custom/sites/site1/dev/post-deployment
+  prune: false
+  retryInterval: 2m0s
+  sourceRef:
+    kind: GitRepository
+    name: micka-gitrepository
+  targetNamespace: <TBD>
+  kubeConfig:
+    secretRef:
+      name: site1-dev-ftps-solution-deployment-secrets
+      key: kubeconfig
+  timeout: 3m0s

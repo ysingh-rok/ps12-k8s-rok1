@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+	license agreements. See the NOTICE file distributed with this work for additional 
+	information regarding copyright ownership. The ASF licenses this file to 
+	You under the Apache License, Version 2.0 (the "License"); you may not use 
+	this file except in compliance with the License. You may obtain a copy of 
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
+	by applicable law or agreed to in writing, software distributed under the 
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. See the License for the specific 
+	language governing permissions and limitations under the License. -->
+<routeTemplates
+	xmlns="http://camel.apache.org/schema/spring"
+	xmlns:b2mml="http://www.wbf.org/xml/B2MML-V0401">
+	<routeTemplate id="idocDiscreteToPojoTemplate">
+		<route id="idocDiscreteToPojo">
+			<description>Read Discrete IDoc data transform them to
+				JTOs and send
+				the JTOs to the JMS queue for processing by EIG-SOS.
+			</description>
+			<from id="processData" uri="seda:processingData" />
+			<setBody>
+				<simple>${exchangeProperty.originalBody}</simple>
+			</setBody>
+			<choice id="idocDiscreteInboundChoice">
+				<description>Discrete IDoc Type Choice</description>
+				<when id="part">
+					<xpath logNamespaces="true">/MATMAS05</xpath>
+					<to id="partConversion" pattern="InOut"
+						uri="language:groovy:resourceUri?script={{groovyScript.path.discrete}}PartConversion.groovy" />
+					<to id="vmPartConversion" uri="seda:transformedFileToFtpc" />
+				</when>
+				<when id="parts">
+					<xpath logNamespaces="true">/ZRA_MATMAS_PARTS</xpath>
+					<to id="partsConversion" pattern="InOut"
+						uri="language:groovy:resourceUri?script={{groovyScript.path.discrete}}PartsConversion.groovy" />
+					<to id="vmPartsConversion" uri="seda:transformedFileToFtpc" />
+				</when>
+				<when id="bom">
+					<xpath logNamespaces="true">/BOMMAT01</xpath>
+					<to id="bomConversion" pattern="InOut"
+						uri="language:groovy:resourceUri?script={{groovyScript.path.discrete}}BomConversion.groovy" />
+					<to id="vmBomConversion" uri="seda:transformedFileToFtpc" />
+				</when>
+				<when id="lot">
+					<xpath logNamespaces="true">/ZRA_LOT</xpath>
+					<to id="lotConversion" pattern="InOut"
+						uri="language:groovy:resourceUri?script={{groovyScript.path.discrete}}LotConversion.groovy" />
+					<to id="vmLotConversion" uri="seda:transformedFileToFtpc" />
+				</when>
+				<when id="workOrder">
+					<xpath logNamespaces="true">/ZLOIPRO01</xpath>
+					<to id="workOrderConversion" pattern="InOut"
+						uri="language:groovy:resourceUri?script={{groovyScript.path.discrete}}WorkOrderConversion.groovy" />
+					<to id="vmWorkOrderConversion" uri="seda:transformedFileToFtpc" />
+				</when>
+				<otherwise id="unknownMsg_idocDiscreteInboundChoice">
+					<to id="unknownMsgCaughtIdocDiscreteChoice"
+						uri="seda:unknownMsgCaught" />
+				</otherwise>
+			</choice>
+			<onException
+				id="onFileNotFoundException_idocDiscreteToPojo">
+				<exception>java.io.FileNotFoundException</exception>
+				<to id="fileNotFoundExceptionHandling"
+					uri="seda:fileNotFoundErrorMsgCaught" />
+			</onException>
+			<onException
+				id="onTransformerException_idocDiscreteToPojo">
+				<exception>org.apache.camel.RuntimeTransformException</exception>
+				<to id="transformerExceptionHandling"
+					uri="seda:transformerErrorMsgCaught" />
+			</onException>
+			<onException
+				id="onCommunicationException_idocDiscreteToPojo">
+				<exception>org.apache.camel.ExchangeTimedOutException</exception>
+				<redeliveryPolicy maximumRedeliveries="2" />
+				<to id="communicationExceptionHandling"
+					uri="seda:jmsErrorMsgCaught" />
+			</onException>
+			<onException id="onRouteException_idocDiscreteToPojo">
+				<exception>java.lang.Exception</exception>
+				<redeliveryPolicy maximumRedeliveries="2" />
+				<to id="routeExceptionHandling" uri="seda:routeErrorMsgCaught" />
+			</onException>
+		</route>
+	</routeTemplate>
+</routeTemplates>

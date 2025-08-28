@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<routeTemplates xmlns="http://camel.apache.org/schema/spring" xmlns:camel="http://camel.apache.org/schema/spring">
+	<routeTemplate id="jmsErrorMsgCaughtRoute_discreteOutboundTemplate">
+		<route id="jmsErrorMsgCaughtRoute_discreteOutbound">
+			<description>Route to handle JMS Exception/Error</description>
+			<from id="jmsErrorMsgCaughtId_discreteOutbound" uri="seda:jmsErrorOutMsgCaught" />
+			<to id="jmsErrorMsgGroovy_discreteOutbound" pattern="InOut" uri="language:groovy:resourceUri?script={{groovyScript.path.discrete}}JmsExceptionHandler.groovy" />
+			<to id="jmsErrorMsgLogPath_discreteOutbound" pattern="InOut" uri="file:{{archive-exc-msg.jmsEx.path.out}}/{{archive-exc-msg.jmsEx.pattern.out}}?fileName={{archive-exc-msg.jmsEx.pattern.out}}_{{datetime.only.pattern}}.xml" />
+			<setHeader id="jmsErrorMsgCaughtRoute_discreteOutboundfail" name="emailType">
+				<constant>{{email.type.failure}}</constant>
+			</setHeader>
+			<to id="failSmtpJms_discreteOutbound" pattern="InOut" uri="seda:sendEmail_discreteOutbound" />
+			<log id="logJMSError_discreteOutbound" loggingLevel="ERROR" message="jmsErrorMsgCaughtRouteId_discreteOutbound: ${body}" />
+		</route>
+	</routeTemplate>
+</routeTemplates>

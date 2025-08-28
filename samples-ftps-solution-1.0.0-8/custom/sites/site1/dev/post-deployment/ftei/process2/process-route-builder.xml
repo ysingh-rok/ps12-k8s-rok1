@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templatedRoutes id="process-route-builder" debug="true">
+	<templatedRoute routeId="restConsumeRoute"
+		routeTemplateRef="restConsumeRouteTemplate">templatedRoute-restRoute
+	</templatedRoute>
+ 	<templatedRoute routeId="fileConsumeRoute"
+		routeTemplateRef="fileConsumeRouteTemplate">templatedRoute-fileConsumeRoute
+	</templatedRoute>
+	<templatedRoute routeId="b2mml7ProcessToPojo"
+		routeTemplateRef="b2mml7ProcessToPojoTemplate">templatedRoute-b2mml7ProcessToPojo
+	</templatedRoute>
+	<templatedRoute routeId="fileNotFoundErrorMsgCaught"
+		routeTemplateRef="fileNotFoundErrorMsgCaughtTemplate">templatedRoute-fileNotFoundErrorMsgCaught
+	</templatedRoute>
+	<templatedRoute routeId="jmsErrorMsgCaught"
+		routeTemplateRef="jmsErrorMsgCaughtTemplate">templatedRoute-jmsErrorMsgCaught</templatedRoute>
+	<templatedRoute routeId="onRouteErrorMsgCaught"
+		routeTemplateRef="onRouteErrorMsgCaughtTemplate">templatedRoute-onRouteErrorMsgCaught</templatedRoute>
+	<templatedRoute routeId="pojoToJms"
+		routeTemplateRef="pojoToJmsTemplate">templatedRoute-pojoToJms</templatedRoute>
+    <templatedRoute routeId="responseFromFtpc"
+		routeTemplateRef="responseFromFtpcTemplate">templatedRoute-responseFromFtpc</templatedRoute>
+	<templatedRoute routeId="sendEmail_processInbound"
+		routeTemplateRef="sendEmail_processInboundTemplate">templatedRoute-sendEmail_processInbound
+	</templatedRoute>
+	<templatedRoute routeId="transformerErrorMsgCaught"
+		routeTemplateRef="transformerErrorMsgCaughtTemplate">templatedRoute-transformerErrorMsgCaught
+	</templatedRoute>
+	<templatedRoute routeId="unknownMsgCaughtRouteId"
+		routeTemplateRef="unknownMsgCaughtRouteIdTemplate">templatedRoute-unknownMsgCaughtRouteId
+	</templatedRoute>
+</templatedRoutes>

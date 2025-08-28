@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+	license agreements. See the NOTICE file distributed with this work for additional 
+	information regarding copyright ownership. The ASF licenses this file to 
+	You under the Apache License, Version 2.0 (the "License"); you may not use 
+	this file except in compliance with the License. You may obtain a copy of 
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
+	by applicable law or agreed to in writing, software distributed under the 
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. See the License for the specific 
+	language governing permissions and limitations under the License. -->
+<routeTemplates
+	xmlns="http://camel.apache.org/schema/spring"
+	xmlns:b2mml="http://www.mesa.org/xml/B2MML">
+	<routeTemplate id="receiveJsonFromAMQTemplate">
+		<route id="receiveOutboundJsonFromAMQ">
+			<description>Receives JSON from FTPC and send it for conversion to
+				XML data</description>
+			<from id="=JsonToErpQueue"
+				uri="activemq:queue:{{queue-name.to-erp.erp}}" />
+
+			<log id="outbound_log" loggingLevel="debug"
+				message="received data: ${body}" />
+			<process id="stringtojsonObject" ref="outboundProcessor" />
+			<choice>
+				<when>
+					<simple>${header.status} == 'TOTAL_FAILURE'</simple>
+					<to id="generateResponseFailure" uri="seda:generateResponseJson" />
+				</when>
+				<otherwise>
+					<to id="toCentralOutboundProcessorRoute"
+						uri="seda:OutboundProcessing" />
+				</otherwise>
+			</choice>
+			<onException id="onJMSException_jsonFromJms">
+				<exception>jakarta.jms.JMSException</exception>
+				<redeliveryPolicy maximumRedeliveries="2" />
+				<to id="jmsExceptionHandling_jsonFromJms" pattern="InOut"
+					uri="seda:jmsErrorOutMsgCaught" />
+			</onException>
+			<onException id="onCommunicationException_jsonFromJms">
+				<exception>org.apache.camel.ExchangeTimedOutException</exception>
+				<redeliveryPolicy maximumRedeliveries="2" />
+				<to id="communicationExceptionHandling_jsonFromJms"
+					pattern="InOut" uri="seda:jmsErrorOutMsgCaught" />
+			</onException>
+			<onException id="onTransformerException_jsonFromJms">
+				<exception>org.apache.camel.RuntimeTransformException</exception>
+				<to id="transformerExceptionHandling_jsonFromJms" pattern="InOut"
+					uri="seda:transformerErrorOutMsgCaught" />
+			</onException>
+			<onException id="onRouteException_jsonFromJms">
+				<exception>java.lang.Exception</exception>
+				<redeliveryPolicy maximumRedeliveries="2" />
+				<to id="onRouteExceptionHandling_jsonFromJms" pattern="InOut"
+					uri="seda:onRouteErrorOutMsgCaught" />
+			</onException>
+		</route>
+	</routeTemplate>
+</routeTemplates>

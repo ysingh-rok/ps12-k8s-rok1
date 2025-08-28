@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+	license agreements. See the NOTICE file distributed with this work for additional 
+	information regarding copyright ownership. The ASF licenses this file to 
+	You under the Apache License, Version 2.0 (the "License"); you may not use 
+	this file except in compliance with the License. You may obtain a copy of 
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
+	by applicable law or agreed to in writing, software distributed under the 
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. See the License for the specific 
+	language governing permissions and limitations under the License. -->
+<routeTemplates
+	xmlns="http://camel.apache.org/schema/spring"
+	xmlns:b2mml="http://www.mesa.org/xml/B2MML">
+	<routeTemplate
+		id="XmlToRestAndSendResponseToFtpcTemplate">
+		<route id="XmlToRestAndSendResponseToFtpc">
+			<description>Sends the data to the rest endpoint for
+				processing
+			</description>
+			<from id="transformedFileToErpId" uri="seda:transformedOutFile" />
+			<process id="formatXMLId" ref="formatterForOutboundXML" />
+			<to id="httpPostRequest" pattern="InOut"
+				uri="{{outboundserver.url}}?sslContextParameters=#sslConfiguration&amp;httpMethod=POST&amp;sslcontextauthMethod={{outboundserver.authenticationMethod}}&amp;authUsername={{outboundserver.user}}&amp;authPassword={{outboundserver.password}}" />
+			<log id="outbound_log_response"
+				message="received response from rest endpoint: ${body}" />
+			<setHeader name="status">
+				<simple>COMPLETE_SUCCESS</simple>
+			</setHeader>
+			<to id="generateResponse" uri="seda:generateResponseJson" />
+			<onException id="onJMSException_sendResponseToFtpc">
+				<exception>jakarta.jms.JMSException</exception>
+				<redeliveryPolicy maximumRedeliveries="2" />
+				<to id="jmsExceptionHandling_sendResponseToFtpc" pattern="InOut"
+					uri="seda:jmsErrorOutMsgCaught" />
+			</onException>
+			<onException
+				id="onCommunicationException_sendResponseToFtpc">
+				<exception>org.apache.camel.ExchangeTimedOutException</exception>
+				<redeliveryPolicy maximumRedeliveries="2" />
+				<to id="communicationExceptionHandling_sendResponseToFtpc"
+					pattern="InOut" uri="seda:jmsErrorOutMsgCaught" />
+			</onException>
+			<onException id="onRouteException_sendResponseToFtpc">
+				<exception>java.lang.Exception</exception>
+				<redeliveryPolicy maximumRedeliveries="2" />
+				<to id="onRouteExceptionHandling_sendResponseToFtpc"
+					pattern="InOut" uri="seda:onRouteErrorOutMsgCaught" />
+			</onException>
+		</route>
+	</routeTemplate>
+</routeTemplates>

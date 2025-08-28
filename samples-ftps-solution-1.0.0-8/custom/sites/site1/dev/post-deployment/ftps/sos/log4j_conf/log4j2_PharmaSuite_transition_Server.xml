@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Customer specific log configuration file for Transition Server
+This file is watched on changes -->
+<Configuration>
+  <Appenders>
+    <RollingFile name="transitionserverlog" fileName="${sys:PCContext.logPath}/${sys:PCContext.logFilePrefix}-ftps_transitionserver_error.log" filePattern="${sys:PCContext.logPath}/${sys:PCContext.logFilePrefix}-ftps_transitionserver_error.log.%i">
+      <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss,SSS z} [%t] %5p %c{1}:%L - %m%n"/>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="5MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="10"/>
+    </RollingFile>
+  </Appenders>
+  <Loggers>
+    <!-- only logging on startup/shutdown -->
+    <Logger name="com.rockwell.mes.commons.base.ifc.CombinedConfigurationWatcher" level="INFO"/>
+    <Logger name="com.rockwell.mes.services.externaleqm.impl.ExternalEqmInboundActivity" level="INFO"/>
+    <Logger name="com.rockwell.mes.services.s88.impl.messaging.externalexceptionhandling.ExternalExceptionHandlingActivity" level="INFO"/>
+    <Logger name="com.rockwell.mes.apps.dcs.ifc.activities.DCSInboundCommunicationDispatcher" level="INFO"/>
+
+    <!-- Change logging level to DEBUG to see which events are triggered and how long they take --> 
+    <!-- <Logger name="com.rockwell.mes.apps.ebr.ifc.activities.transitions.TransitionServerActivity" level="INFO"/> -->
+    <!-- Logging of the message types that will be registered as MBeans -->
+    <!-- <Logger name="com.rockwell.mes.commons.messaging.ifc.jmx.AMQRequestStatMXAgent" level="INFO"/> -->
+    <!-- Log errors indicating a failed update on the transition server in a separate file -->
+    <Logger name="com.rockwell.mes.commons.base.ifc.jmx.transition.TransitionMethodTimeContainer" level="ERROR">
+      <AppenderRef ref="transitionserverlog"/>
+    </Logger>
+    <!-- Uncomment if you want to see which batches are updated -->
+    <!-- <Logger name="com.rockwell.mes.services.inventory.impl.BatchStatusUpdater" level="INFO"/> -->
+  </Loggers>
+</Configuration>
