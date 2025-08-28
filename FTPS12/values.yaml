@@ -46,7 +46,7 @@ micka:
           -----END CERTIFICATE-----
         username: ysingh-rok
         email: "yogendra.singh@rockwellautomation.com"
-        password: "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"
+        password: "ghp_eheQACjZK9qwrPzvQGcFeMCRFkziOd0YYjef"
     sops:
       ageKey: "AGE-SECRET-KEY-1054ERQLAMD6VCKVER0E0HE78HJD50TXVCDPMS2U0G0Z0MMUNDMRS4SAS6G"
   sample-configuration:
