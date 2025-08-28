@@ -1,0 +1,243 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Common labels applied to all resources
+labels:
+  - includeSelectors: true
+    pairs:
+      app.kubernetes.io/part-of: "mes"
+      app.kubernetes.io/name: "sample-configuration"
+      helm.sh/chart: "sample-configuration-1.0.0"
+      app.kubernetes.io/managed-by: "Flux"
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+configMapGenerator:
+  - name: ftei-data-mapping-process1
+    files:
+      - process1/adm-files/material-mapping.adm
+      - process1/adm-files/process-bom-mapping.adm
+      - process1/adm-files/process-order-mapping.adm
+      - process1/adm-files/process-outbound-mapping.adm
+      - process1/adm-files/uom-conversion-mapping.adm
+  - name: ftei-groovy-scripts-process1
+    files:
+      - process1/groovy-scripts/FileExceptionHandler.groovy
+      - process1/groovy-scripts/InboundMoveProcessedFile.groovy
+      - process1/groovy-scripts/JavaLangExceptionHandler.groovy
+      - process1/groovy-scripts/JmsExceptionHandler.groovy
+      - process1/groovy-scripts/ReadFromFileSystemAndTransform_PreCheck.groovy
+      - process1/groovy-scripts/RestPayloadHandler.groovy
+      - process1/groovy-scripts/RestProcessedPayload.groovy
+      - process1/groovy-scripts/RouteSvcErr.groovy
+      - process1/groovy-scripts/TransformerExceptionHandler.groovy
+      - process1/groovy-scripts/UnwrapPayload.groovy
+      - process1/groovy-scripts/UoMConversion.groovy
+      - process1/groovy-scripts/WrapConfirmationResponseToMessageEnvelope.groovy
+      - process1/groovy-scripts/WrapPayload.groovy
+  - name: ftei-properties-process1
+    files:
+      - process1/application.properties
+      - process1/application-process.properties
+      - process1/process-route-builder.xml
+      - process1/hazelcast.xml
+  - name: ftei-routes-process1
+    files:
+      - process1/eihub-routes-config/eihubRoute_fileSysB2mml2Rockwell/b2mml4ProcessToPojo.xml
+      - process1/eihub-routes-config/eihubRoute_fileSysB2mml2Rockwell/b2mml7ProcessToPojo.xml
+      - process1/eihub-routes-config/eihubRoute_fileSysB2mml2Rockwell/fileConsumeRoute.xml
+      - process1/eihub-routes-config/eihubRoute_fileSysB2mml2Rockwell/fileNotFoundErrorMsgCaught.xml
+      - process1/eihub-routes-config/eihubRoute_fileSysB2mml2Rockwell/fileResponseFromFtpc.xml
+      - process1/eihub-routes-config/eihubRoute_fileSysB2mml2Rockwell/jmsErrorMsgCaught.xml
+      - process1/eihub-routes-config/eihubRoute_fileSysB2mml2Rockwell/onRouteErrorMsgCaught.xml
+      - process1/eihub-routes-config/eihubRoute_fileSysB2mml2Rockwell/pojoToJms.xml
+      - process1/eihub-routes-config/eihubRoute_fileSysB2mml2Rockwell/responseFromFtpc.xml
+      - process1/eihub-routes-config/eihubRoute_fileSysB2mml2Rockwell/restConsumeRoute.xml
+      - process1/eihub-routes-config/eihubRoute_fileSysB2mml2Rockwell/restResponseFromFtpc.xml
+      - process1/eihub-routes-config/eihubRoute_fileSysB2mml2Rockwell/sendEmail_processInbound.xml
+      - process1/eihub-routes-config/eihubRoute_fileSysB2mml2Rockwell/transformerErrorMsgCaught.xml
+      - process1/eihub-routes-config/eihubRoute_fileSysB2mml2Rockwell/unknownMsgCaughtRouteId.xml
+      - process1/eihub-routes-config/eihubRoute_rockwell2ProcessFileSys/b2mml4ProcessXmlToFileAndSendResponseToFtpc.xml
+      - process1/eihub-routes-config/eihubRoute_rockwell2ProcessFileSys/b2mml4ProcessXmlToRestAndSendResponseToFtpc.xml
+      - process1/eihub-routes-config/eihubRoute_rockwell2ProcessFileSys/b2mml7ProcessXmlToFileAndSendResponseToFtpc.xml
+      - process1/eihub-routes-config/eihubRoute_rockwell2ProcessFileSys/b2mml7ProcessXmlToRestAndSendResponseToFtpc.xml
+      - process1/eihub-routes-config/eihubRoute_rockwell2ProcessFileSys/jmsErrorMsgCaughtRoute_processOutbound.xml
+      - process1/eihub-routes-config/eihubRoute_rockwell2ProcessFileSys/onRouteErrorMsgCaughtRoute_processOutbound.xml
+      - process1/eihub-routes-config/eihubRoute_rockwell2ProcessFileSys/receiveB2mml4ProcessPojoFromFtpcConvertToXml.xml
+      - process1/eihub-routes-config/eihubRoute_rockwell2ProcessFileSys/receiveB2mml7ProcessPojoFromFtpcConvertToXml.xml
+      - process1/eihub-routes-config/eihubRoute_rockwell2ProcessFileSys/sendEmail_processOutbound.xml
+      - process1/eihub-routes-config/eihubRoute_rockwell2ProcessFileSys/transformerErrorMsgCaughtRoute_processOutbound.xml
+      - process1/eihub-routes-config/eihubRoute_rockwell2ProcessFileSys/unknownMsgCaughtRoute_processOutbound.xml
+  # Process2 Value Pack
+  - name: ftei-data-mapping-process2
+    files:
+      - process2/adm-files/material-mapping.adm
+      - process2/adm-files/process-bom-mapping.adm
+      - process2/adm-files/process-order-mapping.adm
+      - process2/adm-files/process-outbound-mapping.adm
+      - process2/adm-files/uom-conversion-mapping.adm
+  - name: ftei-groovy-scripts-process2
+    files:
+      - process2/groovy-scripts/FileExceptionHandler.groovy
+      - process2/groovy-scripts/InboundMoveProcessedFile.groovy
+      - process2/groovy-scripts/JavaLangExceptionHandler.groovy
+      - process2/groovy-scripts/JmsExceptionHandler.groovy
+      - process2/groovy-scripts/ReadFromFileSystemAndTransform_PreCheck.groovy
+      - process2/groovy-scripts/RestPayloadHandler.groovy
+      - process1/groovy-scripts/RestProcessedPayload.groovy
+      - process2/groovy-scripts/RouteSvcErr.groovy
+      - process2/groovy-scripts/TransformerExceptionHandler.groovy
+      - process2/groovy-scripts/UnwrapPayload.groovy
+      - process2/groovy-scripts/UoMConversion.groovy
+      - process2/groovy-scripts/WrapConfirmationResponseToMessageEnvelope.groovy
+      - process2/groovy-scripts/WrapPayload.groovy
+  - name: ftei-properties-process2
+    files:
+      - process2/application.properties
+      - process2/application-process.properties
+      - process2/process-route-builder.xml
+      - process2/hazelcast.xml
+  - name: ftei-routes-process2
+    files:
+      - process2/eihub-routes-config/eihubRoute_fileSysB2mml2Rockwell/b2mml4ProcessToPojo.xml
+      - process2/eihub-routes-config/eihubRoute_fileSysB2mml2Rockwell/b2mml7ProcessToPojo.xml
+      - process2/eihub-routes-config/eihubRoute_fileSysB2mml2Rockwell/fileConsumeRoute.xml
+      - process2/eihub-routes-config/eihubRoute_fileSysB2mml2Rockwell/fileNotFoundErrorMsgCaught.xml
+      - process2/eihub-routes-config/eihubRoute_fileSysB2mml2Rockwell/fileResponseFromFtpc.xml
+      - process2/eihub-routes-config/eihubRoute_fileSysB2mml2Rockwell/jmsErrorMsgCaught.xml
+      - process2/eihub-routes-config/eihubRoute_fileSysB2mml2Rockwell/onRouteErrorMsgCaught.xml
+      - process2/eihub-routes-config/eihubRoute_fileSysB2mml2Rockwell/pojoToJms.xml
+      - process2/eihub-routes-config/eihubRoute_fileSysB2mml2Rockwell/responseFromFtpc.xml
+      - process2/eihub-routes-config/eihubRoute_fileSysB2mml2Rockwell/restConsumeRoute.xml
+      - process2/eihub-routes-config/eihubRoute_fileSysB2mml2Rockwell/restResponseFromFtpc.xml
+      - process2/eihub-routes-config/eihubRoute_fileSysB2mml2Rockwell/sendEmail_processInbound.xml
+      - process2/eihub-routes-config/eihubRoute_fileSysB2mml2Rockwell/transformerErrorMsgCaught.xml
+      - process2/eihub-routes-config/eihubRoute_fileSysB2mml2Rockwell/unknownMsgCaughtRouteId.xml
+  #ERP Value Pack
+  - name: ftei-data-mapping-erp
+    files:
+      - erp/adm-files/consumed-material-mapping.adm
+      - erp/adm-files/material-mapping.adm
+  - name: ftei-properties-erp
+    files:
+      - erp/application.properties
+      - erp/application-erp.properties
+      - erp/erp-route-builder.xml
+      - erp/Part-Properties.json
+      - erp/hazelcast.xml
+  - name: ftei-routes-erp
+    files:
+      - erp/eihub-routes-config/consumer-route-config/activemq-consume-routes/outbound-activemq-consume-route.xml
+      - erp/eihub-routes-config/consumer-route-config/file-consume-routes/inbound-file-consume-route.xml
+      - erp/eihub-routes-config/consumer-route-config/rest-consume-routes/inbound-rest-consume-route.xml
+      - erp/eihub-routes-config/central-processing-redirection-route-config/inbound-central-processing-route.xml
+      - erp/eihub-routes-config/central-processing-redirection-route-config/outbound-central-processing-route.xml
+      - erp/eihub-routes-config/data-transformation-route-config/atlasmap-transformer-routes/inbound-atlasmap-route.xml
+      - erp/eihub-routes-config/data-transformation-route-config/atlasmap-transformer-routes/outbound-atlasmap-route.xml
+      - erp/eihub-routes-config/data-transformation-route-config/java-processor-routes/javaProcessor-route-sample.xml
+      - erp/eihub-routes-config/data-transformation-route-config/inbound-static-json-route.xml
+      - erp/eihub-routes-config/utility-route-config/exception-error-routes/file-not-found-exception-route.xml
+      - erp/eihub-routes-config/utility-route-config/exception-error-routes/generic-exception-route.xml
+      - erp/eihub-routes-config/utility-route-config/exception-error-routes/jms-error-message-route.xml
+      - erp/eihub-routes-config/utility-route-config/exception-error-routes/transformer-error-message-route.xml
+      - erp/eihub-routes-config/utility-route-config/exception-error-routes/unknown-error-message-route.xml
+      - erp/eihub-routes-config/utility-route-config/response-routes/inbound-response-from-ftpc-route.xml
+      - erp/eihub-routes-config/utility-route-config/response-routes/inbound-rest-response-from-ftpc-route.xml
+      - erp/eihub-routes-config/utility-route-config/response-routes/outbound-json-response-route.xml
+      - erp/eihub-routes-config/utility-route-config/json-to-jms-route.xml
+      - erp/eihub-routes-config/utility-route-config/outbound-out-folder-data-route.xml
+      - erp/eihub-routes-config/utility-route-config/outbound-rest-transfer-data-route.xml
+      - erp/eihub-routes-config/utility-route-config/send-email-erp-route.xml
+  - name: ftei-groovy-scripts-erp
+    files:
+      - erp/groovy-scripts/FileExceptionHandler.groovy
+      - erp/groovy-scripts/JavaLangExceptionHandler.groovy
+      - erp/groovy-scripts/JmsExceptionHandler.groovy
+      - erp/groovy-scripts/RestPayloadHandler.groovy
+      - erp/groovy-scripts/TransformerExceptionHandler.groovy
+  #DCS Value Pack
+  - name: ftei-properties-dcs
+    files:
+      - dcs/application.properties
+      - dcs/application-dcs.properties
+      - dcs/dcs-route-builder.xml
+      - dcs/hazelcast.xml
+  - name: ftei-groovy-scripts-dcs
+    files:
+      - dcs/groovy-scripts/AcknowledgeCreateDCSBatch.groovy
+      - dcs/groovy-scripts/AcknowledgeGetDCSAlarmEvents.groovy
+      - dcs/groovy-scripts/AcknowledgeGetDCSValues.groovy
+      - dcs/groovy-scripts/CreateDCSBatch.groovy
+      - dcs/groovy-scripts/GetDCSValuesBuildQuery.groovy
+      - dcs/groovy-scripts/GetDCSAlarmEventsBuildQuery.groovy
+      - dcs/groovy-scripts/RejectCreateDCSBatch.groovy
+      - dcs/groovy-scripts/RejectGetDCSAlarmEvents.groovy
+      - dcs/groovy-scripts/RejectGetDCSValues.groovy
+  - name: ftei-routes-dcs
+    files:
+      - dcs/eihub-routes-config/createDCSBatch.xml
+      - dcs/eihub-routes-config/getDCSAlarmEvents.xml
+      - dcs/eihub-routes-config/getDCSBatchValues.xml
+  #Discrete Value Pack
+  - name: ftei-routes-discrete
+    files:
+      - discrete/eihub-routes-config/eihubRoute_fileIdocDiscrete2Rockwell/fileConsumeRoute.xml
+      - discrete/eihub-routes-config/eihubRoute_fileIdocDiscrete2Rockwell/fileNotFoundErrorMsgCaught.xml
+      - discrete/eihub-routes-config/eihubRoute_fileIdocDiscrete2Rockwell/idocDiscreteToPojo.xml
+      - discrete/eihub-routes-config/eihubRoute_fileIdocDiscrete2Rockwell/jmsErrorMsgCaught.xml
+      - discrete/eihub-routes-config/eihubRoute_fileIdocDiscrete2Rockwell/pojoToJms.xml
+      - discrete/eihub-routes-config/eihubRoute_fileIdocDiscrete2Rockwell/responseFromFtpc.xml
+      - discrete/eihub-routes-config/eihubRoute_fileIdocDiscrete2Rockwell/restConsumeRoute.xml
+      - discrete/eihub-routes-config/eihubRoute_fileIdocDiscrete2Rockwell/restResponseFromFtpc.xml
+      - discrete/eihub-routes-config/eihubRoute_fileIdocDiscrete2Rockwell/routeErrorMsgCaught.xml
+      - discrete/eihub-routes-config/eihubRoute_fileIdocDiscrete2Rockwell/sendEmail_discreteInbound.xml
+      - discrete/eihub-routes-config/eihubRoute_fileIdocDiscrete2Rockwell/transformerErrorMsgCaught.xml
+      - discrete/eihub-routes-config/eihubRoute_fileIdocDiscrete2Rockwell/unknownMsgCaught.xml
+      - discrete/eihub-routes-config/eihubRoute_rockwell2DiscreteIdocFile/idocDiscreteXmlToFileAndSendResponseToFtpc.xml
+      - discrete/eihub-routes-config/eihubRoute_rockwell2DiscreteIdocFile/idocDiscreteXmlToRestAndSendResponseToFtpc.xml
+      - discrete/eihub-routes-config/eihubRoute_rockwell2DiscreteIdocFile/jmsErrorMsgCaughtRoute_discreteOutbound.xml
+      - discrete/eihub-routes-config/eihubRoute_rockwell2DiscreteIdocFile/onRouteErrorMsgCaughtRoute_discreteOutbound.xml
+      - discrete/eihub-routes-config/eihubRoute_rockwell2DiscreteIdocFile/receiveIdocDiscretePojoFromFtpcConvertToXml.xml
+      - discrete/eihub-routes-config/eihubRoute_rockwell2DiscreteIdocFile/sendEmail_discreteOutbound.xml
+      - discrete/eihub-routes-config/eihubRoute_rockwell2DiscreteIdocFile/transformerErrorRoute_discreteOutbound.xml
+      - discrete/eihub-routes-config/eihubRoute_rockwell2DiscreteIdocFile/unknownMsgCaughtRoute_discreteOutbound.xml
+  - name: ftei-properties-discrete
+    files:
+      - discrete/application.properties
+      - discrete/application-discrete.properties
+      - discrete/discrete-route-builder.xml
+      - discrete/hazelcast.xml
+  - name: ftei-groovy-scripts-discrete
+    files:
+      - discrete/groovy-scripts/BomConversion.groovy
+      - discrete/groovy-scripts/ConsumedPartInfoConversion.groovy
+      - discrete/groovy-scripts/FileExceptionHandler.groovy
+      - discrete/groovy-scripts/InboundMoveProcessedFile.groovy
+      - discrete/groovy-scripts/JavaLangExceptionHandler.groovy
+      - discrete/groovy-scripts/JmsExceptionHandler.groovy
+      - discrete/groovy-scripts/LotConversion.groovy
+      - discrete/groovy-scripts/OperationCompletionInfoConversion.groovy
+      - discrete/groovy-scripts/PartConversion.groovy
+      - discrete/groovy-scripts/PartsConversion.groovy
+      - discrete/groovy-scripts/ReadFromFileSystemAndTransform_PreCheck.groovy
+      - discrete/groovy-scripts/RestPayloadHandler.groovy
+      - discrete/groovy-scripts/RestProcessedPayload.groovy
+      - discrete/groovy-scripts/TransformerExceptionHandler.groovy
+      - discrete/groovy-scripts/UnwrapPayload.groovy
+      - discrete/groovy-scripts/WorkOrderCompletionInfoConversion.groovy
+      - discrete/groovy-scripts/WorkOrderConversion.groovy
+      - discrete/groovy-scripts/WrapConfirmationResponseToMessageEnvelope.groovy
+      - discrete/groovy-scripts/WrapPayload.groovy
+  - name: ftei-sos-erp-jvm-public-args
+    files:
+      - sos/jvm_args/default-public-args.properties
+      - sos/jvm_args/public-args-Server.properties
+  - name: ftei-sos-process-jvm-public-args
+    files:
+      - sos/jvm_args/default-public-args.properties
+      - sos/jvm_args/public-args-Server.properties
+  - name: ftei-sos-discrete-jvm-public-args
+    files:
+      - sos/jvm_args/default-public-args.properties
+      - sos/jvm_args/public-args-Server.properties            

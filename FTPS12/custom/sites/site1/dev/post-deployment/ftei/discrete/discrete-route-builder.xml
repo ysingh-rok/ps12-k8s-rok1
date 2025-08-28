@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templatedRoutes id="discrete-route-builder" debug="true">
+	<templatedRoute routeId="restConsumeRoute"
+		routeTemplateRef="restConsumeRouteTemplate">
+		templatedRoute-rest-routeTemplate
+	</templatedRoute>
+	<templatedRoute routeId="fileConsumeRoute"
+		routeTemplateRef="fileConsumeRouteTemplate">templatedRoute-fileConsumeRoute
+	</templatedRoute>
+	<templatedRoute routeId="fileNotFoundErrorMsgCaught"
+		routeTemplateRef="fileNotFoundErrorMsgCaughtTemplate">templatedRoute-fileNotFoundErrorMsgCaught
+	</templatedRoute>
+	<templatedRoute routeId="idocDiscreteToPojo"
+		routeTemplateRef="idocDiscreteToPojoTemplate">templatedRoute-idocDiscreteToPojo</templatedRoute>
+	<templatedRoute routeId="jmsErrorMsgCaught"
+		routeTemplateRef="jmsErrorMsgCaughtTemplate">templatedRoute-jmsErrorMsgCaught</templatedRoute>
+	<templatedRoute routeId="pojoToJms"
+		routeTemplateRef="pojoToJmsTemplate">templatedRoute-pojoToJms</templatedRoute>
+	<templatedRoute routeId="responseFromFtpc"
+		routeTemplateRef="responseFromFtpcTemplate">templatedRoute-responseFromFtpc</templatedRoute>
+	<templatedRoute routeId="routeErrorMsgCaught"
+		routeTemplateRef="routeErrorMsgCaughtTemplate">templatedRoute-routeErrorMsgCaught</templatedRoute>
+	<templatedRoute routeId="sendEmail_discreteInbound"
+		routeTemplateRef="sendEmail_discreteInboundTemplate">templatedRoute-sendEmail_discreteInbound
+	</templatedRoute>
+	<templatedRoute routeId="transformerErrorMsgCaught"
+		routeTemplateRef="transformerErrorMsgCaughtTemplate">templatedRoute-transformerErrorMsgCaught
+	</templatedRoute>
+	<templatedRoute routeId="unknownMsgCaught"
+		routeTemplateRef="unknownMsgCaughtTemplate">templatedRoute-unknownMsgCaught</templatedRoute>
+	<templatedRoute
+		routeId="idocDiscreteXmlToFileAndSendResponseToFtpc"
+		routeTemplateRef="idocDiscreteXmlToFileAndSendResponseToFtpcTemplate">templatedRoute-idocDiscreteXmlToFileAndSendResponseToFtpc
+	</templatedRoute>
+	<!--<templatedRoute
+		routeId="idocDiscreteXmlToRestAndSendResponseToFtpc"
+		routeTemplateRef="idocDiscreteXmlToRestAndSendResponseToFtpcTemplate">templatedRoute-idocDiscreteXmlToRestAndSendResponseToFtpc
+	</templatedRoute>-->
+	<templatedRoute
+		routeId="jmsErrorMsgCaughtRoute_discreteOutbound"
+		routeTemplateRef="jmsErrorMsgCaughtRoute_discreteOutboundTemplate">templatedRoute-jmsErrorMsgCaughtRoute_discreteOutbound
+	</templatedRoute>
+	<templatedRoute
+		routeId="onRouteErrorMsgCaughtRoute_discreteOutbound"
+		routeTemplateRef="onRouteErrorMsgCaughtRoute_discreteOutboundTemplate">templatedRoute-onRouteErrorMsgCaughtRoute_discreteOutbound
+	</templatedRoute>
+	<templatedRoute
+		routeId="receiveIdocDiscretePojoFromFtpcConvertToXml"
+		routeTemplateRef="receiveIdocDiscretePojoFromFtpcConvertToXmlTemplate">templatedRoute-receiveIdocDiscretePojoFromFtpcConvertToXml
+	</templatedRoute>
+	<templatedRoute routeId="sendEmail_discreteOutbound"
+		routeTemplateRef="sendEmail_discreteOutboundTemplate">templatedRoute-sendEmail_discreteOutbound
+	</templatedRoute>
+	<templatedRoute
+		routeId="transformerErrorMsgCaughtRoute_discreteOutbound"
+		routeTemplateRef="transformerErrorMsgCaughtRoute_discreteOutboundTemplate">templatedRoute-transformerErrorMsgCaughtRoute_discreteOutbound
+	</templatedRoute>
+	<templatedRoute
+		routeId="unknownMsgCaughtRoute_discreteOutbound"
+		routeTemplateRef="unknownMsgCaughtRoute_discreteOutboundTemplate">templatedRoute-unknownMsgCaughtRoute_discreteOutbound
+	</templatedRoute>
+</templatedRoutes>

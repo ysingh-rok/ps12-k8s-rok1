@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+	license agreements. See the NOTICE file distributed with this work for additional 
+	information regarding copyright ownership. The ASF licenses this file to 
+	You under the Apache License, Version 2.0 (the "License"); you may not use 
+	this file except in compliance with the License. You may obtain a copy of 
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
+	by applicable law or agreed to in writing, software distributed under the 
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. See the License for the specific 
+	language governing permissions and limitations under the License. -->
+<routeTemplates
+	xmlns="http://camel.apache.org/schema/spring"
+	xmlns:b2mml="http://www.mesa.org/xml/B2MML">
+	<routeTemplate id="b2mml7ProcessToPojoTemplate">
+		<route id="b2mml7ProcessToPojo">
+			<description>Consume data, process and transform them to JTOs and
+				send the JTOs to the JMS queue for processing by EIG.
+			</description>
+			<from id="getB2mmlProcessData" uri="seda:processingData" />
+			<setBody>
+				<simple>${exchangeProperty.originalBody}</simple>
+			</setBody>
+			<choice id="b2mmlProcessInboundChoice">
+				<description>Process B2mml Type Choice</description>
+				<when id="materialInformation">
+					<xpath logNamespaces="true">/b2mml:SyncMaterialInformation</xpath>
+					<toD id="atlasMapMaterialId"
+						uri="atlasmap://file:{{atlasmap.adm.material}}" />
+					<process id="materialInformationJsonToJavaId"
+						ref="materialInformationJsonToJava" />
+					<to id="vmMaterialInformation" pattern="InOut"
+						uri="seda:transformedFileToFtpc" />
+				</when>
+				<when id="operationsSchedule">
+					<xpath logNamespaces="true">/b2mml:SyncOperationsSchedule</xpath>
+					<toD id="atlasMapProcessOrderId"
+						uri="atlasmap://file:{{atlasmap.adm.processOrder}}" />
+					<process id="operationsScheduleJsonToJavaId"
+						ref="operationsScheduleJsonToJava" />
+					<to id="vmProductionSchedule" pattern="InOut"
+						uri="seda:transformedFileToFtpc" />
+				</when>
+				<when id="operationsDefinition">
+					<xpath logNamespaces="true">/b2mml:SyncOperationsDefinition</xpath>
+					<toD id="atlasMapOperationsDefinitionId"
+						uri="atlasmap://file:{{atlasmap.adm.processBom}}" />
+					<process id="operationsDefinitionJsonToJavaId"
+						ref="operationsDefinitionJsonToJava" />
+					<to id="vmProductDefinition" pattern="InOut"
+						uri="seda:transformedFileToFtpc" />
+				</when>
+				<when id="uomConversion">
+					<xpath logNamespaces="true">/b2mml:SyncUomConversion</xpath>
+					<toD id="atlasMapuomConversionId"
+						uri="atlasmap://file:{{atlasmap.adm.uomConversion}}" />
+					<process id="uomConversionJsonToJavaId"
+						ref="uomConversionJsonToJava" />
+					<to id="vmUomConversion" pattern="InOut"
+						uri="seda:transformedFileToFtpc" />
+				</when>
+				<otherwise id="default(Otherwise)">
+					<to id="unknownMsgCaught"
+						uri="seda:unknownMsgCaught?exchangePattern=InOut" />
+				</otherwise>
+			</choice>
+			<onException
+				id="onFileNotFoundException_b2mmlProcessToPojo">
+				<exception>java.io.FileNotFoundException</exception>
+				<to id="fileNotFoundExceptionHandling" pattern="InOut"
+					uri="seda:fileNotFoundErrorMsgCaught" />
+			</onException>
+			<onException
+				id="onTransformerException_b2mmlProcessToPojo">
+				<exception>org.apache.camel.RuntimeTransformException</exception>
+				<to id="transformerExceptionHandling" pattern="InOut"
+					uri="seda:transformerErrorMsgCaught" />
+			</onException>
+			<onException
+				id="onCommunicationException_b2mmlProcessToPojo">
+				<exception>org.apache.camel.ExchangeTimedOutException</exception>
+				<redeliveryPolicy maximumRedeliveries="2" />
+				<to id="communicationExceptionHandling" pattern="InOut"
+					uri="seda:jmsErrorMsgCaught" />
+			</onException>
+			<onException id="onRouteException_b2mmlProcessToPojo">
+				<exception>java.lang.Exception</exception>
+				<redeliveryPolicy maximumRedeliveries="2" />
+				<to id="onRouteExceptionHandling" pattern="InOut"
+					uri="seda:onRouteErrorMsgCaught" />
+			</onException>
+		</route>
+	</routeTemplate>
+</routeTemplates>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+	license agreements. See the NOTICE file distributed with this work for additional 
+	information regarding copyright ownership. The ASF licenses this file to 
+	You under the Apache License, Version 2.0 (the "License"); you may not use 
+	this file except in compliance with the License. You may obtain a copy of 
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
+	by applicable law or agreed to in writing, software distributed under the 
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. See the License for the specific 
+	language governing permissions and limitations under the License. -->
+<routeTemplates
+	xmlns="http://camel.apache.org/schema/spring">
+	<routeTemplate id="jmsErrorMsgCaughtTemplate">
+		<route id="jmsErrorMsgCaught">
+			<description>Route to handle JMS Exception/Error.</description>
+			<from id="jmsErrorMsgCaught" uri="seda:jmsErrorMsgCaught" />
+			<to id="jmsErrorMsgGroovy" pattern="InOut"
+				uri="language:groovy:resourceUri?script={{groovyScript.path.process}}JmsExceptionHandler.groovy" />
+			<choice id="check for File or payload jms error">
+				<when id="dataReceivedFromFile_JmsErrorMsg">
+					<simple> ${header.isFile} == 'true'</simple>
+					<to id="jmsErrorMsgLogPath" pattern="InOut"
+						uri="file:{{archive-exc-msg.jmsEx.path.in}}?fileName={{datetime.only.pattern}}-{{archive-exc-msg.jmsEx.pattern.in}}-{{common.fname.pattern}}&amp;exchangePattern=InOut" />
+				</when>
+			</choice>
+			<setHeader id="jmsErrorMsgCaughtProcess" name="emailType">
+				<constant>{{email.type.failure}}</constant>
+			</setHeader>
+			<to id="vmFailSmtp_jmsErrorMsgCaught" pattern="InOut"
+				uri="seda:sendEmail_processInbound" />
+			<log id="logJMSError" loggingLevel="ERROR"
+				message="jmsErrorMsgCaughtRouteId: ${body}" />
+		</route>
+	</routeTemplate>
+</routeTemplates>

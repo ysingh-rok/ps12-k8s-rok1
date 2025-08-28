@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templatedRoutes id="erp-route-builder" debug="true">
+    <templatedRoute routeId="restConsumeRoute" routeTemplateRef="restConsumeRouteTemplate"> 
+		templatedRoute-rest-routeTemplate </templatedRoute>
+	<templatedRoute routeId="inboundAtlasMapRoute"
+		routeTemplateRef="inboundAtlasMapRouteTemplate">
+		templatedRoute-inbound-atlasmap-routeTemplate
+	</templatedRoute>
+	<templatedRoute routeId="transformerAndValidatorRoute"
+		routeTemplateRef="transformerAndValidatorTemplate">
+		templatedRoute-inbound-atlasmap-routeTemplate
+	</templatedRoute>
+	<templatedRoute routeId="outboundAtlasMapRoute"
+		routeTemplateRef="outboundAtlasMapRouteTemplate">
+		templatedRoute-outbound-atlasmap-routeTemplate
+	</templatedRoute>
+	<templatedRoute routeId="inboundFileConsumeRoute"
+		routeTemplateRef="inboundFileConsumeRouteTemplate">
+		templatedRoute-inbound-file-consume-routeTemplate
+	</templatedRoute>
+	<templatedRoute
+		routeId="XmlToOutFolderToFileAndSendResponseToFtpc"
+		routeTemplateRef="XmlToOutFolderAndSendResponseToFtpcTemplate">
+		templatedRoute-outbound-out-folder-data-routeTemplate
+	</templatedRoute>
+	<!-- <templatedRoute routeId="XmlToRestAndSendResponseToFtpc" routeTemplateRef="XmlToRestAndSendResponseToFtpcTemplate"> 
+		templatedRoute-outbound-xml-to-rest-api-data-routeTemplate </templatedRoute> -->
+	<templatedRoute routeId="receiveOutboundJsonFromAMQ"
+		routeTemplateRef="receiveJsonFromAMQTemplate">
+		templatedRoute-outbound-activemq-consume-routeTemplate
+	</templatedRoute>
+	<templatedRoute routeId="outboundfileIdentifierRoute"
+		routeTemplateRef="outboundFileProcessingTemplate">
+		templatedRoute-outbound-central-processing-routeTemplate
+	</templatedRoute>
+	<templatedRoute routeId="fileIdentifierRoute"
+		routeTemplateRef="inboundFileProcessingTemplate">
+		templatedRoute-inbound-central-processing-routeTemplate
+	</templatedRoute>
+	<templatedRoute routeId="fileNotFoundErrorMsgCaught"
+		routeTemplateRef="fileNotFoundErrorMsgCaughtTemplate">
+		templatedRoute-file-not-found-exception-routeTemplate
+	</templatedRoute>
+	<templatedRoute routeId="jmsErrorMsgCaught"
+		routeTemplateRef="jmsErrorMsgCaughtTemplate">
+		templatedRoute-jms-error-message-routeTemplate
+	</templatedRoute>
+	<templatedRoute routeId="onRouteErrorMsgCaught"
+		routeTemplateRef="onRouteErrorMsgCaughtTemplate">
+		templatedRoute-on-route-exception-msg-routeTemplate
+	</templatedRoute>
+	<templatedRoute routeId="jsonToJms"
+		routeTemplateRef="jsonToJmsTemplate">
+		templatedRoute-json-to-jms-routeTemplate
+	</templatedRoute>
+	<templatedRoute routeId="responseFromFtpc"
+		routeTemplateRef="responseFromFtpcTemplate">
+		templatedRoute-inbound-response-from-ftpc-routeTemplate
+	</templatedRoute>
+	<templatedRoute routeId="sendEmail_erp"
+		routeTemplateRef="sendEmail_erpTemplate">
+		templatedRoute-send-email-erp-routeTemplate
+	</templatedRoute>
+	<templatedRoute routeId="transformerErrorMsgCaught"
+		routeTemplateRef="transformerErrorMsgCaughtTemplate">
+		templatedRoute-transformer-error-msg-routeTemplate
+	</templatedRoute>
+	<templatedRoute routeId="unknownMsgCaughtRouteId"
+		routeTemplateRef="unknownMsgCaughtRouteIdTemplate">
+		templatedRoute-unknown-msg-error-routeTemplate
+	</templatedRoute>
+	<templatedRoute routeId="generateResponseJson"
+		routeTemplateRef="generateResponseJsonTemplate">
+		templatedRoute-outbound-json-response-routeTemplate
+	</templatedRoute>
+</templatedRoutes>

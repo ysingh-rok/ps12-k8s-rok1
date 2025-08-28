@@ -1,0 +1,1987 @@
+{
+	"systemMetadata": {
+		"clusters": [
+			{
+				"nodes": [
+					{
+						"namespaces": [
+							{
+								"identifier": "",
+								"systems": [
+									{
+										"identifier": "ftpc-dm-job"
+									},
+									{
+										"identifier": "ftpc-mssql"
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	"systemInfo": {
+		"systems": [
+			{
+				"systemName": "FactoryTalk PharmaSuite",
+				"identifier": "FactoryTalk PharmaSuite",
+				"name": "FactoryTalk PharmaSuite",
+				"description": "",
+				"subSystem": [
+					{
+						"name": "FTPS Systems",
+						"description": "",
+						"steps": [
+							{
+								"identifier": "HTTP_REACHABILITY",
+								"type": "HTTP_CLIENT",
+								"sequence": "2",
+								"description": "FTPS reachable",
+								"isSkipStep": "false",
+								"config": {
+									"input": [
+										{
+											"id": "PROTOCOL",
+											"value": "https",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "HOST",
+											"value": "global.components.ftpc.service.server",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "global.components.ftpc.service.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "CONTEXT_PATH",
+											"value": "/PharmaSuite",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "IS_PUBLIC_URL",
+											"value": "true",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "HTTP_REACHABILITY",
+									"config": {
+										"output": [
+											{
+												"id": "HTTP_STATUS_CODE",
+												"value": "200",
+												"source": "EXPLICIT"
+											}
+										]
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "FTPS ActiveMQ",
+						"description": "",
+						"steps": [
+							{
+								"identifier": "IMAGE_NAME_WITH_VERSION",
+								"type": "COMMON",
+								"sequence": "1",
+								"description": "Image name & version",
+								"isSkipStep": "false",
+								"config": {
+									"input": [
+										{
+											"id": "REPLICA_SETS",
+											"value": "iq.ftps.global.components.ftpsAMQ.deployment.replicas",
+											"source": "PUBLIC"
+										}
+									]
+								},	
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsAMQ.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "IMAGE_NAME_WITH_VERSION",
+									"config": {
+										"output": [
+											{
+												"id": "IMAGE_NAME",
+												"value": "iq.ftps.global.components.ftpsAMQ.deployment.image",
+												"source": "PUBLIC"
+											},
+											{
+												"id": "IMAGE_VERSION",
+												"value": "iq.ftps.global.components.ftpsAMQ.deployment.tag",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "READ_VALUES",
+								"type": "COMMON",
+								"sequence": "2",
+								"description": "ActiveMQ hostname and port",
+								"isSkipStep": "true",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsAMQ.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "SOURCE",
+											"value": "PCV",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "SEPARATOR",
+											"value": ":",
+											"source": "EXPLICIT"
+										}
+									]
+								},	
+								"expectedResult": {
+									"type": "READ_VALUES",
+									"config": {
+										"output": [
+											{
+												"id": "HOST",
+												"value": "iq.ftps.global.components.ftpsAMQ.service.server",
+												"source": "PUBLIC"
+											},
+											{
+												"id": "PORT",
+												"value": "iq.ftps.global.components.ftpsAMQ.service.port",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "ACTIVEMQ_REACHABILITY",
+								"type": "ACTIVE_MQ",
+								"sequence": "2",
+								"description": "ActiveMQ reachable",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsAMQ.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "PROTOCOL",
+											"value": "ssl",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "HOST",
+											"value": "iq.ftps.global.components.ftpsAMQ.service.server",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "iq.ftps.global.components.ftpsAMQ.service.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "CONTEXT_PATH",
+											"value": "",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "USER",
+											"value": "iq.ftps.global.components.ftpsAMQ.connectionUsername",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PASSWORD",
+											"value": "iq.ftps.global.components.ftpsAMQ.connectionPassword",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUSTSTORE",
+											"value": "iq.ftps.global.components.ftpcTrustManager.trustStore",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUSTSTORE_PASSWORD",
+											"value": "iq.ftps.global.components.ftpcTrustManager.trustStorePassword",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "IS_PUBLIC_URL",
+											"value": "true",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "ACTIVEMQ_REACHABILITY",
+									"config": {
+										"output": [
+											{
+												"id": "TCP_REACHABILITY",
+												"value": "true",
+												"source": "EXPLICIT"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "REPLICA_SETS",
+								"type": "COMMON",
+								"sequence": "2",
+								"description": "Replica sets",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsAMQ.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "REPLICA_SETS",
+									"config": {
+										"output": [
+											{
+												"id": "REPLICA_SETS",
+												"value": "iq.ftps.global.components.ftpsAMQ.deployment.replicas",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "PERSISTENCE_DISABLED",
+								"type": "ACTIVE_MQ",
+								"sequence": "1",
+								"description": "ActiveMQ persistence disabled",
+								"isSkipStep": "false",
+								"config": {
+									"input": [
+										{
+											"id": "PERSISTENCE_DISABLED_KEY",
+											"value": "global.components.ftpsAMQ.persistence.size",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "FILE_PATH",
+											"value": "/opt/apache-activemq/conf/activemq.xml",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "FILE_TYPE",
+											"value": "XML",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "XML_PROPERTY_KEY",
+											"value": "broker#persistenceAdapter#memoryPersistenceAdapter",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "IS_NULL_EMPTY_VALUE_ALLOWED",
+											"value": "true",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "EXPECTED_ACTUAL_VALUE_MSG_SUCCESS",
+											"value": "true",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "EXPECTED_ACTUAL_VALUE_MSG_FAILURE",
+											"value": "false",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsAMQ.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "PERSISTENCE_DISABLED",
+									"config": {
+										"output": [
+											{
+												"id": "PERSISTENCE_DISABLED",
+												"value": "",
+												"source": "EXPLICIT"
+											}
+										]
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "TOM Server",
+						"description": "",
+						"steps": [
+						 {
+								"identifier": "IMAGE_NAME_WITH_VERSION",
+								"type": "COMMON",
+								"sequence": "1",
+								"description": "Image name & version",
+								"config": {
+									"input": [
+										{
+											"id": "REPLICA_SETS",
+											"value": "iq.ftps.global.components.ftpsSOS.services.[0].replicas",
+											"source": "PUBLIC"
+										}
+									]
+								},
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[0].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "IMAGE_NAME_WITH_VERSION",
+									"config": {
+										"output": [
+											{
+												"id": "IMAGE_NAME",
+												"value": "iq.ftps.global.components.ftpsSOS.image",
+												"source": "PUBLIC"
+											},
+											{
+												"id": "IMAGE_VERSION",
+												"value": "iq.ftps.global.components.ftpsSOS.tag",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "POD_PROBE",
+								"type": "HTTP_CLIENT",
+								"sequence": "2",
+								"description": "Server health",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[0].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "REPLICA_SETS",
+											"value": "iq.ftps.global.components.ftpsSOS.services.[0].replicas",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PROBES",
+											"value": "Liveness,Readiness,Startup",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "PROBE_FROM",
+											"value": "iq.ftpc.global.components.iq.app.label",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "DEFAULT_PROBE_PORT",
+											"value": "iq.ftpc.global.components.probe.default.port",
+											"source": "STATIC"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "POD_PROBE",
+									"config": {
+										"output": [
+											{
+												"id": "HTTP_RESPONSE_BODY",
+												"value": "UP",
+												"source": "EXPLICIT"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "REPLICA_SETS",
+								"type": "COMMON",
+								"sequence": "2",
+								"description": "Replica sets",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[0].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "REPLICA_SETS",
+									"config": {
+										"output": [
+											{
+												"id": "REPLICA_SETS",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[0].replicas",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "SOS_EVENTSHEET",
+								"type": "READ_FILE",
+								"sequence": "1",
+								"description": "Event sheet name",
+								"replicaSet": 1,
+								"config": {
+									"input": [
+										{
+											"id": "FILE_PATH",
+											"value": "iq.ftps.global.components.ftpsSOS.services.[0].file.path",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "FILE_TYPE",
+											"value": "XML",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "XML_PROPERTY_KEY",
+											"value": "event-sheet-name",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[0].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "SOS_EVENTSHEET",
+									"config": {
+										"output": [
+											{
+												"id": "SOS_EVENTSHEET",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[0].eventSheet",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "SOS_OTEL_SERVICE_NAME",
+								"type": "READ_FILE",
+								"sequence": "1",
+								"description": "Open telemetry name",
+								"isSkipStep": "true",
+								"replicaSet": 1,
+								"config": {
+									"input": [
+										{
+											"id": "FILE_PATH",
+											"value": "iq.ftps.global.components.ftpsSOS.services.[0].otel.properties.file",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "FILE_TYPE",
+											"value": "PROPERTIES",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "PROPERTY_KEY",
+											"value": "iq.ftps.otel.javaagent.configuration.file.property.key",
+											"source": "PUBLIC"
+										}
+									]
+								},
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[0].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "SOS_OTEL_SERVICE_NAME",
+									"config": {
+										"output": [
+											{
+												"id": "SOS_OTEL_SERVICE_NAME",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[0].otel.serviceName",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "EBR Server",
+						"description": "",
+						"steps": [
+						 {
+								"identifier": "IMAGE_NAME_WITH_VERSION",
+								"type": "COMMON",
+								"sequence": "1",
+								"description": "Image name & version",
+								"config": {
+									"input": [
+										{
+											"id": "REPLICA_SETS",
+											"value": "iq.ftps.global.components.ftpsSOS.services.[1].replicas",
+											"source": "PUBLIC"
+										}
+									]
+								},	
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[1].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "IMAGE_NAME_WITH_VERSION",
+									"config": {
+										"output": [
+											{
+												"id": "IMAGE_NAME",
+												"value": "iq.ftps.global.components.ftpsSOS.image",
+												"source": "PUBLIC"
+											},
+											{
+												"id": "IMAGE_VERSION",
+												"value": "iq.ftps.global.components.ftpsSOS.tag",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "POD_PROBE",
+								"type": "HTTP_CLIENT",
+								"sequence": "2",
+								"description": "Server health",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[1].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "REPLICA_SETS",
+											"value": "iq.ftps.global.components.ftpsSOS.services.[1].replicas",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PROBES",
+											"value": "Liveness,Readiness,Startup",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "PROBE_FROM",
+											"value": "iq.ftpc.global.components.iq.app.label",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "DEFAULT_PROBE_PORT",
+											"value": "iq.ftpc.global.components.probe.default.port",
+											"source": "STATIC"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "POD_PROBE",
+									"config": {
+										"output": [
+											{
+												"id": "HTTP_RESPONSE_BODY",
+												"value": "UP",
+												"source": "EXPLICIT"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "REPLICA_SETS",
+								"type": "COMMON",
+								"sequence": "2",
+								"description": "Replica sets",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[1].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "REPLICA_SETS",
+									"config": {
+										"output": [
+											{
+												"id": "REPLICA_SETS",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[1].replicas",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "SOS_EVENTSHEET",
+								"type": "READ_FILE",
+								"sequence": "1",
+								"description": "Event sheet name",
+								"replicaSet": 1,
+								"config": {
+									"input": [
+										{
+											"id": "FILE_PATH",
+											"value": "iq.ftps.global.components.ftpsSOS.services.[1].file.path",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "FILE_TYPE",
+											"value": "XML",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "XML_PROPERTY_KEY",
+											"value": "event-sheet-name",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[1].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "SOS_EVENTSHEET",
+									"config": {
+										"output": [
+											{
+												"id": "SOS_EVENTSHEET",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[1].eventSheet",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "SOS_OTEL_SERVICE_NAME",
+								"type": "READ_FILE",
+								"sequence": "1",
+								"description": "Open telemetry name",
+								"isSkipStep": "true",
+								"replicaSet": 1,
+								"config": {
+									"input": [
+										{
+											"id": "FILE_PATH",
+											"value": "iq.ftps.global.components.ftpsSOS.services.[1].otel.properties.file",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "FILE_TYPE",
+											"value": "PROPERTIES",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "PROPERTY_KEY",
+											"value": "iq.ftps.otel.javaagent.configuration.file.property.key",
+											"source": "PUBLIC"
+										}
+									]
+								},
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[1].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "SOS_OTEL_SERVICE_NAME",
+									"config": {
+										"output": [
+											{
+												"id": "SOS_OTEL_SERVICE_NAME",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[1].otel.serviceName",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "POD_ANTI_AFFINITY",
+								"type": "AFFINITY",
+								"sequence": "1",
+								"description": "POD anti affinity",
+								"replicaSet": 2,
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[1].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "MATCH_EXPRESSIONS",
+											"multiValues": [
+												{
+													"id": "key",
+													"value": "app",
+													"source": "EXPLICIT"
+												},
+												{
+													"id": "operator",
+													"value": "in",
+													"source": "EXPLICIT"
+												},
+												{
+													"id": "values",
+													"values": [
+														"iq.ftps.global.components.ftpsSOS.services.[1].app.label"
+													],
+													"source": "PUBLIC"
+												}
+											],
+											"source": "MATCHER"
+										},
+										{
+											"id": "TOPOLOGY_KEY",
+											"value": "kubernetes.io/hostname",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "POD_ANTI_AFFINITY",
+									"config": {
+										"output": [
+											{
+												"id": "REPLICA_SETS",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[1].replicas",
+												"source": "PUBLIC"
+											},
+											{
+												"id": "POD_ANTI_AFFINITY",
+												"value": "true",
+												"source": "CUSTOM"
+											}
+										]
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "OE Server",
+						"description": "",
+						"steps": [
+						 {
+								"identifier": "IMAGE_NAME_WITH_VERSION",
+								"type": "COMMON",
+								"sequence": "1",
+								"description": "Image name & version",
+								"config": {
+									"input": [
+										{
+											"id": "REPLICA_SETS",
+											"value": "iq.ftps.global.components.ftpsSOS.services.[2].replicas",
+											"source": "PUBLIC"
+										}
+									]
+								},	
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[2].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "IMAGE_NAME_WITH_VERSION",
+									"config": {
+										"output": [
+											{
+												"id": "IMAGE_NAME",
+												"value": "iq.ftps.global.components.ftpsSOS.image",
+												"source": "PUBLIC"
+											},
+											{
+												"id": "IMAGE_VERSION",
+												"value": "iq.ftps.global.components.ftpsSOS.tag",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "POD_PROBE",
+								"type": "HTTP_CLIENT",
+								"sequence": "2",
+								"description": "Server health",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[2].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "REPLICA_SETS",
+											"value": "iq.ftps.global.components.ftpsSOS.services.[2].replicas",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PROBES",
+											"value": "Liveness,Readiness,Startup",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "PROBE_FROM",
+											"value": "iq.ftpc.global.components.iq.app.label",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "DEFAULT_PROBE_PORT",
+											"value": "iq.ftpc.global.components.probe.default.port",
+											"source": "STATIC"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "POD_PROBE",
+									"config": {
+										"output": [
+											{
+												"id": "HTTP_RESPONSE_BODY",
+												"value": "UP",
+												"source": "EXPLICIT"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "REPLICA_SETS",
+								"type": "COMMON",
+								"sequence": "2",
+								"description": "Replica sets",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[2].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "REPLICA_SETS",
+									"config": {
+										"output": [
+											{
+												"id": "REPLICA_SETS",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[2].replicas",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "SOS_EVENTSHEET",
+								"type": "READ_FILE",
+								"sequence": "1",
+								"description": "Event sheet name",
+								"replicaSet": 1,
+								"config": {
+									"input": [
+										{
+											"id": "FILE_PATH",
+											"value": "iq.ftps.global.components.ftpsSOS.services.[2].file.path",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "FILE_TYPE",
+											"value": "XML",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "XML_PROPERTY_KEY",
+											"value": "event-sheet-name",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[2].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "SOS_EVENTSHEET",
+									"config": {
+										"output": [
+											{
+												"id": "SOS_EVENTSHEET",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[2].eventSheet",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "SOS_STATION",
+								"type": "READ_FILE",
+								"sequence": "1",
+								"description": "Station name",
+								"replicaSet": 1,
+								"config": {
+									"input": [
+										{
+											"id": "FILE_PATH",
+											"value": "iq.ftps.global.components.ftpsSOS.services.[2].file.path",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "FILE_TYPE",
+											"value": "XML",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "XML_PROPERTY_KEY",
+											"value": "station",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[2].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "SOS_STATION",
+									"config": {
+										"output": [
+											{
+												"id": "SOS_STATION",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[2].station",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "SOS_OTEL_SERVICE_NAME",
+								"type": "READ_FILE",
+								"sequence": "1",
+								"description": "Open telemetry name",
+								"isSkipStep": "true",
+								"replicaSet": 1,
+								"config": {
+									"input": [
+										{
+											"id": "FILE_PATH",
+											"value": "iq.ftps.global.components.ftpsSOS.services.[2].otel.properties.file",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "FILE_TYPE",
+											"value": "PROPERTIES",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "PROPERTY_KEY",
+											"value": "iq.ftps.otel.javaagent.configuration.file.property.key",
+											"source": "PUBLIC"
+										}
+									]
+								},
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[2].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "SOS_OTEL_SERVICE_NAME",
+									"config": {
+										"output": [
+											{
+												"id": "SOS_OTEL_SERVICE_NAME",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[2].otel.serviceName",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Transition Server",
+						"description": "",
+						"steps": [
+						 {
+								"identifier": "IMAGE_NAME_WITH_VERSION",
+								"type": "COMMON",
+								"sequence": "1",
+								"description": "Image name & version",
+								"config": {
+									"input": [
+										{
+											"id": "REPLICA_SETS",
+											"value": "iq.ftps.global.components.ftpsSOS.services.[3].replicas",
+											"source": "PUBLIC"
+										}
+									]
+								},	
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[3].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "IMAGE_NAME_WITH_VERSION",
+									"config": {
+										"output": [
+											{
+												"id": "IMAGE_NAME",
+												"value": "iq.ftps.global.components.ftpsSOS.image",
+												"source": "PUBLIC"
+											},
+											{
+												"id": "IMAGE_VERSION",
+												"value": "iq.ftps.global.components.ftpsSOS.tag",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "POD_PROBE",
+								"type": "HTTP_CLIENT",
+								"sequence": "2",
+								"description": "Server health",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[3].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "REPLICA_SETS",
+											"value": "iq.ftps.global.components.ftpsSOS.services.[3].replicas",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PROBES",
+											"value": "Liveness,Readiness,Startup",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "PROBE_FROM",
+											"value": "iq.ftpc.global.components.iq.app.label",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "DEFAULT_PROBE_PORT",
+											"value": "iq.ftpc.global.components.probe.default.port",
+											"source": "STATIC"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "POD_PROBE",
+									"config": {
+										"output": [
+											{
+												"id": "HTTP_RESPONSE_BODY",
+												"value": "UP",
+												"source": "EXPLICIT"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "REPLICA_SETS",
+								"type": "COMMON",
+								"sequence": "2",
+								"description": "Replica sets",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[3].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "REPLICA_SETS",
+									"config": {
+										"output": [
+											{
+												"id": "REPLICA_SETS",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[3].replicas",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "SOS_EVENTSHEET",
+								"type": "READ_FILE",
+								"sequence": "1",
+								"description": "Event sheet name",
+								"replicaSet": 1,
+								"config": {
+									"input": [
+										{
+											"id": "FILE_PATH",
+											"value": "iq.ftps.global.components.ftpsSOS.services.[3].file.path",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "FILE_TYPE",
+											"value": "XML",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "XML_PROPERTY_KEY",
+											"value": "event-sheet-name",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[3].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "SOS_EVENTSHEET",
+									"config": {
+										"output": [
+											{
+												"id": "SOS_EVENTSHEET",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[3].eventSheet",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "SOS_OTEL_SERVICE_NAME",
+								"type": "READ_FILE",
+								"sequence": "1",
+								"description": "Open telemetry name",
+								"isSkipStep": "true",
+								"replicaSet": 1,
+								"config": {
+									"input": [
+										{
+											"id": "FILE_PATH",
+											"value": "iq.ftps.global.components.ftpsSOS.services.[3].otel.properties.file",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "FILE_TYPE",
+											"value": "PROPERTIES",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "PROPERTY_KEY",
+											"value": "iq.ftps.otel.javaagent.configuration.file.property.key",
+											"source": "PUBLIC"
+										}
+									]
+								},
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[3].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "SOS_OTEL_SERVICE_NAME",
+									"config": {
+										"output": [
+											{
+												"id": "SOS_OTEL_SERVICE_NAME",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[3].otel.serviceName",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Audit Trail Server",
+						"description": "",
+						"steps": [
+						 {
+								"identifier": "IMAGE_NAME_WITH_VERSION",
+								"type": "COMMON",
+								"sequence": "1",
+								"description": "Image name & version",
+								"config": {
+									"input": [
+										{
+											"id": "REPLICA_SETS",
+											"value": "iq.ftps.global.components.ftpsSOS.services.[4].replicas",
+											"source": "PUBLIC"
+										}
+									]
+								},
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[4].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "IMAGE_NAME_WITH_VERSION",
+									"config": {
+										"output": [
+											{
+												"id": "IMAGE_NAME",
+												"value": "iq.ftps.global.components.ftpsSOS.image",
+												"source": "PUBLIC"
+											},
+											{
+												"id": "IMAGE_VERSION",
+												"value": "iq.ftps.global.components.ftpsSOS.tag",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "POD_PROBE",
+								"type": "HTTP_CLIENT",
+								"sequence": "2",
+								"description": "Server health",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[4].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "REPLICA_SETS",
+											"value": "iq.ftps.global.components.ftpsSOS.services.[4].replicas",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PROBES",
+											"value": "Liveness,Readiness,Startup",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "PROBE_FROM",
+											"value": "iq.ftpc.global.components.iq.app.label",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "DEFAULT_PROBE_PORT",
+											"value": "iq.ftpc.global.components.probe.default.port",
+											"source": "STATIC"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "POD_PROBE",
+									"config": {
+										"output": [
+											{
+												"id": "HTTP_RESPONSE_BODY",
+												"value": "UP",
+												"source": "EXPLICIT"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "REPLICA_SETS",
+								"type": "COMMON",
+								"sequence": "2",
+								"description": "Replica sets",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[4].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "REPLICA_SETS",
+									"config": {
+										"output": [
+											{
+												"id": "REPLICA_SETS",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[4].replicas",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "SOS_EVENTSHEET",
+								"type": "READ_FILE",
+								"sequence": "1",
+								"description": "Event sheet name",
+								"replicaSet": 1,
+								"config": {
+									"input": [
+										{
+											"id": "FILE_PATH",
+											"value": "iq.ftps.global.components.ftpsSOS.services.[4].file.path",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "FILE_TYPE",
+											"value": "XML",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "XML_PROPERTY_KEY",
+											"value": "event-sheet-name",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[4].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "SOS_EVENTSHEET",
+									"config": {
+										"output": [
+											{
+												"id": "SOS_EVENTSHEET",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[4].eventSheet",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "SOS_OTEL_SERVICE_NAME",
+								"type": "READ_FILE",
+								"sequence": "1",
+								"description": "Open telemetry name",
+								"isSkipStep": "true",
+								"replicaSet": 1,
+								"config": {
+									"input": [
+										{
+											"id": "FILE_PATH",
+											"value": "iq.ftps.global.components.ftpsSOS.services.[4].otel.properties.file",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "FILE_TYPE",
+											"value": "PROPERTIES",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "PROPERTY_KEY",
+											"value": "iq.ftps.otel.javaagent.configuration.file.property.key",
+											"source": "PUBLIC"
+										}
+									]
+								},
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[4].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "SOS_OTEL_SERVICE_NAME",
+									"config": {
+										"output": [
+											{
+												"id": "SOS_OTEL_SERVICE_NAME",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[4].otel.serviceName",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "AI Server",
+						"description": "",
+						"steps": [
+						 {
+								"identifier": "IMAGE_NAME_WITH_VERSION",
+								"type": "COMMON",
+								"sequence": "1",
+								"description": "Image name & version",
+								"config": {
+									"input": [
+										{
+											"id": "REPLICA_SETS",
+											"value": "iq.ftps.global.components.ftpsSOS.services.[4].replicas",
+											"source": "PUBLIC"
+										}
+									]
+								},
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[5].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "IMAGE_NAME_WITH_VERSION",
+									"config": {
+										"output": [
+											{
+												"id": "IMAGE_NAME",
+												"value": "iq.ftps.global.components.ftpsSOS.image",
+												"source": "PUBLIC"
+											},
+											{
+												"id": "IMAGE_VERSION",
+												"value": "iq.ftps.global.components.ftpsSOS.tag",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "POD_PROBE",
+								"type": "HTTP_CLIENT",
+								"sequence": "2",
+								"description": "Server health",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[5].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "REPLICA_SETS",
+											"value": "iq.ftps.global.components.ftpsSOS.services.[5].replicas",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PROBES",
+											"value": "Liveness,Readiness,Startup",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "PROBE_FROM",
+											"value": "iq.ftpc.global.components.iq.app.label",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "DEFAULT_PROBE_PORT",
+											"value": "iq.ftpc.global.components.probe.default.port",
+											"source": "STATIC"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "POD_PROBE",
+									"config": {
+										"output": [
+											{
+												"id": "HTTP_RESPONSE_BODY",
+												"value": "UP",
+												"source": "EXPLICIT"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "REPLICA_SETS",
+								"type": "COMMON",
+								"sequence": "2",
+								"description": "Replica sets",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[5].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "REPLICA_SETS",
+									"config": {
+										"output": [
+											{
+												"id": "REPLICA_SETS",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[5].replicas",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "SOS_EVENTSHEET",
+								"type": "READ_FILE",
+								"sequence": "1",
+								"description": "Event sheet name",
+								"replicaSet": 1,
+								"config": {
+									"input": [
+										{
+											"id": "FILE_PATH",
+											"value": "iq.ftps.global.components.ftpsSOS.services.[5].file.path",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "FILE_TYPE",
+											"value": "XML",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "XML_PROPERTY_KEY",
+											"value": "event-sheet-name",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[5].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "SOS_EVENTSHEET",
+									"config": {
+										"output": [
+											{
+												"id": "SOS_EVENTSHEET",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[5].eventSheet",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "SOS_OTEL_SERVICE_NAME",
+								"type": "READ_FILE",
+								"sequence": "1",
+								"description": "Open telemetry name",
+								"isSkipStep": "true",
+								"replicaSet": 1,
+								"config": {
+									"input": [
+										{
+											"id": "FILE_PATH",
+											"value": "iq.ftps.global.components.ftpsSOS.services.[5].otel.properties.file",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "FILE_TYPE",
+											"value": "PROPERTIES",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "PROPERTY_KEY",
+											"value": "iq.ftps.otel.javaagent.configuration.file.property.key",
+											"source": "PUBLIC"
+										}
+									]
+								},
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[5].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "SOS_OTEL_SERVICE_NAME",
+									"config": {
+										"output": [
+											{
+												"id": "SOS_OTEL_SERVICE_NAME",
+												"value": "iq.ftps.global.components.ftpsSOS.services.[5].otel.serviceName",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							}
+						]
+					}
+				]
+			}
+		]
+	}
+}

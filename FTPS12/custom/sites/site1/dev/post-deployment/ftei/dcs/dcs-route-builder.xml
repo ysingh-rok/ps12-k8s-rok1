@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templatedRoutes id="dcs-route-builder">
+	<templatedRoute routeId="createDCSBatch"
+		routeTemplateRef="createDCSBatchTemplate">templatedRoute-createDCSBatchTemplate
+	</templatedRoute>
+	<templatedRoute routeId="getDCSBatchValues"
+		routeTemplateRef="getDCSBatchValuesTemplate">templatedRoute-getDCSBatchValuesTemplate
+	</templatedRoute>
+	<templatedRoute routeId="getDCSAlarmEvents"
+		routeTemplateRef="getDCSAlarmEventsTemplate">templatedRoute-getDCSAlarmEventsTemplate
+	</templatedRoute>
+</templatedRoutes>

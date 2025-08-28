@@ -1,0 +1,12 @@
+apiVersion: builtin
+kind: PrefixTransformer
+metadata:
+  name: prefix-transformer
+prefix: site1-dev-
+target:
+  kind: HelmOperation
+  name: ftps-solution-deployment-cr
+fieldSpecs:
+  - path: metadata/name
+    kind: HelmOperation
+    create: true

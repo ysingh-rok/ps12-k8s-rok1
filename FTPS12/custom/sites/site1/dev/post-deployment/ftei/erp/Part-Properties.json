@@ -1,0 +1,83 @@
+{
+  "attributes": [
+    {
+      "name": "partNumber",
+      "sourceName": "partNumber",
+      "validation": [
+        {
+          "MAX_LENGTH": 64,
+          "NOTNULL": "notNull"
+        }
+      ]
+    },
+    {
+      "name": "description",
+      "sourceName": "description",
+      "validation": [
+        {
+          "MAX_LENGTH": 255
+        }
+      ]
+    },
+    {
+      "name": "effectivityStart",
+      "sourceName": "effectivityStart",
+      "validation": [
+        {
+          "DATA_TYPE": "Date"
+        }
+      ]
+    }
+  ],
+  "property": [
+    {
+      "name": "status",
+      "sourceName": "status",
+      "type": "namedUDAs",
+      "validation": []
+    },
+    {
+      "name": "minUsageQuantity",
+      "sourceName": "minUsageQuantity",
+      "type": "namedUDAs",
+      "validation": []
+    },
+    {
+      "name": "Container",
+      "referenceColumn": "partKey",
+      "referenceType": "KEY",
+      "sourceName": "Container",
+      "type": "atDefinitions",
+      "validation": []
+    },
+    {
+      "name": "ShelfLife",
+      "sourceName": "ShelfLife",
+      "targetName": "shelfLife",
+      "type": "attributes",
+      "validation": [
+        {
+          "DATA_TYPE": "Numeric"
+        }
+      ]
+    },
+    {
+      "name": "UnitOfMeasure",
+      "sourceName": "UnitOfMeasure",
+      "targetName": "unitOfMeasure",
+      "type": "attributes",
+      "validation": []
+    }
+  ],
+  "touchpoint": "PART",
+  "updatePayload": [
+    {
+      "REMOVE_DUPLICATE": "partNumber"
+    }
+  ],
+  "validations": [
+    {
+      "CHECK_ID": "senderLogicalId"
+    }
+  ]
+}

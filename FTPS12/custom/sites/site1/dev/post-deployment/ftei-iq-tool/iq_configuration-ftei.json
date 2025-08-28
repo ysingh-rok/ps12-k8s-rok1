@@ -1,0 +1,821 @@
+{
+	"systemMetadata": {
+		"clusters": [
+			{
+				"nodes": [
+					{
+						"namespaces": [
+							{
+								"identifier": "",
+								"systems": [
+									{
+										"identifier": "ftei"
+									},
+									{
+										"identifier": "ftei"
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	"systemInfo": {
+		"systems": [
+			{
+				"systemName": "FactoryTalk Enterprise Integration",
+				"identifier": "FactoryTalk Enterprise Integration",
+				"name": "FactoryTalk Enterprise Integration",
+				"description": "",
+				"subSystem": [
+					{
+						"name": "FTEI Systems",
+						"description": "",
+						"steps": [
+							{
+								"identifier": "IMAGE_NAME_WITH_VERSION",
+								"type": "COMMON",
+								"sequence": "1",
+								"description": "Image name & version",
+								"isSkipStep": "false",
+								"config": {
+									"input": [
+										{
+											"id": "REPLICA_SETS",
+											"value": "iq.ftei.global.components.ftei.valuePacksToInstall.[0].replicas",
+											"source": "PUBLIC"
+										}
+									]
+								},
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftei.global.components.ftei.valuePacksToInstall.[0].service.appName",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "IMAGE_NAME_WITH_VERSION",
+									"config": {
+										"output": [
+											{
+												"id": "IMAGE_NAME",
+												"value": "iq.ftei.global.components.ftei.deployment.image",
+												"source": "PUBLIC"
+											},
+											{
+												"id": "IMAGE_VERSION",
+												"value": "iq.ftei.global.components.ftei.deployment.tag",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "SOS System",
+						"description": "",
+						"steps": [
+							{
+								"identifier": "POD_PROBE",
+								"type": "HTTP_CLIENT",
+								"sequence": "2",
+								"description": "Server health",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftei.global.components.fteiSOS.services.[0].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "REPLICA_SETS",
+											"value": "iq.ftei.global.components.fteiSOS.services.[0].replicas",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PROBES",
+											"value": "Liveness,Readiness,Startup",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "PROBE_FROM",
+											"value": "iq.ftei.global.components.iq.app.label",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "DEFAULT_PROBE_PORT",
+											"value": "iq.ftei.global.components.probe.default.port",
+											"source": "STATIC"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "POD_PROBE",
+									"config": {
+										"output": [
+											{
+												"id": "HTTP_RESPONSE_BODY",
+												"value": "UP",
+												"source": "EXPLICIT"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "SOS_EVENTSHEET",
+								"type": "READ_FILE",
+								"sequence": "1",
+								"description": "Event sheet name",
+								"isSkipStep": "false",
+								"replicaSet": 1,
+								"config": {
+									"input": [
+										{
+											"id": "FILE_PATH",
+											"value": "iq.ftei.global.components.sos.file.path",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "FILE_TYPE",
+											"value": "XML",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "XML_PROPERTY_KEY",
+											"value": "event-sheet-name",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftei.global.components.fteiSOS.services.[0].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "SOS_EVENTSHEET",
+									"config": {
+										"output": [
+											{
+												"id": "SOS_EVENTSHEET",
+												"value": "iq.ftei.global.components.fteiSOS.services.[0].eventSheet",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "REPLICA_SETS",
+								"type": "COMMON",
+								"sequence": "2",
+								"description": "Replica sets",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftei.global.components.fteiSOS.services.[0].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "REPLICA_SETS",
+									"config": {
+										"output": [
+											{
+												"id": "REPLICA_SETS",
+												"value": "iq.ftei.global.components.fteiSOS.services.[0].replicas",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "SOS_OTEL_SERVICE_NAME",
+								"type": "READ_FILE",
+								"sequence": "1",
+								"description": "Open telemetry name",
+								"isSkipStep": "true",
+								"replicaSet": 1,
+								"config": {
+									"input": [
+										{
+											"id": "FILE_PATH",
+											"value": "iq.ftei.sos.services.[0].otel.javaagent.configuration.file",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "FILE_TYPE",
+											"value": "PROPERTIES",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "PROPERTY_KEY",
+											"value": "iq.ftei.otel.javaagent.configuration.file.property.key",
+											"source": "PUBLIC"
+										}
+									]
+								},
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftei.global.components.fteiSOS.services.[0].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "SOS_OTEL_SERVICE_NAME",
+									"config": {
+										"output": [
+											{
+												"id": "SOS_OTEL_SERVICE_NAME",
+												"value": "iq.ftei.global.components.sos.otel.services.[0].name",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "FTEI ActiveMQ",
+						"description": "",
+						"steps": [
+							{
+								"identifier": "ACTIVEMQ_REACHABILITY",
+								"type": "ACTIVE_MQ",
+								"sequence": "2",
+								"description": "ActiveMQ reachable",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftei.global.components.fteiAMQ.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "PROTOCOL",
+											"value": "ssl",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "HOST",
+											"value": "iq.ftei.global.components.fteiAMQ.service.server",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "iq.ftei.global.components.fteiAMQ.service.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "CONTEXT_PATH",
+											"value": "",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "USER",
+											"value": "iq.ftei.global.components.fteiAMQ.connectionUsername",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PASSWORD",
+											"value": "iq.ftei.global.components.fteiAMQ.connectionPassword",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUSTSTORE",
+											"value": "iq.ftei.global.components.ftpcTrustManager.trustStore",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUSTSTORE_PASSWORD",
+											"value": "iq.ftei.global.components.ftpcTrustManager.trustStorePassword",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "IS_PUBLIC_URL",
+											"value": "true",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "ACTIVEMQ_REACHABILITY",
+									"config": {
+										"output": [
+											{
+												"id": "TCP_REACHABILITY",
+												"value": "true",
+												"source": "EXPLICIT"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "REPLICA_SETS",
+								"type": "COMMON",
+								"sequence": "2",
+								"description": "Replica sets",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftei.global.components.fteiAMQ.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "REPLICA_SETS",
+									"config": {
+										"output": [
+											{
+												"id": "REPLICA_SETS",
+												"value": "iq.ftei.global.components.fteiAMQ.deployment.replicas",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "DCS Value Pack",
+						"description": "",
+						"isSkipSubSystem": "false",
+						"steps": [
+							{
+								"identifier": "HTTP_REACHABILITY",
+								"type": "HTTP_CLIENT",
+								"sequence": "2",
+								"description": "Reachable",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftei.global.components.ftei.valuePacksToInstall.[0].service.appName",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "PROTOCOL",
+											"value": "https",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "HOST",
+											"value": "iq.ftei.global.components.ftei.valuePacksToInstall.[0].service.server",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "iq.ftei.global.components.ftei.valuePacksToInstall.[0].service.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "CONTEXT_PATH",
+											"value": "/login",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "IS_PUBLIC_URL",
+											"value": "true",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "HTTP_REACHABILITY",
+									"config": {
+										"output": [
+											{
+												"id": "HTTP_STATUS_CODE",
+												"value": "200",
+												"source": "EXPLICIT"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "REPLICA_SETS",
+								"type": "COMMON",
+								"sequence": "2",
+								"description": "Replica sets",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftei.global.components.ftei.valuePacksToInstall.[0].service.appName",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "REPLICA_SETS",
+									"config": {
+										"output": [
+											{
+												"id": "REPLICA_SETS",
+												"value": "iq.ftei.global.components.ftei.valuePacksToInstall.[0].replicas",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Process Value Pack",
+						"description": "",
+						"isSkipSubSystem": "false",
+						"steps": [
+							{
+								"identifier": "HTTP_REACHABILITY",
+								"type": "HTTP_CLIENT",
+								"sequence": "2",
+								"description": "Reachable",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftei.global.components.ftei.valuePacksToInstall.[1].service.appName",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "PROTOCOL",
+											"value": "https",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "HOST",
+											"value": "iq.ftei.global.components.ftei.valuePacksToInstall.[1].service.server",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "iq.ftei.global.components.ftei.valuePacksToInstall.[1].service.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "CONTEXT_PATH",
+											"value": "/login",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "IS_PUBLIC_URL",
+											"value": "true",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "HTTP_REACHABILITY",
+									"config": {
+										"output": [
+											{
+												"id": "HTTP_STATUS_CODE",
+												"value": "200",
+												"source": "EXPLICIT"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "REPLICA_SETS",
+								"type": "COMMON",
+								"sequence": "2",
+								"description": "Replica sets",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftei.global.components.ftei.valuePacksToInstall.[1].service.appName",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "REPLICA_SETS",
+									"config": {
+										"output": [
+											{
+												"id": "REPLICA_SETS",
+												"value": "iq.ftei.global.components.ftei.valuePacksToInstall.[1].replicas",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Discrete Value Pack",
+						"description": "",
+						"isSkipSubSystem": "true",
+						"steps": [
+							{
+								"identifier": "HTTP_REACHABILITY",
+								"type": "HTTP_CLIENT",
+								"sequence": "2",
+								"description": "Reachable",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftei.global.components.ftei.valuePacksToInstall.[2].service.appName",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "PROTOCOL",
+											"value": "https",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "HOST",
+											"value": "iq.ftei.global.components.ftei.valuePacksToInstall.[2].service.server",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "iq.ftei.global.components.ftei.valuePacksToInstall.[2].service.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "CONTEXT_PATH",
+											"value": "/login",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "IS_PUBLIC_URL",
+											"value": "true",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "HTTP_REACHABILITY",
+									"config": {
+										"output": [
+											{
+												"id": "HTTP_STATUS_CODE",
+												"value": "200",
+												"source": "EXPLICIT"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "REPLICA_SETS",
+								"type": "COMMON",
+								"sequence": "2",
+								"description": "Replica sets",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftei.global.components.ftei.valuePacksToInstall.[2].service.appName",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "REPLICA_SETS",
+									"config": {
+										"output": [
+											{
+												"id": "REPLICA_SETS",
+												"value": "iq.ftei.global.components.ftei.valuePacksToInstall.[2].replicas",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "ERP Value Pack",
+						"description": "",
+						"isSkipSubSystem": "true",
+						"steps": [
+							{
+								"identifier": "HTTP_REACHABILITY",
+								"type": "HTTP_CLIENT",
+								"sequence": "2",
+								"description": "Reachable",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftei.global.components.ftei.valuePacksToInstall.[3].service.appName",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "PROTOCOL",
+											"value": "https",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "HOST",
+											"value": "iq.ftei.global.components.ftei.valuePacksToInstall.[3].service.server",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "iq.ftei.global.components.ftei.valuePacksToInstall.[3].service.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "CONTEXT_PATH",
+											"value": "/login",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "IS_PUBLIC_URL",
+											"value": "true",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "HTTP_REACHABILITY",
+									"config": {
+										"output": [
+											{
+												"id": "HTTP_STATUS_CODE",
+												"value": "200",
+												"source": "EXPLICIT"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "REPLICA_SETS",
+								"type": "COMMON",
+								"sequence": "2",
+								"description": "Replica sets",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftei.global.components.ftei.valuePacksToInstall.[3].service.appName",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "REPLICA_SETS",
+									"config": {
+										"output": [
+											{
+												"id": "REPLICA_SETS",
+												"value": "iq.ftei.global.components.ftei.valuePacksToInstall.[3].replicas",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							}
+						]
+					}
+				]
+			}
+		]
+	}
+}

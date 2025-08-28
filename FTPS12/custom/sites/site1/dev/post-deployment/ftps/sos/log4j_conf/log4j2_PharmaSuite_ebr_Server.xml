@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Customer specific log configuration file for EBR Server
+This file is watched on changes -->
+<Configuration>
+  <Loggers>
+    <!-- only logging on startup/shutdown -->
+    <Logger name="com.rockwell.mes.apps.dcs.ifc.activities.DCSInboundCommunicationActivity" level="INFO"/>
+    <Logger name="com.rockwell.mes.commons.messaging.ifc.jmx.AMQRequestStatMXAgent" level="INFO"/>  
+    <Logger name="com.rockwell.mes.commons.base.ifc.CombinedConfigurationWatcher" level="INFO"/>
+    <Logger name="com.rockwell.mes.apps.ebr.ifc.activities.EBRDistributedExecutionActivity" level="INFO"/>
+
+    <!-- <Logger name="com.rockwell.mes.apps.ebr.ifc.activities" level="DEBUG"/> -->
+    <!-- <Logger name="com.rockwell.mes.services.eto.ifc.server.EventTriggeredOperationASStepActivity" level="DEBUG"/> -->
+    <!-- <Logger name="com.rockwell.mes.services.s88.ifc.execution.AbstractOperationASStepActivity" level="DEBUG"/> -->
+   </Loggers>
+</Configuration>

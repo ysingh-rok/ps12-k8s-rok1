@@ -1,0 +1,3467 @@
+{
+	"systemMetadata": {
+		"clusters": [
+			{
+				"nodes": [
+					{
+						"namespaces": [
+							{
+								"identifier": "",
+								"systems": [
+									{
+										"identifier": "ftpc-dm-job"
+									},
+									{
+										"identifier": "ftpc-mssql"
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	"systemInfo": {
+		"systems": [
+			{
+				"systemName": "FactoryTalk ProductionCentre",
+				"identifier": "FactoryTalk ProductionCentre",
+				"name": "FactoryTalk ProductionCentre",
+				"description": "",
+				"subSystem": [
+					{
+						"name": "FTPC Systems",
+						"description": "",
+						"steps": [
+							{
+								"identifier": "IMAGE_NAME_WITH_VERSION",
+								"type": "COMMON",
+								"sequence": "1",
+								"description": "Image name & version",
+								"isSkipStep": "false",
+								"config": {
+									"input": [
+										{
+											"id": "REPLICA_SETS",
+											"value": "iq.ftpc.global.components.ftpc.deployment.replicas",
+											"source": "PUBLIC"
+										}
+									]
+								},	
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftpc.global.components.ftpc.service.appName",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "IMAGE_NAME_WITH_VERSION",
+									"config": {
+										"output": [
+											{
+												"id": "IMAGE_NAME",
+												"value": "iq.ftpc.global.components.ftpc.deployment.image",
+												"source": "PUBLIC"
+											},
+											{
+												"id": "IMAGE_VERSION",
+												"value": "iq.ftpc.global.components.ftpc.deployment.tag",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "INGRESS_RULE_HOST_PORT",
+								"type": "INGRESS",
+								"sequence": "2",
+								"description": "Application server host and port",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftpc.global.components.ftpc.service.appName",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "INGRESS_NAME",
+											"value": "iq.ftpc.global.components.ftpc.ingress.name",
+											"source": "PUBLIC"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "INGRESS_RULE_HOST_PORT",
+									"config": {
+										"output": [
+											{
+												"id": "INGRESS_HOST",
+												"value": "iq.ftpc.global.components.ftpc.service.server",
+												"source": "PUBLIC"
+											},
+											{
+												"id": "INGRESS_PORT",
+												"value": "iq.ftpc.global.components.ftpc.service.port",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "HTTP_REACHABILITY",
+								"type": "HTTP_CLIENT",
+								"sequence": "2",
+								"description": "FTPC reachable",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftpc.global.components.ftpc.service.appName",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "PROTOCOL",
+											"value": "https",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "HOST",
+											"value": "iq.ftpc.global.components.ftpc.service.server",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "iq.ftpc.global.components.ftpc.service.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "CONTEXT_PATH",
+											"value": "/PlantOperations",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "IS_PUBLIC_URL",
+											"value": "true",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "HTTP_REACHABILITY",
+									"config": {
+										"output": [
+											{
+												"id": "HTTP_STATUS_CODE",
+												"value": "200",
+												"source": "EXPLICIT"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "REPLICA_SETS",
+								"type": "COMMON",
+								"sequence": "2",
+								"description": "Replica sets",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftpc.global.components.ftpc.service.appName",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "REPLICA_SETS",
+									"config": {
+										"output": [
+											{
+												"id": "REPLICA_SETS",
+												"value": "iq.ftpc.global.components.ftpc.deployment.replicas",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "POD_ANTI_AFFINITY",
+								"type": "AFFINITY",
+								"sequence": "1",
+								"description": "POD anti affinity",
+								"isSkipStep": "false",
+								"replicaSet": 1,
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftpc.global.components.ftpc.service.appName",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "MATCH_EXPRESSIONS",
+											"multiValues": [
+												{
+													"id": "key",
+													"value": "app",
+													"source": "EXPLICIT"
+												},
+												{
+													"id": "operator",
+													"value": "in",
+													"source": "EXPLICIT"
+												},
+												{
+													"id": "values",
+													"values": [
+														"iq.ftpc.global.components.ftpc.service.appName"
+													],
+													"source": "PUBLIC"
+												}
+											],
+											"source": "MATCHER"
+										},
+										{
+											"id": "TOPOLOGY_KEY",
+											"value": "kubernetes.io/hostname",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "POD_ANTI_AFFINITY",
+									"config": {
+										"output": [
+											{
+												"id": "REPLICA_SETS",
+												"value": "iq.ftpc.global.components.ftpc.deployment.replicas",
+												"source": "PUBLIC"
+											},
+											{
+												"id": "POD_ANTI_AFFINITY",
+												"value": "true",
+												"source": "CUSTOM"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "JAVA_OPTS",
+								"type": "APP_SERVER",
+								"sequence": "2",
+								"description": "Java options",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftpc.global.components.ftpc.service.appName",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "JAVA_OPTS",
+									"config": {
+										"output": [
+											{
+												"id": "JAVA_OPTS",
+												"value": "iq.ftpc.global.components.ftpc.jboss.javaOpts",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "BLOCKING_TIMEOUT",
+								"type": "APP_SERVER",
+								"sequence": "2",
+								"description": "Blocking timeout",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftpc.global.components.ftpc.service.appName",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "BLOCKING_TIMEOUT",
+									"config": {
+										"output": [
+											{
+												"id": "BLOCKING_TIMEOUT",
+												"value": "iq.ftpc.global.components.ftpc.jboss.blockingTimeout",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "MATCH_CLUSTER_MEMBERS",
+								"type": "APP_SERVER",
+								"sequence": "1",
+								"description": "Match cluster members",
+								"isSkipStep": "false",
+								"replicaSet": 1,
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftpc.global.components.ftpc.service.appName",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{}
+									]
+								},
+								"expectedResult": {
+									"type": "MATCH_CLUSTER_MEMBERS",
+									"config": {
+										"output": [
+											{
+												"id": "MATCH_CLUSTER_MEMBERS",
+												"value": "true",
+												"source": "CUSTOM"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "SMTP_HOST_PORT",
+								"type": "APP_SERVER",
+								"sequence": "2",
+								"description": "SMTP host and port validation",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftpc.global.components.ftpc.service.appName",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "MAIL_SESSIONS",
+											"value": "global.components.ftpc.mailSessions",
+											"source": "PUBLIC"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "APP_SERVER",
+									"config": {
+										"output": [
+											{
+												"id": "HOST_NAME",
+												"value": "global.components.ftpc.mailSessionDefinitions.#dynamicKey.host",
+												"source": "PUBLIC"
+											},
+											{
+												"id": "PORT_NO",
+												"value": "global.components.ftpc.mailSessionDefinitions.#dynamicKey.port",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "SMTP_USERNAME",
+								"type": "APP_SERVER",
+								"sequence": "2",
+								"description": "SMTP username validation",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftpc.global.components.ftpc.service.appName",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "MAIL_SESSIONS",
+											"value": "global.components.ftpc.mailSessions",
+											"source": "PUBLIC"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "APP_SERVER",
+									"config": {
+										"output": [
+											{
+												"id": "SMTP_USERNAME",
+												"value": "global.components.ftpc.mailSessionDefinitions.#dynamicKey.username",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "SMTP_PROTOCOL_TYPE",
+								"type": "APP_SERVER",
+								"sequence": "2",
+								"description": "SMTP TLS protocol validation",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftpc.global.components.ftpc.service.appName",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "MAIL_SESSIONS",
+											"value": "global.components.ftpc.mailSessions",
+											"source": "PUBLIC"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "APP_SERVER",
+									"config": {
+										"output": [
+											{
+												"id": "SMTP_PROTOCOL_TYPE",
+												"value": "global.components.ftpc.mailSessionDefinitions.#dynamicKey.tls",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "FTPC ActiveMQ",
+						"description": "",
+						"steps": [
+							{
+								"identifier": "IMAGE_NAME_WITH_VERSION",
+								"type": "COMMON",
+								"sequence": "1",
+								"description": "Image name & version",
+								"isSkipStep": "false",
+								"config": {
+									"input": [
+										{
+											"id": "REPLICA_SETS",
+											"value": "iq.ftpc.global.components.ftpcAMQ.replicas",
+											"source": "PUBLIC"
+										}
+									]
+								},	
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftpc.global.components.ftpcAMQ.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "IMAGE_NAME_WITH_VERSION",
+									"config": {
+										"output": [
+											{
+												"id": "IMAGE_NAME",
+												"value": "iq.ftpc.global.components.ftpcAMQ.deployment.image",
+												"source": "PUBLIC"
+											},
+											{
+												"id": "IMAGE_VERSION",
+												"value": "iq.ftpc.global.components.ftpcAMQ.deployment.tag",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "ACTIVEMQ_HOST_PORT",
+								"type": "APP_SERVER",
+								"sequence": "2",
+								"description": "ActiveMQ hostname and port",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftpc.global.components.ftpc.service.appName",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "ACTIVEMQ_HOST_PORT",
+									"config": {
+										"output": [
+											{
+												"id": "ACTIVEMQ_HOST",
+												"value": "iq.ftpc.global.components.ftpcAMQ.service.server",
+												"source": "PUBLIC"
+											},
+											{
+												"id": "ACTIVEMQ_PORT",
+												"value": "iq.ftpc.global.components.ftpcAMQ.service.port",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "ACTIVEMQ_REACHABILITY",
+								"type": "ACTIVE_MQ",
+								"sequence": "2",
+								"description": "ActiveMQ reachable",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftpc.global.components.ftpcAMQ.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "PROTOCOL",
+											"value": "ssl",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "HOST",
+											"value": "iq.ftpc.global.components.ftpcAMQ.service.server",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "iq.ftpc.global.components.ftpcAMQ.service.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "CONTEXT_PATH",
+											"value": "",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "USER",
+											"value": "iq.ftpc.global.components.ftpcAMQ.connectionUsername",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PASSWORD",
+											"value": "iq.ftpc.global.components.ftpcAMQ.connectionPassword",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUSTSTORE",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStore",
+											"source": "STATIC"
+										},
+										{
+											"id": "TRUSTSTORE_PASSWORD",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStorePassword",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "IS_PUBLIC_URL",
+											"value": "true",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "ACTIVEMQ_REACHABILITY",
+									"config": {
+										"output": [
+											{
+												"id": "TCP_REACHABILITY",
+												"value": "true",
+												"source": "EXPLICIT"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "REPLICA_SETS",
+								"type": "COMMON",
+								"sequence": "2",
+								"description": "Replica sets",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftpc.global.components.ftpcAMQ.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "REPLICA_SETS",
+									"config": {
+										"output": [
+											{
+												"id": "REPLICA_SETS",
+												"value": "iq.ftpc.global.components.ftpcAMQ.replicas",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "PERSISTENT_SIZE",
+								"type": "COMMON",
+								"sequence": "1",
+								"description": "Persistence size",
+								"isSkipStep": "false",
+								"replicaSet": 1,
+								"config": {
+									"input": [
+										{
+											"id": "PVC_NAME",
+											"value": "iq.ftpc.global.components.ftpcAMQ.pvc.name",
+											"source": "PUBLIC"
+										}
+									]
+								},
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftpc.global.components.ftpcAMQ.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "PERSISTENT_SIZE",
+									"config": {
+										"output": [
+											{
+												"id": "PERSISTENT_SIZE",
+												"value": "iq.ftpc.global.components.ftpcAMQ.persistence.size",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "IO Server",
+						"description": "",
+						"steps": [
+							{
+								"identifier": "IMAGE_NAME_WITH_VERSION",
+								"type": "COMMON",
+								"sequence": "1",
+								"description": "Image name & version",
+								"isSkipStep": "false",
+								"config": {
+									"input": [
+										{
+											"id": "REPLICA_SETS",
+											"value": "iq.ftpc.global.components.shopOperationsServer.services.[0].replicas",
+											"source": "PUBLIC"
+										}
+									]
+								},	
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftpc.global.components.shopOperationsServer.services.[0].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "IMAGE_NAME_WITH_VERSION",
+									"config": {
+										"output": [
+											{
+												"id": "IMAGE_NAME",
+												"value": "iq.ftpc.global.components.shopOperationsServer.services.[0].image",
+												"source": "PUBLIC"
+											},
+											{
+												"id": "IMAGE_VERSION",
+												"value": "iq.ftpc.global.components.shopOperationsServer.services.[0].tag",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "POD_PROBE",
+								"type": "HTTP_CLIENT",
+								"sequence": "2",
+								"description": "Server health",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftpc.global.components.shopOperationsServer.services.[0].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "REPLICA_SETS",
+											"value": "iq.ftpc.global.components.shopOperationsServer.services.[0].replicas",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PROBES",
+											"value": "Liveness,Readiness,Startup",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "PROBE_FROM",
+											"value": "iq.ftpc.global.components.iq.app.label",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "DEFAULT_PROBE_PORT",
+											"value": "iq.ftpc.global.components.probe.default.port",
+											"source": "STATIC"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "POD_PROBE",
+									"config": {
+										"output": [
+											{
+												"id": "HTTP_RESPONSE_BODY",
+												"value": "UP",
+												"source": "EXPLICIT"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "REPLICA_SETS",
+								"type": "COMMON",
+								"sequence": "2",
+								"description": "Replica sets",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftpc.global.components.shopOperationsServer.services.[0].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "REPLICA_SETS",
+									"config": {
+										"output": [
+											{
+												"id": "REPLICA_SETS",
+												"value": "iq.ftpc.global.components.shopOperationsServer.services.[0].replicas",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "SOS_EVENTSHEET",
+								"type": "READ_FILE",
+								"sequence": "1",
+								"description": "Event sheet name",
+								"isSkipStep": "false",
+								"replicaSet": 1,
+								"config": {
+									"input": [
+										{
+											"id": "FILE_PATH",
+											"value": "iq.ftpc.global.components.shopOperationsServer.services.[0].file.path",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "FILE_TYPE",
+											"value": "XML",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "XML_PROPERTY_KEY",
+											"value": "event-sheet-name",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftpc.global.components.shopOperationsServer.services.[0].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "SOS_EVENTSHEET",
+									"config": {
+										"output": [
+											{
+												"id": "SOS_EVENTSHEET",
+												"value": "iq.ftpc.global.components.shopOperationsServer.services.[0].eventSheet",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "SOS_OTEL_SERVICE_NAME",
+								"type": "READ_FILE",
+								"sequence": "1",
+								"description": "Open telemetry name",
+								"isSkipStep": "true",
+								"replicaSet": 1,
+								"config": {
+									"input": [
+										{
+											"id": "FILE_PATH",
+											"value": "iq.ftpc.global.components.shopOperationsServer.services.[0].otel.javaagent.configuration.file",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "FILE_TYPE",
+											"value": "PROPERTIES",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "PROPERTY_KEY",
+											"value": "iq.observability.otel.javaagent.configuration.file.property.key",
+											"source": "PUBLIC"
+										}
+									]
+								},
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.ftpc.global.components.shopOperationsServer.services.[0].app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "SOS_OTEL_SERVICE_NAME",
+									"config": {
+										"output": [
+											{
+												"id": "SOS_OTEL_SERVICE_NAME",
+												"value": "iq.ftpc.global.components.shopOperationsServer.services.[0].service.name",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "WXF System",
+						"description": "",
+						"steps": [
+							{
+								"identifier": "HTTP_REACHABILITY",
+								"type": "HTTP_CLIENT",
+								"sequence": "2",
+								"description": "WXF reachable",
+								"isSkipStep": "false",
+								"config": {
+									"input": [
+										{
+											"id": "PROTOCOL",
+											"value": "https",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "HOST",
+											"value": "iq.ftpc.global.components.ftpc.service.server",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "iq.ftpc.global.components.ftpc.service.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "CONTEXT_PATH",
+											"value": "/FTPCApps/",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "IS_PUBLIC_URL",
+											"value": "true",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "HTTP_REACHABILITY",
+									"config": {
+										"output": [
+											{
+												"id": "TCP_REACHABILITY",
+												"value": "true",
+												"source": "EXPLICIT"
+											}
+										]
+									}
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"systemName": "Database",
+				"name": "Database",
+				"description": "",
+				"subSystem": [
+					{
+						"name": "Active Database",
+						"description": "",
+						"steps": [
+							{
+								"identifier": "DbmsVersion",
+								"type": "sql",
+								"sequence": "6",
+								"description": "DBMS name and version",
+								"isSkipStep": "false",
+								"filter": [],
+								"config": {
+									"input": [
+										{
+											"id": "DATABASE_TYPE",
+											"value": "iq.ftpc.global.components.db.dbServerType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "DATABASE_NAME",
+											"value": "iq.ftpc.global.components.db.active.databaseName",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "USERNAME",
+											"value": "iq.ftpc.global.components.db.active.username",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PASSWORD",
+											"value": "iq.ftpc.global.components.db.active.password",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "iq.ftpc.global.components.db.active.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "HOST",
+											"value": "iq.ftpc.global.components.db.active.server",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "ENCRYPT",
+											"value": "iq.ftpc.global.components.db.active.encrypt",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_SERVER_CERTIFICATE",
+											"value": "iq.ftpc.global.components.db.active.trust_server_certificate",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStore",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_TYPE",
+											"value": "iq.ftpc.global.components.ftpc.jboss.trustStoreType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_PASSWORD",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStorePassword",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "LOGIN_TIMEOUT",
+											"value": "iq.ftpc.global.components.db.active.login_timeout",
+											"source": "PUBLIC"
+										}
+									],
+									"supportedDatabases": ["MSSQL","MSSQL-AlwaysOn","ORACLE"]
+								},
+								"expectedResult": {
+									"type": "DbmsVersion",
+									"config": {
+										"output": [
+											{
+												"id": "DbmsVersion",
+												"value": "NONE",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "Collation",
+								"type": "sql",
+								"sequence": "2",
+								"description": "Database collation",
+								"isSkipStep": "false",
+								"filter": [],
+								"config": {
+									"input": [
+										{
+											"id": "DATABASE_TYPE",
+											"value": "iq.ftpc.global.components.db.dbServerType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "DATABASE_NAME",
+											"value": "iq.ftpc.global.components.db.active.databaseName",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "USERNAME",
+											"value": "iq.ftpc.global.components.db.active.username",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PASSWORD",
+											"value": "iq.ftpc.global.components.db.active.password",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "iq.ftpc.global.components.db.active.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "HOST",
+											"value": "iq.ftpc.global.components.db.active.server",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "ENCRYPT",
+											"value": "iq.ftpc.global.components.db.active.encrypt",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_SERVER_CERTIFICATE",
+											"value": "iq.ftpc.global.components.db.active.trust_server_certificate",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStore",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_TYPE",
+											"value": "iq.ftpc.global.components.ftpc.jboss.trustStoreType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_PASSWORD",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStorePassword",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "LOGIN_TIMEOUT",
+											"value": "iq.ftpc.global.components.db.active.login_timeout",
+											"source": "PUBLIC"
+										}
+									],
+									"supportedDatabases": ["MSSQL","MSSQL-AlwaysOn"]
+								},
+								"expectedResult": {
+									"type": "Collation",
+									"config": {
+										"output": [
+											{
+												"id": "Collation",
+												"value": "iq.ftpc.global.components.db.active.collation",
+												"source": "PRIVATE"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "Characterset",
+								"type": "sql",
+								"sequence": "3",
+								"description": "Database characterset",
+								"isSkipStep": "false",
+								"filter": [],
+								"config": {
+									"input": [
+										{
+											"id": "DATABASE_TYPE",
+											"value": "iq.ftpc.global.components.db.dbServerType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "DATABASE_NAME",
+											"value": "iq.ftpc.global.components.db.active.databaseName",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "USERNAME",
+											"value": "iq.ftpc.global.components.db.active.username",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PASSWORD",
+											"value": "iq.ftpc.global.components.db.active.password",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "iq.ftpc.global.components.db.active.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "HOST",
+											"value": "iq.ftpc.global.components.db.active.server",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "ENCRYPT",
+											"value": "iq.ftpc.global.components.db.active.encrypt",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_SERVER_CERTIFICATE",
+											"value": "iq.ftpc.global.components.db.active.trust_server_certificate",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStore",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_TYPE",
+											"value": "iq.ftpc.global.components.ftpc.jboss.trustStoreType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_PASSWORD",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStorePassword",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "LOGIN_TIMEOUT",
+											"value": "iq.ftpc.global.components.db.active.login_timeout",
+											"source": "PUBLIC"
+										}
+									],
+									"supportedDatabases": ["ORACLE"]
+								},
+								"expectedResult": {
+									"type": "Characterset",
+									"config": {
+										"output": [
+											{
+												"id": "Characterset",
+												"value": "iq.ftpc.global.components.db.active.characterset",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "DBAddressAndPort",
+								"type": "sql",
+								"sequence": "4",
+								"description": "Database address and port",
+								"isSkipStep": "false",
+								"filter": [],
+								"config": {
+									"input": [
+										{
+											"id": "DATABASE_TYPE",
+											"value": "iq.ftpc.global.components.db.dbServerType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "DATABASE_NAME",
+											"value": "iq.ftpc.global.components.db.active.databaseName",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "USERNAME",
+											"value": "iq.ftpc.global.components.db.active.username",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PASSWORD",
+											"value": "iq.ftpc.global.components.db.active.password",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "iq.ftpc.global.components.db.active.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "HOST",
+											"value": "iq.ftpc.global.components.db.active.server",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "ENCRYPT",
+											"value": "iq.ftpc.global.components.db.active.encrypt",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_SERVER_CERTIFICATE",
+											"value": "iq.ftpc.global.components.db.active.trust_server_certificate",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStore",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_TYPE",
+											"value": "iq.ftpc.global.components.ftpc.jboss.trustStoreType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_PASSWORD",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStorePassword",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "LOGIN_TIMEOUT",
+											"value": "iq.ftpc.global.components.db.active.login_timeout",
+											"source": "PUBLIC"
+										}
+									],
+									"supportedDatabases": ["MSSQL","MSSQL-AlwaysOn","ORACLE"]
+								},
+								"expectedResult": {
+									"type": "DBAddressAndPort",
+									"config": {
+										"output": [
+											{
+												"id": "DBAddressAndPort",
+												"value": "NONE",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "UsernameAndPassword",
+								"type": "sql",
+								"sequence": "5",
+								"description": "Username and password",
+								"isSkipStep": "false",
+								"filter": [],
+								"config": {
+									"input": [
+										{
+											"id": "DATABASE_TYPE",
+											"value": "iq.ftpc.global.components.db.dbServerType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "DATABASE_NAME",
+											"value": "iq.ftpc.global.components.db.active.databaseName",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "USERNAME",
+											"value": "iq.ftpc.global.components.db.active.username",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PASSWORD",
+											"value": "iq.ftpc.global.components.db.active.password",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "iq.ftpc.global.components.db.active.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "HOST",
+											"value": "iq.ftpc.global.components.db.active.server",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "ENCRYPT",
+											"value": "iq.ftpc.global.components.db.active.encrypt",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_SERVER_CERTIFICATE",
+											"value": "iq.ftpc.global.components.db.active.trust_server_certificate",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStore",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_TYPE",
+											"value": "iq.ftpc.global.components.ftpc.jboss.trustStoreType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_PASSWORD",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStorePassword",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "LOGIN_TIMEOUT",
+											"value": "iq.ftpc.global.components.db.active.login_timeout",
+											"source": "PUBLIC"
+										}
+									],
+									"supportedDatabases": ["MSSQL","MSSQL-AlwaysOn","ORACLE"]
+								},
+								"expectedResult": {
+									"type": "UsernameAndPassword",
+									"config": {
+										"output": [
+											{
+												"id": "UsernameAndPassword",
+												"value": "iq.ftpc.global.components.db.active.usernameandpassword",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "DatabaseName",
+								"type": "sql",
+								"sequence": "7",
+								"description": "Database name",
+								"isSkipStep": "false",
+								"filter": [],
+								"config": {
+									"input": [
+										{
+											"id": "DATABASE_TYPE",
+											"value": "iq.ftpc.global.components.db.dbServerType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "DATABASE_NAME",
+											"value": "iq.ftpc.global.components.db.active.databaseName",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "USERNAME",
+											"value": "iq.ftpc.global.components.db.active.username",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PASSWORD",
+											"value": "iq.ftpc.global.components.db.active.password",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "iq.ftpc.global.components.db.active.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "HOST",
+											"value": "iq.ftpc.global.components.db.active.server",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "ENCRYPT",
+											"value": "iq.ftpc.global.components.db.active.encrypt",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_SERVER_CERTIFICATE",
+											"value": "iq.ftpc.global.components.db.active.trust_server_certificate",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStore",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_TYPE",
+											"value": "iq.ftpc.global.components.ftpc.jboss.trustStoreType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_PASSWORD",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStorePassword",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "LOGIN_TIMEOUT",
+											"value": "iq.ftpc.global.components.db.active.login_timeout",
+											"source": "PUBLIC"
+										}
+									],
+									"supportedDatabases": ["MSSQL","MSSQL-AlwaysOn","ORACLE"]
+								},
+								"expectedResult": {
+									"type": "DatabaseName",
+									"config": {
+										"output": [
+											{
+												"id": "DatabaseName",
+												"value": "iq.ftpc.global.components.db.active.databaseName",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "OLEAutomationEnabled",
+								"type": "sql",
+								"sequence": "8",
+								"description": "OLE automation enabled",
+								"isSkipStep": "false",
+								"filter": [],
+								"config": {
+									"input": [
+										{
+											"id": "DATABASE_TYPE",
+											"value": "iq.ftpc.global.components.db.dbServerType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "DATABASE_NAME",
+											"value": "iq.ftpc.global.components.db.active.databaseName",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "USERNAME",
+											"value": "iq.ftpc.global.components.db.active.username",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PASSWORD",
+											"value": "iq.ftpc.global.components.db.active.password",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "iq.ftpc.global.components.db.active.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "HOST",
+											"value": "iq.ftpc.global.components.db.active.server",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "ENCRYPT",
+											"value": "iq.ftpc.global.components.db.active.encrypt",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_SERVER_CERTIFICATE",
+											"value": "iq.ftpc.global.components.db.active.trust_server_certificate",
+											"source": "PUBLIC"
+										},                    {
+											"id": "TRUST_STORE",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStore",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_TYPE",
+											"value": "iq.ftpc.global.components.ftpc.jboss.trustStoreType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_PASSWORD",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStorePassword",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "LOGIN_TIMEOUT",
+											"value": "iq.ftpc.global.components.db.active.login_timeout",
+											"source": "PUBLIC"
+										}
+									],
+									"supportedDatabases": ["MSSQL","MSSQL-AlwaysOn"]
+								},
+								"expectedResult": {
+									"type": "OLEAutomationEnabled",
+									"config": {
+										"output": [
+											{
+												"id": "OLEAutomationEnabled",
+												"value": "NONE",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "ServerRoles",
+								"type": "sql",
+								"sequence": "9",
+								"description": "Database server roles",
+								"isSkipStep": "false",
+								"filter": [],
+								"config": {
+									"input": [
+										{
+											"id": "DATABASE_TYPE",
+											"value": "iq.ftpc.global.components.db.dbServerType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "DATABASE_NAME",
+											"value": "iq.ftpc.global.components.db.active.databaseName",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "USERNAME",
+											"value": "iq.ftpc.global.components.db.active.username",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PASSWORD",
+											"value": "iq.ftpc.global.components.db.active.password",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "iq.ftpc.global.components.db.active.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "HOST",
+											"value": "iq.ftpc.global.components.db.active.server",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "ENCRYPT",
+											"value": "iq.ftpc.global.components.db.active.encrypt",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_SERVER_CERTIFICATE",
+											"value": "iq.ftpc.global.components.db.active.trust_server_certificate",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStore",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_TYPE",
+											"value": "iq.ftpc.global.components.ftpc.jboss.trustStoreType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_PASSWORD",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStorePassword",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "LOGIN_TIMEOUT",
+											"value": "iq.ftpc.global.components.db.active.login_timeout",
+											"source": "PUBLIC"
+										}
+									],
+									"supportedDatabases": ["MSSQL","MSSQL-AlwaysOn"]
+								},
+								"expectedResult": {
+									"type": "ServerRoles",
+									"config": {
+										"output": [
+											{
+												"id": "ServerRoles",
+												"value": "NONE",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "CompatibilityLevel",
+								"type": "sql",
+								"sequence": "10",
+								"description": "Database compatibility level",
+								"filter": [],
+								"config": {
+									"input": [
+										{
+											"id": "DATABASE_TYPE",
+											"value": "iq.ftpc.global.components.db.dbServerType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "DATABASE_NAME",
+											"value": "iq.ftpc.global.components.db.active.databaseName",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "USERNAME",
+											"value": "iq.ftpc.global.components.db.active.username",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PASSWORD",
+											"value": "iq.ftpc.global.components.db.active.password",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "iq.ftpc.global.components.db.active.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "HOST",
+											"value": "iq.ftpc.global.components.db.active.server",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "ENCRYPT",
+											"value": "iq.ftpc.global.components.db.active.encrypt",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_SERVER_CERTIFICATE",
+											"value": "iq.ftpc.global.components.db.active.trust_server_certificate",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStore",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_TYPE",
+											"value": "iq.ftpc.global.components.ftpc.jboss.trustStoreType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_PASSWORD",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStorePassword",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "LOGIN_TIMEOUT",
+											"value": "iq.ftpc.global.components.db.active.login_timeout",
+											"source": "PUBLIC"
+										}
+									],
+									"supportedDatabases": ["MSSQL","MSSQL-AlwaysOn"]
+								},
+								"expectedResult": {
+									"type": "CompatibilityLevel",
+									"config": {
+										"output": [
+											{
+												"id": "CompatibilityLevel",
+												"value": "NONE",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "EnabledOptions",
+								"type": "sql",
+								"sequence": "11",
+								"description": "Database enabled options",
+								"isSkipStep": "false",
+								"filter": [],
+								"config": {
+									"input": [
+										{
+											"id": "DATABASE_TYPE",
+											"value": "iq.ftpc.global.components.db.dbServerType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "DATABASE_NAME",
+											"value": "iq.ftpc.global.components.db.active.databaseName",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "USERNAME",
+											"value": "iq.ftpc.global.components.db.active.username",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PASSWORD",
+											"value": "iq.ftpc.global.components.db.active.password",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "iq.ftpc.global.components.db.active.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "HOST",
+											"value": "iq.ftpc.global.components.db.active.server",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "ENCRYPT",
+											"value": "iq.ftpc.global.components.db.active.encrypt",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_SERVER_CERTIFICATE",
+											"value": "iq.ftpc.global.components.db.active.trust_server_certificate",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStore",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_TYPE",
+											"value": "iq.ftpc.global.components.ftpc.jboss.trustStoreType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_PASSWORD",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStorePassword",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "LOGIN_TIMEOUT",
+											"value": "iq.ftpc.global.components.db.active.login_timeout",
+											"source": "PUBLIC"
+										}
+									],
+									"supportedDatabases": ["MSSQL","MSSQL-AlwaysOn"]
+								},
+								"expectedResult": {
+									"type": "EnabledOptions",
+									"config": {
+										"output": [
+											{
+												"id": "EnabledOptions",
+												"value": "NONE",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "PrivilegesAndRoles",
+								"type": "sql",
+								"sequence": "10",
+								"description": "Assigned privileges of the database user",
+								"isSkipStep": "false",
+								"filter": [],
+								"config": {
+									"input": [
+										{
+											"id": "DATABASE_TYPE",
+											"value": "iq.ftpc.global.components.db.dbServerType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "DATABASE_NAME",
+											"value": "iq.ftpc.global.components.db.active.databaseName",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "USERNAME",
+											"value": "iq.ftpc.global.components.db.active.username",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PASSWORD",
+											"value": "iq.ftpc.global.components.db.active.password",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "iq.ftpc.global.components.db.active.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "HOST",
+											"value": "iq.ftpc.global.components.db.active.server",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "ENCRYPT",
+											"value": "iq.ftpc.global.components.db.active.encrypt",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_SERVER_CERTIFICATE",
+											"value": "iq.ftpc.global.components.db.active.trust_server_certificate",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStore",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_PASSWORD",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStorePassword",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_TYPE",
+											"value": "iq.ftpc.global.components.ftpc.jboss.trustStoreType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "LOGIN_TIMEOUT",
+											"value": "iq.ftpc.global.components.db.active.login_timeout",
+											"source": "PUBLIC"
+										}
+									],
+									"supportedDatabases": ["ORACLE"]
+								},
+								"expectedResult": {
+									"type": "PrivilegesAndRoles",
+									"config": {
+										"output": [
+											{
+												"id": "PrivilegesAndRoles",
+												"value": "iq.ftpc.global.components.db.active.privilegesandroles",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "LogObjRevisionLevel",
+								"type": "sql",
+								"sequence": "10",
+								"description": "Object revisioning level",
+								"isSkipStep": "false",
+								"filter": [],
+								"config": {
+									"input": [
+										{
+											"id": "DATABASE_TYPE",
+											"value": "iq.ftpc.global.components.db.dbServerType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "DATABASE_NAME",
+											"value": "iq.ftpc.global.components.db.active.databaseName",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "USERNAME",
+											"value": "iq.ftpc.global.components.db.active.username",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PASSWORD",
+											"value": "iq.ftpc.global.components.db.active.password",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "iq.ftpc.global.components.db.active.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "HOST",
+											"value": "iq.ftpc.global.components.db.active.server",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "ENCRYPT",
+											"value": "iq.ftpc.global.components.db.active.encrypt",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_SERVER_CERTIFICATE",
+											"value": "iq.ftpc.global.components.db.active.trust_server_certificate",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStore",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_TYPE",
+											"value": "iq.ftpc.global.components.ftpc.jboss.trustStoreType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_PASSWORD",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStorePassword",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "LOGIN_TIMEOUT",
+											"value": "iq.ftpc.global.components.db.active.login_timeout",
+											"source": "PUBLIC"
+										}
+									],
+									"supportedDatabases": ["MSSQL","MSSQL-AlwaysOn","ORACLE"]
+								},
+								"expectedResult": {
+									"type": "LogObjRevisionLevel",
+									"config": {
+										"output": [
+											{
+												"id": "LogObjRevisionLevel",
+												"value": "iq.ftpc.global.components.initializeFtpcDb.objectRevisioningLevel",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "LogTrxLevel",
+								"type": "sql",
+								"sequence": "10",
+								"description": "Transaction logging level",
+								"isSkipStep": "false",
+								"filter": [],
+								"config": {
+									"input": [
+										{
+											"id": "DATABASE_TYPE",
+											"value": "iq.ftpc.global.components.db.dbServerType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "DATABASE_NAME",
+											"value": "iq.ftpc.global.components.db.active.databaseName",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "USERNAME",
+											"value": "iq.ftpc.global.components.db.active.username",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PASSWORD",
+											"value": "iq.ftpc.global.components.db.active.password",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "iq.ftpc.global.components.db.active.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "HOST",
+											"value": "iq.ftpc.global.components.db.active.server",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "ENCRYPT",
+											"value": "iq.ftpc.global.components.db.active.encrypt",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_SERVER_CERTIFICATE",
+											"value": "iq.ftpc.global.components.db.active.trust_server_certificate",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStore",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_PASSWORD",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStorePassword",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_TYPE",
+											"value": "iq.ftpc.global.components.ftpc.jboss.trustStoreType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "LOGIN_TIMEOUT",
+											"value": "iq.ftpc.global.components.db.active.login_timeout",
+											"source": "PUBLIC"
+										}
+									],
+									"supportedDatabases": ["MSSQL","MSSQL-AlwaysOn","ORACLE"]
+								},
+								"expectedResult": {
+									"type": "LogTrxLevel",
+									"config": {
+										"output": [
+											{
+												"id": "LogTrxLevel",
+												"value": "1",
+												"source": "EXPLICIT"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "MsSqlAlwaysOnEnabled",
+								"type": "sql",
+								"sequence": "3",
+								"description": "Always on enabled",
+								"isSkipStep": "false",
+								"filter": [],
+								"config": {
+									"input": [
+										{
+											"id": "DATABASE_TYPE",
+											"value": "iq.ftpc.global.components.db.dbServerType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "DATABASE_NAME",
+											"value": "iq.ftpc.global.components.db.active.databaseName",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "USERNAME",
+											"value": "iq.ftpc.global.components.db.active.username",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PASSWORD",
+											"value": "iq.ftpc.global.components.db.active.password",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "iq.ftpc.global.components.db.active.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "HOST",
+											"value": "iq.ftpc.global.components.db.active.server",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "ENCRYPT",
+											"value": "iq.ftpc.global.components.db.active.encrypt",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_SERVER_CERTIFICATE",
+											"value": "iq.ftpc.global.components.db.active.trust_server_certificate",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStore",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_TYPE",
+											"value": "iq.ftpc.global.components.ftpc.jboss.trustStoreType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_PASSWORD",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStorePassword",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "LOGIN_TIMEOUT",
+											"value": "iq.ftpc.global.components.db.active.login_timeout",
+											"source": "PUBLIC"
+										}
+									],
+									"supportedDatabases": ["MSSQL","MSSQL-AlwaysOn"]
+								},
+								"expectedResult": {
+									"type": "MsSqlAlwaysOnEnabled",
+									"config": {
+										"output": [
+											{
+												"id": "MsSqlAlwaysOnEnabled",
+												"value": "iq.ftpc.global.components.db.active.mssql.always.on.enabled",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "MsSqlAlwaysOnNodes",
+								"type": "sql",
+								"sequence": "3",
+								"description": "Nodes",
+								"isSkipStep": "false",
+								"filter": [],
+								"config": {
+									"input": [
+										{
+											"id": "DATABASE_TYPE",
+											"value": "iq.ftpc.global.components.db.dbServerType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "DATABASE_NAME",
+											"value": "iq.ftpc.global.components.db.active.databaseName",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "USERNAME",
+											"value": "iq.ftpc.global.components.db.active.username",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PASSWORD",
+											"value": "iq.ftpc.global.components.db.active.password",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "iq.ftpc.global.components.db.active.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "HOST",
+											"value": "iq.ftpc.global.components.db.active.server",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "ENCRYPT",
+											"value": "iq.ftpc.global.components.db.active.encrypt",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_SERVER_CERTIFICATE",
+											"value": "iq.ftpc.global.components.db.active.trust_server_certificate",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStore",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_TYPE",
+											"value": "iq.ftpc.global.components.ftpc.jboss.trustStoreType",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "TRUST_STORE_PASSWORD",
+											"value": "iq.ftpc.global.components.ftpcTrustManager.trustStorePassword",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "LOGIN_TIMEOUT",
+											"value": "iq.ftpc.global.components.db.active.login_timeout",
+											"source": "PUBLIC"
+										}
+									],
+									"supportedDatabases": ["MSSQL","MSSQL-AlwaysOn"]
+								},
+								"expectedResult": {
+									"type": "MsSqlAlwaysOnNodes",
+									"config": {
+										"output": [
+											{
+												"id": "MsSqlAlwaysOnNodes",
+												"value": "NONE",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"systemName": "Observability",
+				"identifier": "Observability",
+				"name": "Observability",
+				"isSystemSkipped": "true",
+				"description": "",
+				"subSystem": [
+					{
+						"name": "Open Telemetry",
+						"description": "",
+						"steps": [
+							{
+								"identifier": "IMAGE_NAME_WITH_VERSION",
+								"type": "COMMON",
+								"sequence": "1",
+								"description": "Image name & version",
+								"isSkipStep": "false",
+								"config": {
+									"input": [
+										{
+											"id": "REPLICA_SETS",
+											"value": "iq.observability.otel.replicas",
+											"source": "PUBLIC"
+										}
+									]
+								},	
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.observability.otel.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "IMAGE_NAME_WITH_VERSION",
+									"config": {
+										"output": [
+											{
+												"id": "IMAGE_NAME",
+												"value": "iq.observability.otel.deployment.image",
+												"source": "PUBLIC"
+											},
+											{
+												"id": "IMAGE_VERSION",
+												"value": "iq.observability.otel.deployment.tag",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "HTTP_REACHABILITY",
+								"type": "HTTP_CLIENT",
+								"sequence": "2",
+								"description": "Open telemetry reachable",
+								"isSkipStep": "true",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.observability.otel.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "PROTOCOL",
+											"value": "https",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "HOST",
+											"value": "values.global.components.otel.service.server",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "values.global.components.otel.service.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "CONTEXT_PATH",
+											"value": "/",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "IS_PUBLIC_URL",
+											"value": "false",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "HTTP_REACHABILITY",
+									"config": {
+										"output": [
+											{
+												"id": "TCP_REACHABILITY",
+												"value": "true",
+												"source": "EXPLICIT"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "REPLICA_SETS",
+								"type": "COMMON",
+								"sequence": "2",
+								"description": "Replica sets",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.observability.otel.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "REPLICA_SETS",
+									"config": {
+										"output": [
+											{
+												"id": "REPLICA_SETS",
+												"value": "iq.observability.otel.replicas",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Grafana Loki",
+						"description": "",
+						"steps": [
+							{
+								"identifier": "IMAGE_NAME_WITH_VERSION",
+								"type": "COMMON",
+								"sequence": "1",
+								"description": "Image name & version",
+								"isSkipStep": "false",
+								"config": {
+									"input": [
+										{
+											"id": "REPLICA_SETS",
+											"value": "iq.observability.loki.replicas",
+											"source": "PUBLIC"
+										}
+									]
+								},
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.observability.loki.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "IMAGE_NAME_WITH_VERSION",
+									"config": {
+										"output": [
+											{
+												"id": "IMAGE_NAME",
+												"value": "iq.observability.loki.deployment.image",
+												"source": "PUBLIC"
+											},
+											{
+												"id": "IMAGE_VERSION",
+												"value": "iq.observability.loki.deployment.tag",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "HTTP_REACHABILITY",
+								"type": "HTTP_CLIENT",
+								"sequence": "2",
+								"description": "Loki reachable",
+								"isSkipStep": "true",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.observability.loki.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "PROTOCOL",
+											"value": "https",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "HOST",
+											"value": "values.global.components.loki.server.host",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "values.global.components.loki.server.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "CONTEXT_PATH",
+											"value": "/",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "IS_PUBLIC_URL",
+											"value": "true",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "HTTP_REACHABILITY",
+									"config": {
+										"output": [
+											{
+												"id": "TCP_REACHABILITY",
+												"value": "true",
+												"source": "EXPLICIT"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "REPLICA_SETS",
+								"type": "COMMON",
+								"sequence": "2",
+								"description": "Replica sets",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.observability.loki.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "REPLICA_SETS",
+									"config": {
+										"output": [
+											{
+												"id": "REPLICA_SETS",
+												"value": "iq.observability.loki.replicas",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Grafana Dashboard",
+						"description": "",
+						"steps": [
+							{
+								"identifier": "IMAGE_NAME_WITH_VERSION",
+								"type": "COMMON",
+								"sequence": "1",
+								"description": "Image name & version",
+								"isSkipStep": "false",
+								"config": {
+									"input": [
+										{
+											"id": "REPLICA_SETS",
+											"value": "iq.observability.grafana.replicas",
+											"source": "PUBLIC"
+										}
+									]
+								},
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.observability.grafana.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "IMAGE_NAME_WITH_VERSION",
+									"config": {
+										"output": [
+											{
+												"id": "IMAGE_NAME",
+												"value": "iq.observability.grafana.deployment.image",
+												"source": "PUBLIC"
+											},
+											{
+												"id": "IMAGE_VERSION",
+												"value": "iq.observability.grafana.deployment.tag",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "HTTP_REACHABILITY",
+								"type": "HTTP_CLIENT",
+								"sequence": "2",
+								"description": "Grafana dashboard reachable",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.observability.grafana.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "PROTOCOL",
+											"value": "https",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "HOST",
+											"value": "iq.observability.grafana.service.server",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "iq.observability.grafana.service.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "CONTEXT_PATH",
+											"value": "/",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "IS_PUBLIC_URL",
+											"value": "true",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "HTTP_REACHABILITY",
+									"config": {
+										"output": [
+											{
+												"id": "TCP_REACHABILITY",
+												"value": "true",
+												"source": "EXPLICIT"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "REPLICA_SETS",
+								"type": "COMMON",
+								"sequence": "2",
+								"description": "Replica sets",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.observability.grafana.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "REPLICA_SETS",
+									"config": {
+										"output": [
+											{
+												"id": "REPLICA_SETS",
+												"value": "iq.observability.grafana.replicas",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Prometheus",
+						"description": "",
+						"steps": [
+							{
+								"identifier": "IMAGE_NAME_WITH_VERSION",
+								"type": "COMMON",
+								"sequence": "1",
+								"description": "Image name & version",
+								"isSkipStep": "false",
+								"config": {
+									"input": [
+										{
+											"id": "REPLICA_SETS",
+											"value": "iq.observability.prometheus.replicas",
+											"source": "PUBLIC"
+										}
+									]
+								},
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.observability.prometheus.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "IMAGE_NAME_WITH_VERSION",
+									"config": {
+										"output": [
+											{
+												"id": "IMAGE_NAME",
+												"value": "iq.observability.prometheus.deployment.image",
+												"source": "PUBLIC"
+											},
+											{
+												"id": "IMAGE_VERSION",
+												"value": "iq.observability.prometheus.deployment.tag",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "HTTP_REACHABILITY",
+								"type": "HTTP_CLIENT",
+								"sequence": "2",
+								"description": "Prometheus reachable",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.observability.prometheus.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "PROTOCOL",
+											"value": "https",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "HOST",
+											"value": "iq.observability.prometheus.service.server",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "iq.observability.prometheus.service.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "CONTEXT_PATH",
+											"value": "/",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "IS_PUBLIC_URL",
+											"value": "true",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "HTTP_REACHABILITY",
+									"config": {
+										"output": [
+											{
+												"id": "TCP_REACHABILITY",
+												"value": "true",
+												"source": "EXPLICIT"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "REPLICA_SETS",
+								"type": "COMMON",
+								"sequence": "2",
+								"description": "Replica sets",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.observability.prometheus.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "REPLICA_SETS",
+									"config": {
+										"output": [
+											{
+												"id": "REPLICA_SETS",
+												"value": "iq.observability.prometheus.replicas",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Alert Manager",
+						"description": "",
+						"steps": [
+							{
+								"identifier": "IMAGE_NAME_WITH_VERSION",
+								"type": "COMMON",
+								"sequence": "1",
+								"description": "Image name & version",
+								"isSkipStep": "false",
+								"config": {
+									"input": [
+										{
+											"id": "REPLICA_SETS",
+											"value": "iq.observability.alertmanager.replicas",
+											"source": "PUBLIC"
+										}
+									]
+								},
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.observability.alertmanager.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "IMAGE_NAME_WITH_VERSION",
+									"config": {
+										"output": [
+											{
+												"id": "IMAGE_NAME",
+												"value": "iq.observability.alertmanager.deployment.image",
+												"source": "PUBLIC"
+											},
+											{
+												"id": "IMAGE_VERSION",
+												"value": "iq.observability.alertmanager.deployment.tag",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "HTTP_REACHABILITY",
+								"type": "HTTP_CLIENT",
+								"sequence": "2",
+								"description": "Alert manager reachable",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.observability.alertmanager.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "PROTOCOL",
+											"value": "https",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "HOST",
+											"value": "iq.observability.alertmanager.service.server",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "PORT",
+											"value": "iq.observability.alertmanager.service.port",
+											"source": "PUBLIC"
+										},
+										{
+											"id": "CONTEXT_PATH",
+											"value": "",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "IS_PUBLIC_URL",
+											"value": "true",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "HTTP_REACHABILITY",
+									"config": {
+										"output": [
+											{
+												"id": "TCP_REACHABILITY",
+												"value": "true",
+												"source": "EXPLICIT"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "REPLICA_SETS",
+								"type": "COMMON",
+								"sequence": "2",
+								"description": "Replica sets",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.observability.alertmanager.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "REPLICA_SETS",
+									"config": {
+										"output": [
+											{
+												"id": "REPLICA_SETS",
+												"value": "iq.observability.alertmanager.replicas",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "ALERT_MANAGER_SMTP_SMART_HOST",
+								"type": "READ_FILE",
+								"sequence": "2",
+								"description": "SMTP smart host",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.observability.alertmanager.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "FILE_PATH",
+											"value": "--config.file",
+											"source": "CONTAINER_ARGS"
+										},
+										{
+											"id": "FILE_TYPE",
+											"value": "YAML",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "YAML_PROPERTY_KEY",
+											"value": "global#smtp_smarthost",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "READ_YAML_PROPERTY",
+									"config": {
+										"preConditions": [
+											{
+												"conditionLhs": {
+													"id": "CONDITION_LHS",
+													"value": "iq.observability.alertmanager.emailChannelEnabled",
+													"source": "PUBLIC"
+												},
+												"condition": {
+													"id": "CONDITION",
+													"value": "EQUALS",
+													"source": "EXPLICIT"
+												},
+												"conditionRhs": {
+													"id": "CONDITION_RHS",
+													"value": "true",
+													"source": "EXPLICIT"
+												}
+											}
+										],
+										"output": [
+											{
+												"id": "ALERT_MANAGER_SMTP_SMART_HOST",
+												"value": "iq.observability.alertmanager.emailSmarthost",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "ALERT_MANAGER_SMTP_FROM",
+								"type": "READ_FILE",
+								"sequence": "2",
+								"description": "SMTP from",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.observability.alertmanager.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "FILE_PATH",
+											"value": "--config.file",
+											"source": "CONTAINER_ARGS"
+										},
+										{
+											"id": "FILE_TYPE",
+											"value": "YAML",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "YAML_PROPERTY_KEY",
+											"value": "global#smtp_from",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "READ_YAML_PROPERTY",
+									"config": {
+										"preConditions": [
+											{
+												"conditionLhs": {
+													"id": "CONDITION_LHS",
+													"value": "iq.observability.alertmanager.emailChannelEnabled",
+													"source": "PUBLIC"
+												},
+												"condition": {
+													"id": "CONDITION",
+													"value": "EQUALS",
+													"source": "EXPLICIT"
+												},
+												"conditionRhs": {
+													"id": "CONDITION_RHS",
+													"value": "true",
+													"source": "EXPLICIT"
+												}
+											}
+										],
+										"output": [
+											{
+												"id": "ALERT_MANAGER_SMTP_FROM",
+												"value": "iq.observability.alertmanager.emailFrom",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "ALERT_MANAGER_EMAIL_CHANNEL_EMAIL_CONFIG.TO",
+								"type": "READ_FILE",
+								"sequence": "2",
+								"description": "SMTP to",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.observability.alertmanager.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"config": {
+									"input": [
+										{
+											"id": "FILE_PATH",
+											"value": "--config.file",
+											"source": "CONTAINER_ARGS"
+										},
+										{
+											"id": "FILE_TYPE",
+											"value": "YAML",
+											"source": "EXPLICIT"
+										},
+										{
+											"id": "YAML_PROPERTY_KEY",
+											"value": "receivers#email_configs#to",
+											"source": "EXPLICIT"
+										}
+									]
+								},
+								"expectedResult": {
+									"type": "READ_YAML_PROPERTY",
+									"config": {
+										"preConditions": [
+											{
+												"conditionLhs": {
+													"id": "CONDITION_LHS",
+													"value": "iq.observability.alertmanager.emailChannelEnabled",
+													"source": "PUBLIC"
+												},
+												"condition": {
+													"id": "CONDITION",
+													"value": "EQUALS",
+													"source": "EXPLICIT"
+												},
+												"conditionRhs": {
+													"id": "CONDITION_RHS",
+													"value": "true",
+													"source": "EXPLICIT"
+												}
+											}
+										],
+										"output": [
+											{
+												"id": "ALERT_MANAGER_EMAIL_CHANNEL_EMAIL_CONFIG.TO",
+												"value": "iq.observability.alertmanager.receivers.emailChannel.email_configs",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Thanos",
+						"description": "",
+						"steps": [
+							{
+								"identifier": "IMAGE_NAME_WITH_VERSION",
+								"type": "COMMON",
+								"sequence": "1",
+								"description": "Image name & version",
+								"isSkipStep": "false",
+								"config": {
+									"input": [
+										{
+											"id": "REPLICA_SETS",
+											"value": "iq.observability.thanos.replicas",
+											"source": "PUBLIC"
+										}
+									]
+								},
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.observability.thanos.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "IMAGE_NAME_WITH_VERSION",
+									"config": {
+										"output": [
+											{
+												"id": "IMAGE_NAME",
+												"value": "iq.observability.thanos.deployment.image",
+												"source": "PUBLIC"
+											},
+											{
+												"id": "IMAGE_VERSION",
+												"value": "iq.observability.thanos.deployment.tag",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "REPLICA_SETS",
+								"type": "COMMON",
+								"sequence": "2",
+								"description": "Replica sets",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.observability.thanos.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "REPLICA_SETS",
+									"config": {
+										"output": [
+											{
+												"id": "REPLICA_SETS",
+												"value": "iq.observability.thanos.replicas",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							},
+							{
+								"identifier": "DataPointResolution",
+								"type": "kubectl",
+								"sequence": "2",
+								"description": "Thanos data point resolution",
+								"isSkipStep": "false",
+								"filter": [
+									{
+										"object": "POD",
+										"objectType": "LABEL",
+										"condition": "EQUALS",
+										"values": [
+											{
+												"id": "POD_LABEL",
+												"value": "iq.observability.thanos.app.label",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								],
+								"expectedResult": {
+									"type": "DataPointResolution",
+									"config": {
+										"output": [
+											{
+												"id": "RESOLUTION_RAW",
+												"value": "observability.thanos.deployment.compact.retention.resolution_raw",
+												"source": "PUBLIC"
+											},
+											{
+												"id": "RESOLUTION_5M",
+												"value": "observability.thanos.deployment.compact.retention.resolution_5m",
+												"source": "PUBLIC"
+											},
+											{
+												"id": "RESOLUTION_1H",
+												"value": "observability.thanos.deployment.compact.retention.resolution_1h",
+												"source": "PUBLIC"
+											}
+										]
+									}
+								}
+							}
+						]
+					}
+				]
+			}
+		]
+	}
+}
