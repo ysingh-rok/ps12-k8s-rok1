@@ -1,3 +1,4 @@
 key.agekey
 **/*.tmp.[extension]
 *_zbackupz.[extension]
+*_zbackupz.yaml
