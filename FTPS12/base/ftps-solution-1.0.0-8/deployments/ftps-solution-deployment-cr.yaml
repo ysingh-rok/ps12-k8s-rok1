@@ -24,6 +24,7 @@ spec:
           # @allowedValues true | false
           metallb: false
         # @description The Ingress NGINX installation with Helm.
+
         # @component Ingress NGINX
         # @externalLink Ingress NGINX documentation | https://docs.nginx.com/nginx-ingress-controller/installation/installing-nic/installation-with-helm/
         # @externalLink GitHub Readme | https://github.com/kubernetes/ingress-nginx/blob/main/charts/ingress-nginx/README.md
@@ -40,6 +41,7 @@ spec:
               # @allowedValues Alphanumeric characters
               name: ingress-nginx-{{ .Values.namespace }}
               # @description Specifies the controller of the IngressClass.
+
               # @component Ingress NGINX
               # @dataType string
               controllerValue: k8s.io/ingress-nginx-{{ .Values.namespace }}
@@ -53,6 +55,7 @@ spec:
               externalIPs:
                 - '{{ .Values.externalIP }}'
               # @forInstallationOnly
+
               # @description Specifies the IP address pool for the load balancer. 
               # @description Must be overwritten with a real IP address that exists in the network.
               # @component Ingress NGINX
@@ -60,6 +63,7 @@ spec:
               # @allowedValues An IP address
               loadBalancerIP: '{{ .Values.externalIP }}'
           # @description Specifies the TCP mapping to the pods
+
           # @component FTPC Core
           tcp:
             # @forInstallationOnly
@@ -68,46 +72,55 @@ spec:
             # @dataType string
             "8443": '{{ .Values.namespace }}/ftpc-service:8443'
             # @forInstallationOnly
+
             # @description Specifies the TCP mapping for the FTPC ActiveMQ service.
             # @component FTPC Core
             # @dataType string
             "61617": '{{ .Values.namespace }}/ftpc-activemq:61617'
             # @forInstallationOnly
+
             # @description Specifies the TCP mapping for the FTEI ActiveMQ service.
             # @component FTPC Core
             # @dataType string
             "61619": '{{ .Values.namespace }}/ftei-activemq-service:61619'
             # @forInstallationOnly
+
             # @description Specifies the TCP mapping for the FTEI ActiveMQ Console.
             # @component FTPC Core
             # @dataType string
             "8162": '{{ .Values.namespace }}/ftei-activemq-service:8162'
             # @forInstallationOnly
+
             # @description Specifies the TCP mapping for the FTEI Process1 Service.
             # @component FTPC Core
             # @dataType string
             "8445": '{{ .Values.namespace }}/ftei-process1-service:8445'
             # @forInstallationOnly
+
             # @description Specifies the TCP mapping for the FTEI Process2 Service.
             # @component FTPC Core
             # @dataType string
             "8446": '{{ .Values.namespace }}/ftei-process2-service:8446'
             # @forInstallationOnly
+
             # @description Specifies the TCP mapping for the FTEI DCS Service.
             # @component FTPC Core
             # @dataType string
             "8447": '{{ .Values.namespace }}/ftei-dcs-service:8447'
             # @forInstallationOnly
+
             # @description Specifies the TCP mapping for the FTEI SOS Service.
             # @component FTPC Core
             # @dataType string
             "8448": '{{ .Values.namespace }}/ftei-sos-process-service:8448'
             # @forInstallationOnly
+
             # @description Specifies the TCP mapping for the FTEI ERP Service.
             # @component FTPC Core
             # @dataType string
             "8449": '{{ .Values.namespace }}/ftei-erp-service:8449'
             # @forInstallationOnly
+
             # @description Specifies the TCP mapping for the PS ActiveMQ service.
             # @component FTPC Core
             # @dataType string
@@ -128,6 +141,7 @@ spec:
           # @externalLink Kubernetes documentation | https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-memory
           size: 5Gi
           # @forInstallationOnly
+
           # @description Specifies the storage class name responsible for volume provisioning for the external persistence for the IQ tool.
           # @description If empty, the default class defined in the cluster is used.
           # @component IQ tool
@@ -135,6 +149,7 @@ spec:
           # @allowedValues A specified storage class name.
           storageClassName: '{{ .Values.storageClassName }}'
           # @forInstallationOnly
+
           # @description Specifies the list of mount options for the NFS server used for the external persistence for the IQ tool.
           # @component IQ tool
           # @dataType string
@@ -149,6 +164,7 @@ spec:
             # @allowedValues A valid CSI driver name
             driver: '{{ .Values.externalStorageDriver }}'
             # @forInstallationOnly
+
             # @description Specifies a value the CSI driver can use to uniquely identify the share in the cluster.
             # @description A recommended way to produce a unique value is to combine the nfs-server address, sub directory name and share name.
             # @description for example {nfs-server-address}#{sub-dir-name}#{share-name}.
@@ -166,6 +182,7 @@ spec:
               # @externalLink NFS CSI Driver parameters | https://github.com/kubernetes-csi/csi-driver-nfs/blob/master/docs/driver-parameters.md
               server: '{{ .Values.externalStorageServer }}'
               # @forInstallationOnly
+
               # @description Specifies the path to the NFS storage folder used for the external persistence for the IQ tool.
               # @component IQ tool
               # @dataType string
@@ -173,16 +190,19 @@ spec:
               # @externalLink NFS CSI Driver parameters | https://github.com/kubernetes-csi/csi-driver-nfs/blob/master/docs/driver-parameters.md
               share: '{{ .Values.externalStorageShare }}'
         # @description Specifies the property for the clusterName of the custom resource in the IQ controller.
+
         # @component IQ tool
         # @dataType string
         # @allowedValues A specified cluster name.
         clusterName: '{{ .Values.clusterName }}'
         # @description Specifies the property for the triggerTool of the custom resource to run the IQ controller. It must be set to "start" to run the IQ tool.
+
         # @component IQ tool
         # @dataType string
         # @allowedValues "idle" / "start"
         triggerTool: '{{ .Values.triggerTool }}'
         # @forInstallationOnly
+
         # @description Specifies the name of the ConfigMap containing the truststore generated from FTPC Core.
         # @component FTPC Core
         # @allowedValues The FTPC Core truststore ConfigMap name
@@ -200,6 +220,7 @@ spec:
             # @allowedValues A valid URL
             prometheusUrl: https://obs-prometheus-server.ftmes-cluster-monitoring.svc.cluster.local:9090
             # @description Specifies the URL of the Loki instance used as datasource for infrastructure metrics.
+
             # @component Grafana
             # @dataType string
             # @allowedValues A valid URL
@@ -213,6 +234,7 @@ spec:
           # @allowedValues A specified StorageClass name; if empty, the default class defined in the cluster will be used 
           storageClassName: '{{ .Values.storageClassName }}'
           # @forInstallationOnly
+
           # @description Specifies the size of the storage used for the Grafana database.
           # @component Grafana
           # @dataType string
@@ -227,11 +249,13 @@ spec:
             # @allowedValues true | false
             allowSignUp: true
             # @description Specifies the path to the LDAP-specific configuration file.
+
             # @component Grafana
             # @dataType string
             # @allowedValues A valid path
             configFile: /etc/grafana/ldap.toml
             # @description If the value is set to true, LDAP integration is enabled.
+
             # @component Grafana
             # @dataType boolean
             # @allowedValues true | false
@@ -254,6 +278,7 @@ spec:
           # @allowedValues A positive integer
           grpc_server_max_recv_msg_size: 1048576000
           # @description The maximum message size for the grpc server can send in bytes.
+
           # @component Loki
           # @dataType int
           # @allowedValues A positive integer
@@ -267,6 +292,7 @@ spec:
           # @allowedValues A specified StorageClass name
           storageClassName: '{{ .Values.storageClassName }}'
           # @forInstallationOnly
+
           # @description Specifies the size of the storage used for the Loki database.
           # @component Loki
           # @dataType string
@@ -283,11 +309,13 @@ spec:
           # @allowedValues A duration value equal to or greater than 0s
           scrape_interval: 30s
           # @description Specifies how long samples are retained in storage.
+
           # @component Prometheus
           # @dataType duration
           # @allowedValues A duration value equal to or greater than 0s
           retention_time: 7d
         # Alerts configuration  
+
         alertmanager:
           # @description Specifies how long a value must exceed the threshold before raising a warning limit alert.
           # @component Prometheus
@@ -295,104 +323,123 @@ spec:
           # @allowedValues A duration value equal to or greater than 0s
           warningLimitInterval: 1m
           # @description Specifies how long a value must exceed the threshold before raising a control limit alert.
+
           # @component Prometheus
           # @dataType duration
           # @allowedValues A duration value equal to or greater than 0s
           controlLimitInterval: 30s
           # @description Specifies the interval between measurements of the throughput increase.
+
           # @component Prometheus
           # @dataType duration
           # @allowedValues A duration value equal to or greater than 0s
           throughputIncreaseInterval: 5m
           # @description Specifies the warning threshold for heap memory usage as a percentage of the maximum heap memory.
+
           # @component Prometheus
           # @dataType integer
           # @allowedValues An integer value equal to or greater than 0
           heapMemoryWarning: 90
           # @description Specifies the control threshold for heap memory usage as a percentage of the maximum heap memory.
+
           # @component Prometheus
           # @dataType integer
           # @allowedValues An integer value equal to or greater than 0
           heapMemoryControl: 95
           # @description Specifies the warning threshold for control recipe throughput on the EBR server, 
+
           # @description defined as the number of control recipes started within the throughput increase interval.
           # @component Prometheus
           # @dataType integer
           # @allowedValues An integer value equal to or greater than 0
           controlRecipeThroughputWarning: 1300
           # @description Specifies the control threshold for control recipe throughput on the EBR server, 
+
           # @description defined as the number of control recipes started within the throughput increase interval.
           # @component Prometheus
           # @dataType integer
           # @allowedValues An integer value equal to or greater than 0
           controlRecipeThroughputControl: 1950
           # @description Specifies the warning threshold for operation throughput on the EBR server, 
+
           # @description defined as the number of operations completed within the throughput increase interval.
           # @component Prometheus
           # @dataType integer
           # @allowedValues An integer value equal to or greater than 0
           operationThroughputWarning: 300
           # @description Specifies the control threshold for operation throughput on the EBR server, 
+
           # @description defined as the number of operations completed within the throughput increase interval.
           # @component Prometheus
           # @dataType integer
           # @allowedValues An integer value equal to or greater than 0
           operationThroughputControl: 450
           # @description Specifies the warning threshold for unit procedure throughput on the EBR server, 
+
           # @description defined as the number of unit procedures started within the throughput increase interval.
           # @component Prometheus
           # @dataType integer
           # @allowedValues An integer value equal to or greater than 0
           unitProcedureThroughputWarning: 3000
           # @description Specifies the control threshold for unit procedure throughput on the EBR server, 
+
           # @description defined as the number of unit procedures started within the throughput increase interval.
           # @component Prometheus
           # @dataType integer
           # @allowedValues An integer value equal to or greater than 0
           unitProcedureThroughputControl: 4500
           # @description Specifies the warning threshold for operation hold throughput on the OE server, 
+
           # @description defined as the number of operations held within the throughput increase interval.
           # @component Prometheus
           # @dataType integer
           # @allowedValues An integer value equal to or greater than 0
           operationHoldThroughputWarning: 200
           # @description Specifies the control threshold for operation hold throughput on the OE server, 
+
           # @description defined as the number of operations held within the throughput increase interval.
           # @component Prometheus
           # @dataType integer
           # @allowedValues An integer value equal to or greater than 0
           operationHoldThroughputControl: 300
           # @description Specifies the warning threshold for the number of running unit procedures on the EBR server
+
           # @component Prometheus
           # @dataType integer
           # @allowedValues An integer value equal to or greater than 0
           runningUnitProceduresWarning: 6000
           # @description Specifies the warning threshold for the number of threads on the OE server.
+
           # @component Prometheus
           # @dataType integer
           # @allowedValues An integer value equal to or greater than 0
           oeThreadCountWarning: 300
           # @description Specifies the warning threshold for the number of threads in FTEI.
+
           # @component Prometheus
           # @dataType integer
           # @allowedValues An integer value equal to or greater than 0
           fteiThreadCountWarning: 500
           # @description Specifies the warning threshold for the number of pending messages in FTEI ActiveMQ queues.
+
           # @component Prometheus
           # @dataType integer
           # @allowedValues An integer value equal to or greater than 0
           pendingMessagesLimit: 20
           # @description Specifies the warning threshold for the database round trip time in ms.
+
           # @component Prometheus
           # @dataType integer
           # @allowedValues An integer value equal to or greater than 0
           dbRoundTripTimeWarning: 500
           # @description Specifies the warning threshold before an automatic certificate renewal in days.
+
           # @component Prometheus
           # @dataType integer
           # @allowedValues An integer value equal to or greater than 0
           certmanagerCertificateRenewalWarning: 5
           # @description Specifies the control threshold for the time interval in days between the certificate renewal date having passed and the expiry alert being raised.
+
           # @component Prometheus
           # @dataType integer
           # @allowedValues An integer value equal to or greater than 0
@@ -406,6 +453,7 @@ spec:
           # @allowedValues A specified StorageClass name
           storageClassName: '{{ .Values.storageClassName }}'
           # @forInstallationOnly
+
           # @description Specifies the storage size used for the Prometheus database.
           # @component Prometheus
           # @dataType string
@@ -429,11 +477,13 @@ spec:
               # @allowedValues A duration value equal to or greater than 0d
               resolution_raw: 2d
               # @description Specifies the retention period for samples of resolution 1 (5 minutes) in storage. Setting this to 0d will retain samples of this resolution indefinitely.
+
               # @component Thanos
               # @dataType duration
               # @allowedValues A duration value equal to or greater than 0d
               resolution_5m: 10d
               # @description Specifies the retention period for samples of resolution 2 (1 hour) in storage. Setting this to 0d will retain samples of this resolution indefinitely.
+
               # @component Thanos
               # @dataType duration
               # @allowedValues A duration value equal to or greater than 0d
@@ -447,6 +497,7 @@ spec:
           # @allowedValues A specified StorageClass name
           storageClassName: '{{ .Values.storageClassName }}'
           # @forInstallationOnly
+
           # @description Specifies the storage size used for the Thanos database.
           # @component Thanos
           # @dataType string
@@ -463,6 +514,7 @@ spec:
           # @allowedValues A Kubernetes endpoint
           certManagerMetricsEndpoint: cert-manager.cert-manager.svc.cluster.local:9402
           # @description Setting how often the cert-manager metrics are collected.
+
           # @component OpenTelemetry
           # @dataType duration
           # @allowedValues A duration value equal to or greater than 0s
@@ -476,21 +528,25 @@ spec:
         # @allowedValues A duration matching the regular expression ((([0-9]+)y)?(([0-9]+)w)?(([0-9]+)d)?(([0-9]+)h)?(([0-9]+)m)?(([0-9]+)s)?(([0-9]+)ms)?|0), e.g. 1d, 1h30m, 5m, 10s
         resolveTimeout: 1m
         # @description If the value is set to true, the email channel is enabled.
+
         # @component AlertManager
         # @dataType boolean
         # @allowedValues true | false
         emailChannelEnabled: true
         # @description Specifies the default SMTP smarthost and port number for sending emails.
+
         # @component AlertManager
         # @dataType string
         # @allowedValues Common port numbers are 25 or 587 for SMTP over TLS.
         emailSmarthostSecretRef: '{{ .Values.baseSecret }}'
         # @description Specifies the sender's email address.
+
         # @component AlertManager
         # @dataType string
         # @allowedValues Email address
         emailFromSecretRef: '{{ .Values.baseSecret }}'
         # @description Routing-related settings allow configuring how alerts are routed, aggregated, throttled, and muted based on time.
+
         route:
           # @description Specifies the initial wait time before sending a notification for a group of alerts.
           # @description If omitted, child routes inherit the group_wait value from the parent route. 
@@ -499,6 +555,7 @@ spec:
           # @allowedValues Duration for an inhibiting alert to arrive or to collect more initial alerts for the same group (typically from 0 seconds to a few minutes).   
           groupWait: 30s
           # @description Specifies the wait time before sending a notification about new alerts 
+
           # @description added to an existing group of alerts for which an initial notification 
           # @description has already been sent (typically 5 minutes or more). If omitted, 
           # @description child routes inherit the group_interval value from the parent route.
@@ -507,6 +564,7 @@ spec:
           # @allowedValues A duration matching the regular expression ((([0-9]+)y)?(([0-9]+)w)?(([0-9]+)d)?(([0-9]+)h)?(([0-9]+)m)?(([0-9]+)s)?(([0-9]+)ms)?|0), e.g. 1d, 1h30m, 5m, 10s
           groupInterval: 5m
           # @description Specifies the wait time before resending a notification for an alert   
+
           # @description that has already been sent (typically 3 hours or more). If omitted, 
           # @description child routes inherit the repeat_interval value from the parent route.
           # @description Note that this parameter is implicitly bound by AlertManager’s 
@@ -518,6 +576,7 @@ spec:
           # @allowedValues A duration matching the regular expression ((([0-9]+)y)?(([0-9]+)w)?(([0-9]+)d)?(([0-9]+)h)?(([0-9]+)m)?(([0-9]+)s)?(([0-9]+)ms)?|0), e.g. 1d, 1h30m, 5m, 10s
           repeatInterval: 24h
           # @description Specifies the default receiver for notifications.
+
           # @component AlertManager
           # @dataType string
           # @allowedValues email_channel | slack_channel
@@ -530,6 +589,7 @@ spec:
             # @allowedValues control | warning (can be left empty). 
             matchSeverity: control
             # @description Specifies the match app_type label.
+
             # @component AlertManager
             # @dataType string
             # @allowedValues server (can be left empty).
@@ -540,6 +600,7 @@ spec:
             # @allowedValues true | false
             continueMatching: true
             # @description Specifies the email channel inline configuration.
+
             # @component AlertManager
             # @dataType sequence of <email_config> items
             # @allowedValues <email_config> items
@@ -559,12 +620,14 @@ spec:
           # @allowedValues A specified storage class name
           storageClassName: '{{ .Values.storageClassName }}'
           # @forInstallationOnly 
+
           # @description Specifies the storage size used for the support bundle data.
           # @component Support bundle data collector
           # @dataType string
           # @allowedValues Memory resource units
           size: 10Gi
         # @description The appconfig section can provide additional configuration for the support-bundle-data-collector.
+
         # @description For mor information refer to the README.md of the support-bundle-data-collector.
         # @component Support bundle data collector
         appconfig:
@@ -576,6 +639,7 @@ spec:
             # @default 336
             hours_behind: 336
             # @description Specifies the time interval into which logs will be split. The value must be a factor of 24 and is given in hours.
+
             # @component Support bundle data collector
             # @dataType integer
             # @allowedValues An integer value factor of 24
@@ -585,10 +649,12 @@ spec:
     ftei-system:
       enabled: false
     # -- Enable the Replicated chart
+
     # @default -- false
     replicated:
       enabled: true
     # -- Enable the micka chart
+
     # @default -- false
     micka:
       enabled: false
@@ -860,22 +926,27 @@ spec:
                     - # @Immutable
                       name: global.timezone
     # -- Enable the infrastructure-monitoring chart
+
     # @default -- false
     infrastructure-monitoring:
       enabled: false
     # -- Enable the ftpc micka post-deployment chart
+
     # @default -- false
     ftpc-micka-post-deployment-config:
       enabled: false
     # -- Enable the ftps micka post-deployment chart
+
     # @default -- false
     ftps-micka-post-deployment-config:
       enabled: false
     # -- Enable the ftei micka post-deployment chart
+
     # @default -- false
     ftei-micka-post-deployment-config:
       enabled: false
     # -- Enable the observability micka post-deployment chart
+
     # @default -- false
     observability-micka-post-deployment-config:
       enabled: false
@@ -889,6 +960,7 @@ spec:
         # @allowedValues A specified storage class name
         storageClassName: '{{ .Values.storageClassName }}'
         # @forInstallationOnly
+
         # @description Specifies the volume size.
         # @component FTPC Core
         # @dataType string
@@ -896,11 +968,13 @@ spec:
         # @externalLink Kubernetes documentation | https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-memory
         size: 10Gi
       # @forInstallationOnly
+
       # @description Specifies a valid hostname available in the Kubernetes cluster network.
       # @component FTPC Core
       # @dataType string
       systemHostname: '{{ .Values.namespace }}.{{ .Values.externalIP }}'
       # @forInstallationOnly
+
       # @description Specifies a valid domain name available in the Kubernetes cluster network.
       # @component FTPC Core
       # @dataType string
@@ -921,22 +995,26 @@ spec:
           # @allowedValues Host, i.e. domain, subdomain, and port
           registry: '{{ .Values.registry }}'
           # @forInstallationOnly
+
           # @description Specifies the username to the repository.
           # @component System
           # @dataType string
           usernameSecretRef: "{{ .Values.baseSecret }}"
           # @forInstallationOnly
+
           # @description Specifies the password to the repository.
           # @component System
           # @dataType string
           # @allowedValues Alphanumeric character
           passwordSecretRef: "{{ .Values.baseSecret }}"
         # @description Specifies the IQ Tool Solution version, which needs to be updated after each new iteration.
+
         # @component IQ Tool
         # @dataType string
         # @allowedValues The version of the system for which IQ needs to be done. (It can be an FTPS Solution / other systems)
         iqToolSolutionVersion: "1.0.0-8"
       # @description Specifies the values related to pod distribution on nodes.
+
       nodeSelectors:
         # @forInstallationOnly
         # @description Specifies whether a node selector will be used to distribute pods on specific nodes.
@@ -946,12 +1024,14 @@ spec:
         # @allowedValues true | false
         enableNodeSelector: false
         # @forInstallationOnly
+
         # @description Specifies the name of the label to be used for node selection.
         # @component System
         # @dataType string
         # @allowedValues A valid label name
         nodeSelectorLabelName: "kots.io/embedded-cluster-role-0"
         # @forInstallationOnly
+
         # @description Specifies the value of the label to be used for node selection.
         # @description Only nodes that have the specified label set to this value will be selected for pod distribution.
         # @component System
@@ -967,6 +1047,7 @@ spec:
           # @allowedValues CIDR notation
           IPAddressPool: '{{ .Values.externalIP }}/32'
           # @description Specifies the IP address for the load balancer. It must be a valid IP address that is available in the Kubernetes cluster network.
+
           # @component MetalLB
           # @dataType string
           # @allowedValues An IP address
@@ -978,12 +1059,14 @@ spec:
           # @dataType string
           trustStore: '{{ .Values.trustStore }}'
           # @forInstallationOnly
+
           # @description Specifies the password for decrypting the truststore.
           # @component FTPC Core
           # @dataType string
           # @allowedValues A string containing at least: 8 characters, one alphabetic character, one digit, one non-alphanumeric symbol. Cannot contain: < > &#124; & or space. Example: YourPassword0!
           trustStorePasswordSecretRef: "{{ .Values.baseSecret }}"
           # @forInstallationOnly
+
           # @description Specifies the PEM-formatted CA certificate to use for signing certificates.
           # @component FTPC Core
           # @dataType string
@@ -996,12 +1079,14 @@ spec:
           # @dataType string
           keyStore: '{{ .Values.keyStore }}'
           # @forInstallationOnly
+
           # @description Specifies the password to decrypt the private key stored in the keystore.
           # @component FTPC Core
           # @dataType string
           # @allowedValues A string containing at least: 8 characters, one alphabetic character, one digit, one non-alphanumeric symbol. Cannot contain: < > &#124; & or space. Example: YourPassword0!
           keyPasswordSecretRef: "{{ .Values.baseSecret }}"
           # @forInstallationOnly
+
           # @description Specifies the password to decrypt the keystore.
           # @component FTPC Core
           # @dataType string
@@ -1015,21 +1100,25 @@ spec:
             # @allowedValues true | false
             enabled: true
             # @forInstallationOnly
+
             # @description Specifies the legal name of your organization. It must not be abbreviated or include any suffixes.
             # @component FTPC Core
             # @dataType string
             organizationName: '{{ .Values.organizationName }}'
             # @forInstallationOnly
+
             # @description Specifies the PEM-formatted CA certificate for signing certificates.
             # @component FTPC Core
             # @dataType string
             certificateSecretRef: "{{ .Values.baseSecret }}"
             # @forInstallationOnly
+
             # @description Specifies the PEM-formatted private key.
             # @component FTPC Core
             # @dataType string
             privateKeySecretRef: "{{ .Values.baseSecret }}"
             # @forInstallationOnly
+
             # @description Specifies the certificate authority.
             # @component FTPC Core
             # @dataType string
@@ -1042,12 +1131,14 @@ spec:
             # @externalLink Go documentation | https://pkg.go.dev/time#ParseDuration
             duration: 2160h
             # @forInstallationOnly
+
             # @description Specifies the certificate renew time before it expires (in hours).
             # @component FTPC Core
             # @allowedValues Time specified in the Go time.Duration format. 
             # @externalLink Go documentation | https://pkg.go.dev/time#ParseDuration
             renewBefore: 240h
             # @forInstallationOnly
+
             # @description Specifies additional subject alternate names to be included in a certificate.
             # @component FTPC Core
             # @default An empty list
@@ -1065,12 +1156,12 @@ spec:
               - obs-thanos-querier
               - obs-thanos-store-gateway
             # @forInstallationOnly
+
             # @description Specifies uris to be included in subject alternate names in a certificate.
             # @description For UPC UA Connections use "urn:<systemHostname>.<systemDomain>:OPCUA:<systemHostname>" format.
             # @component FTPC Core
             # @default An empty list
-            sanUris: [
-              ]
+            sanUris: []
         cups:
           persistence:
             # @forInstallationOnly
@@ -1081,6 +1172,7 @@ spec:
             # @externalLink Kubernetes documentation | https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-memory
             size: 100Mi
             # @forInstallationOnly
+
             # @description Specifies the storage class name responsible for volume provisioning. If empty, the default class defined in the cluster is used.
             # @component CUPS
             # @dataType string
@@ -1103,12 +1195,14 @@ spec:
             # @allowedValues A server URL
             server: '{{ .Values.fullQualifiedDomainName }}'
             # @forInstallationOnly
+
             # @description Specifies the FTPC port.
             # @component FTPC
             # @dataType integer
             # @allowedValues Values from 0 to 65535
             port: 8443
             # @forInstallationOnly
+
             # @description Specifies the client home path.
             # @description Note that changing this parameter requires changing the Access Control Setting list of the .FTPC directory.
             # @component FTPC
@@ -1116,18 +1210,21 @@ spec:
             # @allowedValues A client home path
             clientHome: ~/.FTPC
             # @forInstallationOnly
+
             # @description Set the FTPC portbase number for exposing App server cluster pods , pod-0 is exposed at portBase +0, pod-1 at portBase+1 etc.
             # @component FTPC
             # @dataType integer
             # @allowedValues Values from 1025 to 65535
             portBase: 10000
             # @forInstallationOnly
+
             # @description Defines the FQDN for FTPC installation and uses it as the unique download directory name on the client side.
             # @component FTPC
             # @dataType string
             # @allowedValues Characters allowed in FQDN
             serverInstance: '{{ .Values.fullQualifiedDomainName }}'
             # @forInstallationOnly
+
             # @description Defines a unique application name in the cluster. An example value is an FQDN with dots converted to underscores: hostname_example_company_com.
             # @component FTPC
             # @dataType string
@@ -1142,6 +1239,7 @@ spec:
             # @externalLink Kubernetes documentation | https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-memory
             size: 5Gi
             # @forInstallationOnly
+
             # @description Specifies the storage classe name responsible for volume provisioning. If empty, the default class defined in the cluster is used.
             # @component FTPC
             # @dataType string
@@ -1158,6 +1256,7 @@ spec:
               # @externalLink Kubernetes documentation | https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-memory
               size: 10Gi
               # @forInstallationOnly
+
               # @description Specifies the list of mount options for the NFS server used for the external persistence for FTPC.
               # @description The external persistence is used to store data from multiple pods that is available from outside the cluster (i.e. Heap and Thread Dumps).
               # @component FTPC
@@ -1174,6 +1273,7 @@ spec:
                 # @allowedValues A valid CSI driver name
                 driver: '{{ .Values.externalStorageDriver }}'
                 # @forInstallationOnly
+
                 # @description Specifies a value the CSI driver can use to uniquely identify the share in the cluster.
                 # @description A recommended way to produce a unique value is to combine the nfs-server address, sub directory name and share name
                 # @description for example {nfs-server-address}#{sub-dir-name}#{share-name}.
@@ -1192,6 +1292,7 @@ spec:
                   # @externalLink  NFS CSI Driver parameters | https://github.com/kubernetes-csi/csi-driver-nfs/blob/master/docs/driver-parameters.md
                   server: '{{ .Values.externalStorageServer }}'
                   # @forInstallationOnly
+
                   # @description Specifies the path to the NFS storage folder used for the external persistence for FTPC.
                   # @description The external persistence is used to store data from multiple pods that is available from outside the cluster (i.e. Heap and Thread Dumps).
                   # @component FTPC
@@ -1208,54 +1309,60 @@ spec:
             # @externalLink WildFly Admin guide | https://docs.wildfly.org/21/Admin_Guide.html#controlling-operation-blocking-time
             blockingTimeout: 600
             # @forInstallationOnly
+
             # @description Specifies the JAVA_OPTS passed to the application server instance.
             # @component FTPC
             # @dataType string
             # @allowedValues Custom JVM settings
-            javaOpts: "-server -Xms2048m -Xmx2048m -XX:+UseG1GC -XX:MaxGCPauseMillis=500\
-              \ -XX:+ExplicitGCInvokesConcurrent -Djava.net.preferIPv4Stack=true --add-opens=java.xml/com.sun.org.apache.xml.internal.serialize=ALL-UNNAMED\
-              \  -Dorg.apache.activemq.SERIALIZABLE_PACKAGES=java,com.rockwell,com.datasweep,sun,com.osisoft\
-              \ -Djboss.modules.system.pkgs=org.jboss.byteman"
+            javaOpts: "-server -Xms2048m -Xmx2048m -XX:+UseG1GC -XX:MaxGCPauseMillis=500 -XX:+ExplicitGCInvokesConcurrent -Djava.net.preferIPv4Stack=true --add-opens=java.xml/com.sun.org.apache.xml.internal.serialize=ALL-UNNAMED  -Dorg.apache.activemq.SERIALIZABLE_PACKAGES=java,com.rockwell,com.datasweep,sun,com.osisoft -Djboss.modules.system.pkgs=org.jboss.byteman"
             # @forInstallationOnly
+
             # @description Specifies the credential value password.
             # @component FTPC
             # @dataType string
             # @allowedValues A string containing at least: 8 characters, one alphabetic character, one digit, one non-alphanumeric symbol. Cannot contain: < > &#124; & or space. Example: YourPassword0!
             credentialStorePasswordSecretRef: "{{ .Values.baseSecret }}"
             # @forInstallationOnly
+
             # @description Specifies salt to apply to the final masked password of the credential store.
             # @component FTPC
             # @dataType string
             # @allowedValues A string of usually 16 characters (alphanumeric characters and symbols)
             credentialStoreSaltSecretRef: "{{ .Values.baseSecret }}"
             # @forInstallationOnly
+
             # @description Specifies the iteration count for the final masked password of the credential store.
             # @component FTPC
             # @dataType integer
             # @allowedValues A value equal to or greater than 1
             credentialStoreIterations: 120
             # @description Specifies the admin name for the application server.
+
             # @component FTPC
             # @dataType string
             # @allowedValues A string containing at least: 8 characters
             adminUsernameSecretRef: "{{ .Values.baseSecret }}"
             # @description Specifies the admin password for the application server.
+
             # @component FTPC
             # @dataType string
             # @allowedValues A string containing at least: 8 characters, one alphabetic character, one digit, one non-alphanumeric symbol. Cannot contain: < > &#124; & or space. Example: YourPassword0!
             adminPasswordSecretRef: "{{ .Values.baseSecret }}"
             # @description Specifies the default timeout for transactions (in seconds). Setting a transaction timeout is crucial as it will lock DB resources for the duration of the transaction until the transaction is committed or roll back.
+
             # @component Database
             # @dataType integer
             # @allowedValues Values from 1 to 604800
             transactionTimeout: 900
           # @forInstallationOnly
+
           # @description The JVM arguments to add to the Java command of the Process Designer and the Shop Operations clients.
           # @component FTPC
           # @dataType string
           # @allowedValues Custom JVM settings
           Custom_PD_SO_JVM_Args: " -Xmx4096M"
           # @description Specifies the packages containing classes that are trusted when creating the ObjectMessages to be transferred using JMS messaging.
+
           # @description In ActiveMQ, these are the so-called serializable packages.
           # @description Note: The packages that are mandatory for FTPC are already added as trusted packages. Please only add custom ones as needed.
           # @component FTPC
@@ -1269,12 +1376,14 @@ spec:
           # @allowedValues  Alphanumeric characters
           dba_email_address: "dba@localhost"
           # @forInstallationOnly
+
           # @description Specifies the site id for the FTPC installation.
           # @component FTPC
           # @dataType string
           # @allowedValues  Alphanumeric characters
           siteId: ""
           # @forInstallationOnly
+
           # @description Specifies the semicolon (;) separated list of mail sessions to configure.
           # @description Each mail session must be defined under the mailSessionDefinitions section with the required properties.
           # @description The required properties for each mail session are: host, port, username, password, and tls.
@@ -1291,12 +1400,14 @@ spec:
               # @allowedValues A server URL
               host: '{{ .Values.mailSessionDefinitionsHost }}'
               # @forInstallationOnly
+
               # @description Specifies the port for the SMTP server.
               # @component FTPC
               # @dataType integer
               # @allowedValues Values from 0 to 65535
               port: '{{ .Values.mailSessionDefinitionsPort}}'
               # @forInstallationOnly
+
               # @description Specifies the username for authenticating with the SMTP server.
               # @description The setting is also used as the email sender address for sending emails.
               # @component FTPC
@@ -1304,16 +1415,19 @@ spec:
               # @allowedValues A valid email address
               usernameSecretRef: '{{ .Values.baseSecret }}'
               # @description Specifies the password for authenticating with the SMTP server.
+
               # @component FTPC
               # @dataType string
               # @allowedValues Alphanumeric characters
               passwordSecretRef: '{{ .Values.baseSecret }}'
               # @description Specifies whether TLS is used to connect to the SMTP server. If the value is set to true, TLS must be used to connect to the SMTP server.
+
               # @component FTPC
               # @dataType boolean
               # @allowedValues true | false
               tls: false
           # @forInstallationOnly
+
           # @description Specifies the login module to use.
           # @component FTPC
           # @dataType string
@@ -1333,18 +1447,21 @@ spec:
             # @allowedValues A specified Base Distinguished Name
             baseDnSecretRef: '{{ .Values.baseSecret }}'
             # @forInstallationOnly
+
             # @description Specifies the LDAP/LDAPS search base for users.
             # @component FTPC
             # @dataType string
             # @allowedValues A specified User Distinguished Name
             userDnSecretRef: '{{ .Values.baseSecret }}'
             # @forInstallationOnly
+
             # @description Specifies the LDAP/LDAPS search base for groups.
             # @component FTPC
             # @dataType string
             # @allowedValues A specified Group Distinguished Name
             groupDnSecretRef: '{{ .Values.baseSecret }}'
             # @forInstallationOnly
+
             # @description Specifies the LDAP bind password.
             # @component FTPC
             # @dataType string
@@ -1359,6 +1476,7 @@ spec:
             # @allowedValues Alphanumeric characters
             adminUsernameSecretRef: "{{ .Values.baseSecret }}"
             # @forInstallationOnly
+
             # @description Specifies the admin password for the application server in the Deployment Manager.
             # @component Deployment Manager
             # @dataType string
@@ -1373,6 +1491,7 @@ spec:
             # @default admin
             usernameSecretRef: "{{ .Values.baseSecret }}"
             # @forInstallationOnly
+
             # @description Specifies the password for FTPC in the Deployment Manager.
             # @description Unless FTPS is installed initially, the password is not changed. In this case it should be changed manually or set with the deployWxfResources.ftpc.passwordOld value.
             # @component Deployment Manager
@@ -1380,6 +1499,7 @@ spec:
             # @allowedValues A string containing at least: 8 characters, one alphabetic character, one digit, one non-alphanumeric symbol. Cannot contain: < > &#124; & or space. Example: YourPassword0!
             passwordSecretRef: "{{ .Values.baseSecret }}"
             # @forInstallationOnly
+
             # @description Optional value that specifies the old password for FTPC in the Deployment Manager.
             # @description Unless FTPS is installed initially, the password is not changed, and the Deployment Manager does not work correctly.
             # @description Unless the deployWxfResources.ftpc.passwordOld value is empty, ChangeAdminPassword is executed first.
@@ -1396,18 +1516,21 @@ spec:
           # @allowedValues true | false
           forceDBInitialization: false
           # @forInstallationOnly
+
           # @description If the value is set to true, the database is migrated.
           # @component FTPC Database Initializer
           # @dataType boolean
           # @allowedValues true | false
           dbMigration: false
           # @forInstallationOnly
+
           # @description Specifies the site number used during database initialization.
           # @component FTPC Database Initializer
           # @dataType integer
           # @allowedValues A value equal to or greater than 1
           siteNumber: 1
           # @forInstallationOnly
+
           # @description Specifies the object revisioning level used during database initialization.
           # @description The revisioning level defines which objects will have revisions according to the following:
           # @description  0 - None, revisioning is off
@@ -1419,6 +1542,7 @@ spec:
           # @allowedValues 0 | 1 | 2 | 3
           objectRevisioningLevel: 3
           # @forInstallationOnly
+
           # @description Specifies that if the value is set to true, SQL methods in the database will be enabled during database initialization.
           # @component FTPC Database Initializer
           # @dataType boolean
@@ -1431,29 +1555,34 @@ spec:
           # @allowedValues Alphanumeric characters
           connectionUsernameSecretRef: "{{ .Values.baseSecret }}"
           # @description Specifies the connection password for FTPC ActiveMQ.
+
           # @component FTPC ActiveMQ
           # @dataType string
           # @allowedValues A string containing at least: 8 characters, one alphabetic character, one digit, one non-alphanumeric symbol. Cannot contain: < > &#124; & or space. Example: YourPassword0!
           connectionPasswordSecretRef: "{{ .Values.baseSecret }}"
           # @forInstallationOnly
+
           # @description Specifies the admin username for FTPC ActiveMQ.
           # @component FTPC ActiveMQ
           # @dataType string
           # @allowedValues Alphanumeric characters
           adminUsernameSecretRef: "{{ .Values.baseSecret }}"
           # @forInstallationOnly
+
           # @description Specifies the admin password for FTPC ActiveMQ.
           # @component FTPC ActiveMQ
           # @dataType string
           # @allowedValues A string containing at least: 8 characters, one alphabetic character, one digit, one non-alphanumeric symbol. Cannot contain: < > &#124; & or space. Example: YourPassword0!
           adminPasswordSecretRef: "{{ .Values.baseSecret }}"
           # @forInstallationOnly
+
           # @description Specifies the secret used for the encryption and decryption of passwords  for FTPC ActiveMQ.
           # @component FTPC ActiveMQ
           # @dataType string
           # @allowedValues A string containing at least: 8 characters, one alphabetic character, one digit, one non-alphanumeric symbol. Cannot contain: < > &#124; & or space. Example: YourPassword0!
           encryptorSecretSecretRef: "{{ .Values.baseSecret }}"
           # @forInstallationOnly
+
           # @description Specifies the ACTIVEMQ_OPTS value passed to ActiveMQ.
           # @component FTPC ActiveMQ
           # @dataType string
@@ -1470,6 +1599,7 @@ spec:
               # @externalLink Kubernetes documentation | https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-memory
               size: 10Gi
               # @forInstallationOnly
+
               # @description Specifies the list of mount options for the NFS server used for the external persistence for the FTPC ActiveMQ.
               # @description The external persistence is used to store data from multiple pods that is available from outside the cluster (i.e. Heap and Thread Dumps).
               # @component FTPC ActiveMQ
@@ -1486,6 +1616,7 @@ spec:
                 # @allowedValues A valid CSI driver name
                 driver: '{{ .Values.externalStorageDriver }}'
                 # @forInstallationOnly
+
                 # @description Specifies a value the CSI driver can use to uniquely identify the share in the cluster.
                 # @description A recommended way to produce a unique value is to combine the nfs-server address, sub directory name and share name
                 # @description for example {nfs-server-address}#{sub-dir-name}#{share-name}.
@@ -1504,6 +1635,7 @@ spec:
                   # @externalLink  NFS CSI Driver parameters | https://github.com/kubernetes-csi/csi-driver-nfs/blob/master/docs/driver-parameters.md
                   server: '{{ .Values.externalStorageServer }}'
                   # @forInstallationOnly
+
                   # @description Specifies the path to the NFS storage folder used for the external persistence for the FTPC ActiveMQ.
                   # @description The external persistence is used to store data from multiple pods that is available from outside the cluster (i.e. Heap and Thread Dumps).
                   # @component FTPC ActiveMQ
@@ -1518,6 +1650,7 @@ spec:
             # @allowedValues A server URL
             server: '{{ .Values.fullQualifiedDomainName }}'
             # @description Specifies the port for the FTPC ActiveMQ service.
+
             # @component FTPC ActiveMQ
             # @dataType integer
             # @allowedValues Values from 0 to 65535
@@ -1531,6 +1664,7 @@ spec:
             # @externalLink Kubernetes documentation | https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-memory
             size: 5Gi
             # @forInstallationOnly
+
             # @description Specifies the storage class name responsible for volume provisioning. If empty, the default class defined in the cluster is used.
             # @component FTPC ActiveMQ
             # @dataType string
@@ -1551,30 +1685,35 @@ spec:
             # @allowedValues Alphanumeric characters. Example: PSPROD01
             databaseName: '{{ .Values.databaseName }}'
             # @forInstallationOnly
+
             # @description Specifies the server for the active database.
             # @component Database
             # @dataType string
             # @allowedValues Alphanumeric characters
             server: '{{ .Values.databaseServer }}'
             # @forInstallationOnly
+
             # @description Specifies the port for the active database.
             # @component Database
             # @dataType integer
             # @allowedValues Values from 0 to 65535
             port: '{{ .Values.databasePort }}'
             # @forInstallationOnly
+
             # @description Specifies the username for the active database.
             # @component Database
             # @dataType string
             # @allowedValues Alphanumeric characters
             usernameSecretRef: "{{ .Values.instanceSecret }}"
             # @forInstallationOnly
+
             # @description Specifies the password for the active database.
             # @component Database
             # @dataType string
             # @allowedValues A string containing at least: 8 characters, one alphabetic character, one digit, one non-alphanumeric symbol. Cannot contain: < > &#124; & or space . Example: YourPassword0!
             passwordSecretRef: "{{ .Values.instanceSecret }}"
         # @description Configuration of FTPC SOS.
+
         # @component Shop Operation Services
         shopOperationsServer:
           # @forInstallationOnly
@@ -1585,17 +1724,20 @@ spec:
           # @default admin
           usernameSecretRef: "{{ .Values.baseSecret }}"
           # @forInstallationOnly
+
           # @description Specifies the password for the Shop Operation Services to connect to FTPC.
           # @component Shop Operation Services
           # @dataType string
           # @allowedValues A string containing at least: 8 characters, one alphabetic character, one digit, one non-alphanumeric symbol. Cannot contain: < > &#124; & or space. Example: YourPassword0!
           passwordSecretRef: "{{ .Values.baseSecret }}"
           # @description Specifies the private RSA key used for BarTender printing.
+
           # @component IOServer
           # @dataType string
           # @allowedValues Alphanumeric characters
           rsaPrivateKeyIOServerSecretRef: "{{ .Values.baseSecret }}"
           # @description Specifies settings for custom fonts in SOS
+
           # @component Shop Operation Services
           persistenceFonts:
             # @forInstallationOnly
@@ -1606,12 +1748,14 @@ spec:
             # @externalLink Kubernetes documentation | https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-memory
             size: 1Gi
             # @forInstallationOnly
+
             # @description Specifies the storage class name responsible for volume provisioning. If empty, the default class defined in the cluster is used.
             # @component Shop Operation Services
             # @dataType string
             # @allowedValues A specified storage class name
             storageClassName: '{{ .Values.storageClassName }}'
           # @description List of SOS services to install.
+
           # @component Shop Operation Services
           externalStorage:
             persistence:
@@ -1624,6 +1768,7 @@ spec:
               # @externalLink Kubernetes documentation | https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-memory
               size: 10Gi
               # @forInstallationOnly
+
               # @description Specifies the list of mount options for the NFS server used for the external persistence for the FTPC SOS.
               # @description The external persistence is used to store data from multiple pods that is available from outside the cluster (i.e. Heap and Thread Dumps).
               # @component FTPC SOS
@@ -1640,6 +1785,7 @@ spec:
                 # @allowedValues A valid CSI driver name
                 driver: '{{ .Values.externalStorageDriver }}'
                 # @forInstallationOnly
+
                 # @description Specifies a value the CSI driver can use to uniquely identify the share in the cluster.
                 # @description A recommended way to produce a unique value is to combine the nfs-server address, sub directory name and share name
                 # @description for example {nfs-server-address}#{sub-dir-name}#{share-name}.
@@ -1658,6 +1804,7 @@ spec:
                   # @externalLink  NFS CSI Driver parameters | https://github.com/kubernetes-csi/csi-driver-nfs/blob/master/docs/driver-parameters.md
                   server: '{{ .Values.externalStorageServer }}'
                   # @forInstallationOnly
+
                   # @description Specifies the path to the NFS storage folder used for the external persistence for the FTPC SOS.
                   # @description The external persistence is used to store data from multiple pods that is available from outside the cluster (i.e. Heap and Thread Dumps).
                   # @component FTPC SOS
@@ -1669,24 +1816,28 @@ spec:
             - # @Immutable
               name: io-server
               # @forInstallationOnly
+
               # @description Specifies the name of the event sheet used by the SOS service.
               # @component Shop Operation Services
               # @dataType string
               # @allowedValues The name of the event sheet available in the system.
               eventSheet: IOServerES
               # @forInstallationOnly
+
               # @description Specifies the station for the SOS service.
               # @component Shop Operation Services
               # @dataType string
               # @allowedValues A customer-specific station name
               station: ""
               # @description Specifies the number of SOS replicas.
+
               # @component Shop Operation Services
               # @dataType integer
               # @allowedValues A value equal to or greater than 0
               # @externalLink Kubernetes documentation | https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/#replicas
               replicas: 1
               # @description The probes configuration: liveness, readiness, and startup.
+
               # @component Shop Operation Services
               probe:
                 # @description The startup probe verifies whether the application within a container is started.
@@ -1699,6 +1850,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   initialDelaySeconds: 10
                   # @description Specifies how often (in seconds) to perform the probe.
+
                   # @component Shop Operation Services
                   # @dataType integer
                   # @allowedValues A value equal to or greater than 1
@@ -1711,6 +1863,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   failureThreshold: 30
                 # @description The liveness probe determines when to restart a container.
+
                 # @component Shop Operation Services
                 liveness:
                   # @description Specifies the time (in seconds) to initiate a probe after a container has been started.
@@ -1720,6 +1873,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   initialDelaySeconds: 10
                   # @description Specifies how often (in seconds) to perform the probe.
+
                   # @component Shop Operation Services
                   # @dataType integer
                   # @allowedValues A value equal to or greater than 1
@@ -1732,6 +1886,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   failureThreshold:
                 # @description Readiness probes determines when a container is ready to start accepting traffic.
+
                 # @component Shop Operation Services
                 readiness:
                   # @description Specifies the time (in seconds) to initiate a probe after a container has been started.
@@ -1741,6 +1896,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   initialDelaySeconds: 10
                   # @description Specifies how often (in seconds) to perform the probe.
+
                   # @component Shop Operation Services
                   # @dataType integer
                   # @allowedValues A value equal to or greater than 1
@@ -1763,19 +1919,21 @@ spec:
             # @forInstallationOnly
             sourceSecret: ""
             # @description Specifies the mapping between source and target files of sourceSecret and targetSecret.
+
             # @dataType string
             # @component derConverter
             # @default list of sourceName and targetName for key and client certificate
             # @forInstallationOnly
-            dataMap: [
-              ]
+            dataMap: []
             # @description Specifies the name of the secret where the client certificate in der format will be stored.
+
             # @dataType string
             # @component derConverter
             # @default client-certificate
             # @forInstallationOnly
             targetSecret: "client-certificate"
           # @description server certificate specifications
+
           # @component derConverter
           serverCertificateSpec:
             # @description Specifies the name of the ConfigMap where the trusted server certificates are stored.
@@ -1785,19 +1943,21 @@ spec:
             # @forInstallationOnly
             sourceConfigMap: ""
             # @description Specifies the .pem file key name within the sourceConfigMap.
+
             # @dataType string
             # @component derConverter
             # @default list of sourceName and targetName for key and client certificate
             # @forInstallationOnly
-            dataMap: [
-              ]
+            dataMap: []
             # @description Specifies the name of the secret where the server certificates in der format will be stored.
+
             # @dataType string
             # @component derConverter
             # @default server-certificates
             # @forInstallationOnly
             targetConfigMap: "server-certificates"
         # @description Specifies the configuration of the FTPC SITE_CONFIG Controller Operator.
+
         # @component FTPCSiteConfigController
         ftpcSiteConfigController:
           # @description Specifies the name of the ConfigMap that operator monitors.
@@ -1805,6 +1965,7 @@ spec:
           # @allowedValues Alphanumeric characters
           configMapName: configmapftpcsiteconfigcontroller
           # @description Configuration in SITE_CONFIG table.
+
           # @description Along with below properties user can update AMQ connection info like jmsUsername,jmsPassword and jmsUrl defined under ftpcAMQ section and objectRevisioningLevel in SITE_CONFIG table.
           # @description Important:FTPC server needs to be restarted for any change in below configuration to take effect.
           # @component FTPCSiteConfigController
@@ -1816,26 +1977,31 @@ spec:
             # @allowedValues A value equal or greater than 1, but equal or lower than 64
             minPwdLength: 1
             # @description Specifies the number of failed FTPC authentication attempts allowed before the user is locked.
+
             # @component FTPCSiteConfigController
             # @dataType integer
             # @allowedValues A value equal or greater than 1, but equal or lower than 64
             failedLoginAttemptCount: 3
             # @description Specifies the number of the lowercase characters required in the user password.
+
             # @component FTPCSiteConfigController
             # @dataType integer
             # @allowedValues A value equal or greater than 0
             pwdLowercaseLettersLength: ""
             # @description Specifies the number of the uppercase characters required in the user password.
+
             # @component FTPCSiteConfigController
             # @dataType integer
             # @allowedValues A value equal or greater than 0
             pwdUppercaseLettersLength: ""
             # @description Specifies the number of the numeric characters required in the user password.
+
             # @component FTPCSiteConfigController
             # @dataType integer
             # @allowedValues A value equal or greater than 0
             pwdNumericLettersLength: ""
             # @description Specifies the number of the special characters required in the user password.
+
             # @component FTPCSiteConfigController
             # @dataType integer
             # @allowedValues A value equal or greater than 0
@@ -1848,24 +2014,28 @@ spec:
           # @allowedValues Alphanumeric characters
           connectionUsernameSecretRef: "{{ .Values.baseSecret }}"
           # @forInstallationOnly
+
           # @description Specifies the connection password for FTPS ActiveMQ.
           # @component FTPS ActiveMQ
           # @dataType string
           # @allowedValues A string containing at least: 8 characters, one alphabetic character, one digit, one non-alphanumeric symbol. Cannot contain: < > &#124; & or space. Example: YourPassword0!
           connectionPasswordSecretRef: "{{ .Values.baseSecret }}"
           # @forInstallationOnly
+
           # @description Specifies the web console user.
           # @component FTPS ActiveMQ
           # @dataType string
           # @allowedValues Alphanumeric characters
           adminUsernameSecretRef: "{{ .Values.baseSecret }}"
           # @forInstallationOnly
+
           # @description Specifies the web console user password.
           # @component FTPS ActiveMQ
           # @dataType string
           # @allowedValues A string containing at least: 8 characters, one alphabetic character, one digit, one non-alphanumeric symbol. Cannot contain: < > &#124; & or space. Example: YourPassword0!
           adminPasswordSecretRef: "{{ .Values.baseSecret }}"
           # @forInstallationOnly
+
           # @description Specifies the encryption secret for the FTPS ActiveMQ.
           # @component FTPS ActiveMQ
           # @dataType string
@@ -1879,12 +2049,14 @@ spec:
             # @allowedValues A server URL
             server: '{{ .Values.fullQualifiedDomainName }}'
             # @forInstallationOnly
+
             # @description Specifies the port for the service in FTPS ActiveMQ.
             # @component FTPS ActiveMQ
             # @dataType integer
             # @allowedValues Values from 0 to 65535
             port: "61646"
           # @forInstallationOnly
+
           # @description Specifies the ACTIVEMQ_OPTS value passed to ActiveMQ.
           # @component FTPS ActiveMQ
           # @dataType string
@@ -1901,6 +2073,7 @@ spec:
               # @externalLink Kubernetes documentation | https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-memory
               size: 10Gi
               # @forInstallationOnly
+
               # @description Specifies the list of mount options for the NFS server used for the external persistence for the FTPS ActiveMQ.
               # @description The external persistence is used to store data from multiple pods that is available from outside the cluster (i.e. Heap and Thread Dumps).
               # @component FTPS ActiveMQ
@@ -1917,6 +2090,7 @@ spec:
                 # @allowedValues A valid CSI driver name
                 driver: '{{ .Values.externalStorageDriver }}'
                 # @forInstallationOnly
+
                 # @description Specifies a value the CSI driver can use to uniquely identify the share in the cluster.
                 # @description A recommended way to produce a unique value is to combine the nfs-server address, sub directory name and share name
                 # @description for example {nfs-server-address}#{sub-dir-name}#{share-name}.
@@ -1935,6 +2109,7 @@ spec:
                   # @externalLink  NFS CSI Driver parameters | https://github.com/kubernetes-csi/csi-driver-nfs/blob/master/docs/driver-parameters.md
                   server: '{{ .Values.externalStorageServer }}'
                   # @forInstallationOnly
+
                   # @description Specifies the path to the NFS storage folder used for the external persistence for the FTPS ActiveMQ.
                   # @description The external persistence is used to store data from multiple pods that is available from outside the cluster (i.e. Heap and Thread Dumps).
                   # @component FTPS ActiveMQ
@@ -1958,18 +2133,21 @@ spec:
             # @default admin
             usernameSecretRef: "{{ .Values.baseSecret }}"
             # @forInstallationOnly
+
             # @description Specifies the password for FTPC.
             # @component FTPS Installer
             # @dataType string
             # @allowedValues A string containing at least: 8 characters, one alphabetic character, one digit, one non-alphanumeric symbol. Cannot contain: < > &#124; & or space. Example: admin1
             passwordSecretRef: "{{ .Values.baseSecret }}"
             # @forInstallationOnly
+
             # @description Specifies the FTPC server name.
             # @component FTPS Installer
             # @dataType string
             # @allowedValues A server URL
             server: '{{ .Values.fullQualifiedDomainName }}'
             # @forInstallationOnly
+
             # @description Specifies the FTPC port.
             # @component FTPS Installer
             # @dataType integer
@@ -1983,6 +2161,7 @@ spec:
             # @allowedValues Alphanumeric characters
             restUserSecretRef: "{{ .Values.baseSecret }}"
             # @forInstallationOnly
+
             # @description Specifies the Warehouse rest password for the installer.
             # @component FTPS Installer
             # @dataType string
@@ -1996,6 +2175,7 @@ spec:
           # @allowedValues Alphanumeric characters
           updateUsernameSecretRef: "{{ .Values.baseSecret }}"
           # @forInstallationOnly
+
           # @description Specifies the password for FTPS update.
           # @component FTPS Installer
           # @dataType string
@@ -2010,6 +2190,7 @@ spec:
                 # @allowedValues A valid image name
                 image: "provide-ftps-update-base-resources"
                 # @description Specifies the image version of the FTPS update's internal resources provider for the base version package and data migration package properties file.
+
                 # @description If the value is empty, the default (previous) base version from the update engine will be used.
                 # @description If the base version package is provided on the external persistent storage, this value will be ignored.
                 # @component FTPS Installer
@@ -2024,6 +2205,7 @@ spec:
                 # @allowedValues A valid image name
                 image: "provide-ftps-update-new-resources"
                 # @description Specifies the image version of the FTPS update's internal resources provider for the new version package and data migration package.
+
                 # @description If the value is empty, the default (current) new version from the update engine will be used.
                 # @description If the new version package is provided on the external persistent storage, this value will be ignored.
                 # @component FTPS Installer
@@ -2039,6 +2221,7 @@ spec:
               # @externalLink Kubernetes documentation | https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-memory
               size: 1Gi
               # @forInstallationOnly
+
               # @description Specifies the storage class name responsible for volume provisioning. If empty, the default class defined in the cluster is used.
               # @component FTPS Installer
               # @dataType string
@@ -2056,6 +2239,7 @@ spec:
               # @externalLink Kubernetes documentation | https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-memory
               size: 10Gi
               # @forInstallationOnly
+
               # @description Specifies the storage class name responsible for volume provisioning for the external persistence for the FTPS Upgrade.
               # @description If empty, the default class defined in the cluster is used.
               # @description The external persistence is used to allow the user to provide input to the FTPS Upgrade (i.e., a conflict resolution)
@@ -2083,6 +2267,7 @@ spec:
                 # @allowedValues A valid CSI driver name
                 driver: '{{ .Values.externalStorageDriver }}'
                 # @forInstallationOnly
+
                 # @description Specifies a value the CSI driver can use to uniquely identify the share in the cluster.
                 # @description A recommended way to produce a unique value is to combine the nfs-server address, sub directory name, and share name,
                 # @description for example {nfs-server-address}#{sub-dir-name}#{share-name}.
@@ -2102,6 +2287,7 @@ spec:
                   # @externalLink  NFS CSI Driver parameters | https://github.com/kubernetes-csi/csi-driver-nfs/blob/master/docs/driver-parameters.md
                   server: '{{ .Values.externalStorageServer }}'
                   # @forInstallationOnly
+
                   # @description Specifies the path to the NFS storage folder used for the external persistence for the FTPS Upgrade.
                   # @description The external persistence is used to allow the user to provide input to the FTPS Upgrade (i.e., a conflict resolution)
                   # @description and to see the output of the FTPS Upgrade (e.g., proposed conflict resolution, stage result files, etc.).
@@ -2118,6 +2304,7 @@ spec:
           # @allowedValues A string containing at least: 8 characters, one alphabetic character, one digit, one non-alphanumeric symbol. Cannot contain: < > &#124; & or space. Example: YourPassword0!
           passwordSecretRef: "{{ .Values.baseSecret }}"
           # @forInstallationOnly
+
           # @description Specifies the username for Shop Operation Services.
           # @component Shop Operation Services
           # @dataType string
@@ -2135,6 +2322,7 @@ spec:
               # @externalLink Kubernetes documentation | https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-memory
               size: 10Gi
               # @forInstallationOnly
+
               # @description Specifies the list of mount options for the NFS server used for the external persistence for the FTPS Shop Operation Services.
               # @description The external persistence is used to store data from multiple pods that is available from outside the cluster (i.e. Heap and Thread Dumps).
               # @component Shop Operation Services
@@ -2151,6 +2339,7 @@ spec:
                 # @allowedValues A valid CSI driver name
                 driver: '{{ .Values.externalStorageDriver }}'
                 # @forInstallationOnly
+
                 # @description Specifies a value the CSI driver can use to uniquely identify the share in the cluster.
                 # @description A recommended way to produce a unique value is to combine the nfs-server address, sub directory name and share name
                 # @description for example {nfs-server-address}#{sub-dir-name}#{share-name}.
@@ -2169,6 +2358,7 @@ spec:
                   # @externalLink  NFS CSI Driver parameters | https://github.com/kubernetes-csi/csi-driver-nfs/blob/master/docs/driver-parameters.md
                   server: '{{ .Values.externalStorageServer }}'
                   # @forInstallationOnly
+
                   # @description Specifies the path to the NFS storage folder used for the external persistence for the FTPS Shop Operation Services.
                   # @description The external persistence is used to store data from multiple pods that is available from outside the cluster (i.e. Heap and Thread Dumps).
                   # @component Shop Operation Services
@@ -2180,6 +2370,7 @@ spec:
             - # @Immutable
               name: tom
               # @description Allows to specify the probes configuration: liveness, readiness, and startup.
+
               # @component Shop Operation Services
               probe:
                 # @description The startup probe verifies whether the application within a container is started.
@@ -2192,6 +2383,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   initialDelaySeconds: 10
                   # @description Specifies how often (in seconds) to perform the probe.
+
                   # @component Shop Operation Services
                   # @dataType integer
                   # @allowedValues A value equal to or greater than 1
@@ -2204,6 +2396,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   failureThreshold: 30
                 # @description The liveness probe determines when to restart a container.
+
                 # @component Shop Operation Services
                 liveness:
                   # @description Specifies the time (in seconds) to initiate a probe after a container has been started.
@@ -2213,6 +2406,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   initialDelaySeconds: 10
                   # @description Specifies how often (in seconds) to perform the probe.
+
                   # @component Shop Operation Services
                   # @dataType integer
                   # @allowedValues A value equal to or greater than 1
@@ -2225,6 +2419,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   failureThreshold:
                 # @description Readiness probes determines when a container is ready to start accepting traffic.
+
                 # @component Shop Operation Services
                 readiness:
                   # @description Specifies the time (in seconds) to initiate a probe after a container has been started.
@@ -2234,6 +2429,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   initialDelaySeconds: 60
                   # @description Specifies how often (in seconds) to perform the probe.
+
                   # @component Shop Operation Services
                   # @dataType integer
                   # @allowedValues A value equal to or greater than 1
@@ -2248,6 +2444,7 @@ spec:
             - # @Immutable
               name: ebr
               # @description Specifies the number of SOS replicas for the service.
+
               # @description For a Single Node installation, the value must be set to 1, and for a High Availability installation, the value must be set to 2.
               # @component Shop Operation Services
               # @dataType integer
@@ -2255,6 +2452,7 @@ spec:
               # @externalLink Kubernetes documentation | https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/#replicas
               replicas: '{{ .Values.ebrServiceReplicas }}'
               # @description Allows to specify the probes configuration: liveness, readiness, and startup.
+
               # @component Shop Operation Services
               probe:
                 # @description The startup probe verifies whether the application within a container is started.
@@ -2267,6 +2465,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   initialDelaySeconds: 10
                   # @description Specifies how often (in seconds) to perform the probe.
+
                   # @component Shop Operation Services
                   # @dataType integer
                   # @allowedValues A value equal to or greater than 1
@@ -2279,6 +2478,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   failureThreshold: 30
                 # @description The liveness probe determines when to restart a container.
+
                 # @component Shop Operation Services
                 liveness:
                   # @description Specifies the time (in seconds) to initiate a probe after a container has been started.
@@ -2288,6 +2488,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   initialDelaySeconds: 10
                   # @description Specifies how often (in seconds) to perform the probe.
+
                   # @component Shop Operation Services
                   # @dataType integer
                   # @allowedValues A value equal to or greater than 1
@@ -2300,6 +2501,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   failureThreshold:
                 # @description Readiness probes determines when a container is ready to start accepting traffic.
+
                 # @component Shop Operation Services
                 readiness:
                   # @description Specifies the time (in seconds) to initiate a probe after a container has been started.
@@ -2309,6 +2511,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   initialDelaySeconds: 60
                   # @description Specifies how often (in seconds) to perform the probe.
+
                   # @component Shop Operation Services
                   # @dataType integer
                   # @allowedValues A value equal to or greater than 1
@@ -2323,6 +2526,7 @@ spec:
             - # @Immutable
               name: oe
               # @description The probes configuration: liveness, readiness, and startup.
+
               # @component Shop Operation Services
               probe:
                 # @description The startup probe verifies whether the application within a container is started.
@@ -2335,6 +2539,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   initialDelaySeconds: 10
                   # @description Specifies how often (in seconds) to perform the probe.
+
                   # @component Shop Operation Services
                   # @dataType integer
                   # @allowedValues A value equal to or greater than 1
@@ -2347,6 +2552,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   failureThreshold: 30
                 # @description The liveness probe determines when to restart a container.
+
                 # @component Shop Operation Services
                 liveness:
                   # @description Specifies the time (in seconds) to initiate a probe after a container has been started.
@@ -2356,6 +2562,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   initialDelaySeconds: 10
                   # @description Specifies how often (in seconds) to perform the probe.
+
                   # @component Shop Operation Services
                   # @dataType integer
                   # @allowedValues A value equal to or greater than 1
@@ -2368,6 +2575,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   failureThreshold:
                 # @description Readiness probes determines when a container is ready to start accepting traffic.
+
                 # @component Shop Operation Services
                 readiness:
                   # @description Specifies the time (in seconds) to initiate a probe after a container has been started.
@@ -2377,6 +2585,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   initialDelaySeconds: 60
                   # @description Specifies how often (in seconds) to perform the probe.
+
                   # @component Shop Operation Services
                   # @dataType integer
                   # @allowedValues A value equal to or greater than 1
@@ -2391,6 +2600,7 @@ spec:
             - # @Immutable
               name: transition
               # @description The probes configuration: liveness, readiness, and startup.
+
               # @component Shop Operation Services
               probe:
                 # @description The startup probe verifies whether the application within a container is started.
@@ -2403,6 +2613,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   initialDelaySeconds: 10
                   # @description Specifies how often (in seconds) to perform the probe.
+
                   # @component Shop Operation Services
                   # @dataType integer
                   # @allowedValues A value equal to or greater than 1
@@ -2415,6 +2626,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   failureThreshold: 30
                 # @description The liveness probe determines when to restart a container.
+
                 # @component Shop Operation Services
                 liveness:
                   # @description Specifies the time (in seconds) to initiate a probe after a container has been started.
@@ -2424,6 +2636,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   initialDelaySeconds: 10
                   # @description Specifies how often (in seconds) to perform the probe.
+
                   # @component Shop Operation Services
                   # @dataType integer
                   # @allowedValues A value equal to or greater than 1
@@ -2436,6 +2649,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   failureThreshold:
                 # @description Readiness probes determines when a container is ready to start accepting traffic.
+
                 # @component Shop Operation Services
                 readiness:
                   # @description Specifies the time (in seconds) to initiate a probe after a container has been started.
@@ -2445,6 +2659,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   initialDelaySeconds: 60
                   # @description Specifies how often (in seconds) to perform the probe.
+
                   # @component Shop Operation Services
                   # @dataType integer
                   # @allowedValues A value equal to or greater than 1
@@ -2459,6 +2674,7 @@ spec:
             - # @Immutable
               name: audittrail
               # @description The probes configuration: liveness, readiness, and startup.
+
               # @component Shop Operation Services
               probe:
                 # @description The startup probe verifies whether the application within a container is started.
@@ -2471,6 +2687,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   initialDelaySeconds: 10
                   # @description Specifies how often (in seconds) to perform the probe.
+
                   # @component Shop Operation Services
                   # @dataType integer
                   # @allowedValues A value equal to or greater than 1
@@ -2483,6 +2700,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   failureThreshold: 30
                 # @description The liveness probe determines when to restart a container.
+
                 # @component Shop Operation Services
                 liveness:
                   # @description Specifies the time (in seconds) to initiate a probe after a container has been started.
@@ -2492,6 +2710,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   initialDelaySeconds: 10
                   # @description Specifies how often (in seconds) to perform the probe.
+
                   # @component Shop Operation Services
                   # @dataType integer
                   # @allowedValues A value equal to or greater than 1
@@ -2504,6 +2723,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   failureThreshold:
                 # @description Readiness probes determines when a container is ready to start accepting traffic.
+
                 # @component Shop Operation Services
                 readiness:
                   # @description Specifies the time (in seconds) to initiate a probe after a container has been started.
@@ -2513,6 +2733,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   initialDelaySeconds: 60
                   # @description Specifies how often (in seconds) to perform the probe.
+
                   # @component Shop Operation Services
                   # @dataType integer
                   # @allowedValues A value equal to or greater than 1
@@ -2527,6 +2748,7 @@ spec:
             - # @Immutable
               name: ai
               # @description Specifies the live data configuration for OPC UA.
+
               # @component Shop Operation Services
               # @description Any change made to the section below will require a restart of the service.
               livedata:
@@ -2540,24 +2762,27 @@ spec:
                   # @default cert.der
                   securityCertificate: "cert.der"
                   # @description Specifies the name of the DER certificate private key in the Live Data configuration directory.
+
                   # @description Any change made to this property will require a change in the DERConversion custom resource.
                   # @component Shop Operation Services
                   # @dataType string
                   # @default private.key
                   securityPrivateKey: "private.key"
                   # @description Specifies the private key password.
+
                   # @component Shop Operation Services
                   # @dataType string
                   securityPrivateKeyPasswordSecretRef: "{{ .Values.baseSecret }}"
                 # @description Allows to specify the OPC UA configuration.
+
                 # @component Shop Operation Services
-                opcUaServers: [
-                  ]
+                opcUaServers: []
                 # @description Allows to specify the OPC DA to UA gateways configuration.
+
                 # @component Shop Operation Services
-                opcDaToUaGateways: [
-                  ]
+                opcDaToUaGateways: []
               # @description The probes configuration: liveness, readiness, and startup.
+
               # @component Shop Operation Services
               probe:
                 # @description The startup probe verifies whether the application within a container is started.
@@ -2570,6 +2795,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   initialDelaySeconds: 10
                   # @description Specifies how often (in seconds) to perform the probe.
+
                   # @component Shop Operation Services
                   # @dataType integer
                   # @allowedValues A value equal to or greater than 1
@@ -2582,6 +2808,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   failureThreshold: 30
                 # @description The liveness probe determines when to restart a container.
+
                 # @component Shop Operation Services
                 liveness:
                   # @description Specifies the time (in seconds) to initiate a probe after a container has been started.
@@ -2591,6 +2818,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   initialDelaySeconds: 10
                   # @description Specifies how often (in seconds) to perform the probe.
+
                   # @component Shop Operation Services
                   # @dataType integer
                   # @allowedValues A value equal to or greater than 1
@@ -2603,6 +2831,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   failureThreshold:
                 # @description Readiness probes determines when a container is ready to start accepting traffic.
+
                 # @component Shop Operation Services
                 readiness:
                   # @description Specifies the time (in seconds) to initiate a probe after a container has been started.
@@ -2612,6 +2841,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   initialDelaySeconds: 60
                   # @description Specifies how often (in seconds) to perform the probe.
+
                   # @component Shop Operation Services
                   # @dataType integer
                   # @allowedValues A value equal to or greater than 1
@@ -2638,6 +2868,7 @@ spec:
             WH_
             RA_
           # @forInstallationOnly
+
           # @description Specifies which ATDefinitions prefixes are set as properties to disable AuditTrail for them.
           # @component FTPS Installer
           # @dataType string
@@ -2651,6 +2882,7 @@ spec:
             RS_Param
             RS_RtPar
           # @forInstallationOnly
+
           # @description Specifies which standard FTPC/FTPS objects/tables are set as properties to disable AuditTrail for them.
           # @component FTPS Installer
           # @dataType string
@@ -2811,18 +3043,21 @@ spec:
             - # @Immutable
               name: dcs
               # @forInstallationOnly
+
               # @description Specifies the name of the FTEI valuepack.
               # @component FTEI
               # @dataType string
               # @allowedValues dcs | discrete | erp | process
               valuepack: dcs
               # @forInstallationOnly
+
               # @description If the value is set to true, the valuepack installation for FTEI is enabled.
               # @component FTEI
               # @dataType boolean
               # @allowedValues true | false
               enabled: true
               # @description Specifies the number of replicas.
+
               # @component FTEI
               # @dataType integer
               # @allowedValues A value equal to or greater than 0
@@ -2835,11 +3070,13 @@ spec:
                 # @allowedValues A server URL
                 server: '{{ .Values.fullQualifiedDomainName }}'
                 # @description Specifies the FTEI port.
+
                 # @component FTEI
                 # @dataType integer
                 # @allowedValues Values from 0 to 65535
                 port: 8447
                 # @description Specifies a unique application name in the cluster. An example value is FQDN with dots converted to underscores: hostname_example_company_com_ftei_deployment_name.
+
                 # @component FTEI
                 # @dataType string
                 # @allowedValues Unique application name (must be no more than 63 characters)
@@ -2856,6 +3093,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-memory
                   size: 10Gi
                   # @forInstallationOnly
+
                   # @description Specifies the list of mount options for the NFS server used for the external persistence for the FTEI Application.
                   # @description The external persistence is used to allow the user to provide input to the FTEI Application
                   # @description and to see the output of the FTEI Application (e.g. B2MML/IDOC files).
@@ -2874,6 +3112,7 @@ spec:
                     # @allowedValues A valid CSI driver name
                     driver: '{{ .Values.externalStorageDriver }}'
                     # @forInstallationOnly
+
                     # @description Specifies a value the CSI driver can use to uniquely identify the share in the cluster.
                     # @description A recommended way to produce a unique value is to combine the nfs-server address, sub directory name and share name
                     # @description for example {nfs-server-address}#{sub-dir-name}#{share-name}.
@@ -2893,6 +3132,7 @@ spec:
                       # @externalLink  NFS CSI Driver parameters | https://github.com/kubernetes-csi/csi-driver-nfs/blob/master/docs/driver-parameters.md
                       server: '{{ .Values.externalStorageServer }}'
                       # @forInstallationOnly
+
                       # @description Specifies the path to the NFS storage folder used for the external persistence for the FTEI Application.
                       # @description The external persistence is used to allow the user to provide input to the FTEI Application
                       # @description and to see the output of the FTEI Application (e.g. B2MML/IDOC files).
@@ -2904,18 +3144,21 @@ spec:
             - # @Immutable
               name: process1
               # @forInstallationOnly
+
               # @description Specifies the name of the FTEI valuepack.
               # @component FTEI
               # @dataType string
               # @allowedValues dcs | discrete | erp | process
               valuepack: process
               # @forInstallationOnly
+
               # @description If the value is set to true, the valuepack installation for FTEI is enabled.
               # @component FTEI
               # @dataType boolean
               # @allowedValues true | false
               enabled: true
               # @description Specifies the number of replicas.
+
               # @component FTEI
               # @dataType integer
               # @allowedValues A value equal to or greater than 0
@@ -2928,11 +3171,13 @@ spec:
                 # @allowedValues A server URL
                 server: '{{ .Values.fullQualifiedDomainName }}'
                 # @description Specifies the FTEI port.
+
                 # @component FTEI
                 # @dataType integer
                 # @allowedValues Values from 0 to 65535
                 port: 8445
                 # @description Specifies a unique application name in the cluster. An example value is FQDN with dots converted to underscores: hostname_example_company_com_ftei_deployment_name.
+
                 # @component FTEI
                 # @dataType string
                 # @allowedValues Unique application name (must be no more than 63 characters)
@@ -2949,6 +3194,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-memory
                   size: 10Gi
                   # @forInstallationOnly
+
                   # @description Specifies the list of mount options for the NFS server used for the external persistence for the FTEI Application.
                   # @description The external persistence is used to allow the user to provide input to the FTEI Application
                   # @description and to see the output of the FTEI Application (e.g. B2MML/IDOC files).
@@ -2967,6 +3213,7 @@ spec:
                     # @allowedValues A valid CSI driver name
                     driver: '{{ .Values.externalStorageDriver }}'
                     # @forInstallationOnly
+
                     # @description Specifies a value the CSI driver can use to uniquely identify the share in the cluster.
                     # @description A recommended way to produce a unique value is to combine the nfs-server address, sub directory name and share name
                     # @description for example {nfs-server-address}#{sub-dir-name}#{share-name}.
@@ -2986,6 +3233,7 @@ spec:
                       # @externalLink  NFS CSI Driver parameters | https://github.com/kubernetes-csi/csi-driver-nfs/blob/master/docs/driver-parameters.md
                       server: '{{ .Values.externalStorageServer }}'
                       # @forInstallationOnly
+
                       # @description Specifies the path to the NFS storage folder used for the external persistence for the FTEI Application.
                       # @description The external persistence is used to allow the user to provide input to the FTEI Application
                       # @description and to see the output of the FTEI Application (e.g. B2MML/IDOC files).
@@ -2997,18 +3245,21 @@ spec:
             - # @Immutable
               name: process2
               # @forInstallationOnly
+
               # @description Specifies the name of the FTEI valuepack.
               # @component FTEI
               # @dataType string
               # @allowedValues dcs | discrete | erp | process
               valuepack: process
               # @forInstallationOnly
+
               # @description If the value is set to true, the valuepack installation for FTEI is enabled.
               # @component FTEI
               # @dataType boolean
               # @allowedValues true | false
               enabled: true
               # @description Specifies the number of replicas.
+
               # @component FTEI
               # @dataType integer
               # @allowedValues A value equal to or greater than 0
@@ -3021,11 +3272,13 @@ spec:
                 # @allowedValues A server URL
                 server: '{{ .Values.fullQualifiedDomainName }}'
                 # @description Specifies the FTEI port.
+
                 # @component FTEI
                 # @dataType integer
                 # @allowedValues Values from 0 to 65535
                 port: 8446
                 # @description Specifies a unique application name in the cluster. An example value is FQDN with dots converted to underscores: hostname_example_company_com_ftei_deployment_name.
+
                 # @component FTEI
                 # @dataType string
                 # @allowedValues Unique application name (must be no more than 63 characters)
@@ -3042,6 +3295,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-memory
                   size: 10Gi
                   # @forInstallationOnly
+
                   # @description Specifies the list of mount options for the NFS server used for the external persistence for the FTEI Application.
                   # @description The external persistence is used to allow the user to provide input to the FTEI Application
                   # @description and to see the output of the FTEI Application (e.g. B2MML/IDOC files).
@@ -3060,6 +3314,7 @@ spec:
                     # @allowedValues A valid CSI driver name
                     driver: '{{ .Values.externalStorageDriver }}'
                     # @forInstallationOnly
+
                     # @description Specifies a value the CSI driver can use to uniquely identify the share in the cluster.
                     # @description A recommended way to produce a unique value is to combine the nfs-server address, sub directory name and share name
                     # @description for example {nfs-server-address}#{sub-dir-name}#{share-name}.
@@ -3079,6 +3334,7 @@ spec:
                       # @externalLink  NFS CSI Driver parameters | https://github.com/kubernetes-csi/csi-driver-nfs/blob/master/docs/driver-parameters.md
                       server: '{{ .Values.externalStorageServer }}'
                       # @forInstallationOnly
+
                       # @description Specifies the path to the NFS storage folder used for the external persistence for the FTEI Application.
                       # @description The external persistence is used to allow the user to provide input to the FTEI Application
                       # @description and to see the output of the FTEI Application (e.g. B2MML/IDOC files).
@@ -3095,6 +3351,7 @@ spec:
             # @allowedValues Alphanumeric characters
             usernameSecretRef: "{{ .Values.baseSecret }}"
             # @forInstallationOnly
+
             # @description Specifies the password for FTPC in FTEI.
             # @component FTEI
             # @dataType string
@@ -3108,11 +3365,13 @@ spec:
               # @allowedValues A server URL
               url: '{{ .Values.fteiBatchServerUrl }}'
               # @description Specifies the batch Server authentication username.
+
               # @component FTEI
               # @dataType string
               # @allowedValues Alphanumeric characters
               usernameSecretRef: "{{ .Values.baseSecret }}"
               # @description Specifies the batch Server authentication password.
+
               # @component FTEI
               # @dataType string
               # @allowedValues Alphanumeric and special characters
@@ -3122,14 +3381,15 @@ spec:
               # @component FTEI
               # @dataType string
               # @allowedValues A database URL
-              url: jdbc:sqlserver://{{ .Values.fteiBatchDbDomainName }}:1433;databaseName={{
-                .Values.fteiBatchDatabaseName }};trustServerCertificate=true;
+              url: jdbc:sqlserver://{{ .Values.fteiBatchDbDomainName }}:1433;databaseName={{ .Values.fteiBatchDatabaseName }};trustServerCertificate=true;
               # @description Specifies the batch database authentication username.
+
               # @component FTEI
               # @dataType string
               # @allowedValues Alphanumeric characters
               usernameSecretRef: "{{ .Values.baseSecret }}"
               # @description Specifies the batch database authentication password.
+
               # @component FTEI
               # @dataType string
               # @allowedValues Alphanumeric and special characters
@@ -3141,27 +3401,32 @@ spec:
             # @allowedValues A server URL
             host: '{{ .Values.fteiSMTPHost }}'
             # @description Specifies the port for the SMTP server.
+
             # @component FTEI
             # @dataType integer
             # @allowedValues 0-65535
             port: '{{ .Values.fteiSMTPPort }}'
             # @description Specifies the username for authenticating with the SMTP server.
+
             # @description The setting is also used as the email sender address for sending emails.
             # @component FTEI
             # @dataType string
             # @allowedValues A valid email address
             usernameSecretRef: "{{ .Values.baseSecret }}"
             # @description Specifies the password for authenticating with the SMTP server.
+
             # @component FTEI
             # @dataType string
             # @allowedValues Alphanumeric and special characters
             passwordSecretRef: "{{ .Values.baseSecret }}"
             # @description Specifies the SMTP sender address used for sending emails.
+
             # @component FTEI
             # @dataType string
             # @allowedValues A valid email address
             sender: '{{ .Values.fteiSMTPSender }}'
             # @description Specifies the SMTP receiver address used for response messages.
+
             # @component FTEI
             # @dataType string
             # @allowedValues A valid email address
@@ -3173,21 +3438,25 @@ spec:
             # @allowedValues A list of URLs
             urlsSecretRef: "{{ .Values.baseSecret }}"
             # @description Required for <LoginModule="ldap/ldaps"> LDAP/LDAPS bind credentials. Specifies the full path for the base DN.
+
             # @component FTEI
             # @dataType string
             # @allowedValues A specified Base Distinguished Name
             baseDnSecretRef: "{{ .Values.baseSecret }}"
             # @description Specifies the LDAP/LDAPS search base for users.
+
             # @component FTEI
             # @dataType string
             # @allowedValues A specified User Distinguished Name
             userDnSecretRef: "{{ .Values.baseSecret }}"
             # @description Specifies the LDAP/LDAPS search base for groups.
+
             # @component FTEI
             # @dataType string
             # @allowedValues A specified Group Distinguished Name
             groupDnSecretRef: "{{ .Values.baseSecret }}"
             # @description Specifies the LDAP bind password.
+
             # @component FTEI
             # @dataType string
             # @allowedValues Alphanumeric and special characters
@@ -3199,16 +3468,19 @@ spec:
             # @allowedValues A server URL
             url: '{{ .Values.fteiOutboundServerURL }}'
             # @description Specifies the Outbound Server authentication username.
+
             # @component FTEI
             # @dataType string
             # @allowedValues Alphanumeric characters
             usernameSecretRef: "{{ .Values.baseSecret }}"
             # @description Specifies the Outbound Server authentication password.
+
             # @component FTEI
             # @dataType string
             # @allowedValues Alphanumeric and special characters
             passwordSecretRef: "{{ .Values.baseSecret }}"
           # @description Custom Configurations for FTEI.
+
           # @component FTEI
           customConfigurations:
             # @description Specifies the custom application properties for FTEI deployment 'process1'.
@@ -3225,6 +3497,7 @@ spec:
               spring.trust-store=config/certs/{{ .Values.trustStore }}.p12
               server.ssl.key-store=file:config/certs/{{ .Values.keyStore }}.p12
             # @description Specifies the custom application properties for FTEI deployment 'process2'.
+
             # @component FTEI
             # @dataType string
             # @allowedValues key-value pair of spring application properties
@@ -3238,6 +3511,7 @@ spec:
               spring.trust-store=config/certs/{{ .Values.trustStore }}.p12
               server.ssl.key-store=file:config/certs/{{ .Values.keyStore }}.p12
             # @description Specifies the custom application properties for FTEI deployment 'erp'.
+
             # @component FTEI
             # @dataType string
             # @allowedValues key-value pair of spring application properties
@@ -3251,6 +3525,7 @@ spec:
               spring.trust-store=config/certs/{{ .Values.trustStore }}.p12
               server.ssl.key-store=file:config/certs/{{ .Values.keyStore }}.p12
             # @description Specifies the custom application properties for FTEI deployment 'dcs'.
+
             # @component FTEI
             # @dataType string
             # @allowedValues key-value pair of spring application properties
@@ -3261,6 +3536,7 @@ spec:
               spring.trust-store=config/certs/{{ .Values.trustStore }}.p12
               server.ssl.key-store=file:config/certs/{{ .Values.keyStore }}.p12
         # @description Configuration of FTEI SOS.
+
         # @component FTEI SOS
         fteiSOS:
           # @forInstallationOnly
@@ -3271,6 +3547,7 @@ spec:
           # @default admin
           usernameSecretRef: "{{ .Values.baseSecret }}"
           # @forInstallationOnly   
+
           # @description Specifies the password for the Shop Operation Services to connect to FTPC.
           # @component FTEI SOS
           # @dataType string
@@ -3287,6 +3564,7 @@ spec:
               # @externalLink Kubernetes documentation | https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-memory
               size: 10Gi
               # @forInstallationOnly
+
               # @description Specifies the list of mount options for the NFS server used for the external persistence for the FTEI SOS.
               # @description The external persistence is used to store data from multiple pods that is available from outside the cluster (i.e. Heap and Thread Dumps).
               # @component FTEI SOS
@@ -3303,6 +3581,7 @@ spec:
                 # @allowedValues A valid CSI driver name
                 driver: '{{ .Values.externalStorageDriver }}'
                 # @forInstallationOnly
+
                 # @description Specifies a value the CSI driver can use to uniquely identify the share in the cluster.
                 # @description A recommended way to produce a unique value is to combine the nfs-server address, sub directory name and share name
                 # @description for example {nfs-server-address}#{sub-dir-name}#{share-name}.
@@ -3321,6 +3600,7 @@ spec:
                   # @externalLink  NFS CSI Driver parameters | https://github.com/kubernetes-csi/csi-driver-nfs/blob/master/docs/driver-parameters.md
                   server: '{{ .Values.externalStorageServer }}'
                   # @forInstallationOnly
+
                   # @description Specifies the path to the NFS storage folder used for the external persistence for the FTEI SOS.
                   # @description The external persistence is used to store data from multiple pods that is available from outside the cluster (i.e. Heap and Thread Dumps).
                   # @component FTEI SOS
@@ -3329,35 +3609,41 @@ spec:
                   # @externalLink  NFS CSI Driver parameters | https://github.com/kubernetes-csi/csi-driver-nfs/blob/master/docs/driver-parameters.md
                   share: '{{ .Values.externalStorageShare }}'
           # @description List of SOS services to install.
+
           # @component FTEI SOS
           services:
             - # @Immutable
               name: fteiSOS
               # @forInstallationOnly
+
               # @description Specifies the name of the FTEI valuepack for SOS.
               # @component FTEI SOS
               # @dataType string
               # @allowedValues discrete | erp | process
               valuepack: process
               # @forInstallationOnly
+
               # @description Specifies the name of the event sheet used by the FTEI SOS service.
               # @component FTEI SOS
               # @dataType string
               # @allowedValues The name of the event sheet available in the system.
               eventSheet: EIG_IntegrationEventSheet_Process
               # @forInstallationOnly
+
               # @description Specifies the station for the FTEI SOS service.
               # @component FTEI SOS
               # @dataType string
               # @allowedValues A customer-specific station name
               station: ""
               # @description Specifies the number of FTEI SOS replicas.
+
               # @component FTEI SOS
               # @dataType integer
               # @allowedValues A value equal to or greater than 0
               # @externalLink Kubernetes documentation | https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/#replicas
               replicas: 1
               # @description The probes configuration: liveness, readiness, and startup.
+
               # @component FTEI SOS
               probe:
                 # @description The startup probe verifies whether the application within a container is started.
@@ -3370,6 +3656,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   initialDelaySeconds: 10
                   # @description Specifies how often (in seconds) to perform the probe.
+
                   # @component FTEI SOS
                   # @dataType integer
                   # @allowedValues A value equal to or greater than 1
@@ -3382,6 +3669,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   failureThreshold: 30
                 # @description The liveness probe determines when to restart a container.
+
                 # @component FTEI SOS
                 liveness:
                   # @description Specifies the time (in seconds) to initiate a probe after a container has been started.
@@ -3391,6 +3679,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   initialDelaySeconds: 10
                   # @description Specifies how often (in seconds) to perform the probe.
+
                   # @component FTEI SOS
                   # @dataType integer
                   # @allowedValues A value equal to or greater than 1
@@ -3403,6 +3692,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   failureThreshold:
                 # @description Readiness probes determines when a container is ready to start accepting traffic.
+
                 # @component FTEI SOS
                 readiness:
                   # @description Specifies the time (in seconds) to initiate a probe after a container has been started.
@@ -3412,6 +3702,7 @@ spec:
                   # @externalLink Kubernetes documentation | https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
                   initialDelaySeconds: 10
                   # @description Specifies how often (in seconds) to perform the probe.
+
                   # @component FTEI SOS
                   # @dataType integer
                   # @allowedValues A value equal to or greater than 1
@@ -3430,42 +3721,47 @@ spec:
           # @allowedValues Alphanumeric characters
           name: ftei-activemq
           # @forInstallationOnly
+
           # @description Specifies the connection username for FTEI ActiveMQ.
           # @component FTEI ActiveMQ
           # @dataType string
           # @allowedValues Alphanumeric characters
           connectionUsernameSecretRef: "{{ .Values.baseSecret }}"
           # @forInstallationOnly
+
           # @description Specifies the connection password for FTEI ActiveMQ.
           # @component FTEI ActiveMQ
           # @dataType string
           # @allowedValues A string containing at least: 8 characters, one alphabetic character, one digit, one non-alphanumeric symbol. Cannot contain: < > &#124; & or space. Example: YourPassword0!
           connectionPasswordSecretRef: "{{ .Values.baseSecret }}"
           # @forInstallationOnly
+
           # @description Specifies the admin username for FTEI ActiveMQ.
           # @component FTEI ActiveMQ
           # @dataType string
           # @allowedValues Alphanumeric characters
           adminUsernameSecretRef: "{{ .Values.baseSecret }}"
           # @forInstallationOnly
+
           # @description Specifies the admin password for FTEI ActiveMQ.
           # @component FTEI ActiveMQ
           # @dataType string
           # @allowedValues A string containing at least: 8 characters, one alphabetic character, one digit, one non-alphanumeric symbol. Cannot contain: < > &#124; & or space. Example: YourPassword0!
           adminPasswordSecretRef: "{{ .Values.baseSecret }}"
           # @forInstallationOnly
+
           # @description Specifies the secret used for the encryption and decryption of passwords  for FTEI ActiveMQ.
           # @component FTEI ActiveMQ
           # @dataType string
           # @allowedValues A string containing at least: 8 characters, one alphabetic character, one digit, one non-alphanumeric symbol. Cannot contain: < > &#124; & or space. Example: YourPassword0!
           encryptorSecretSecretRef: "{{ .Values.baseSecret }}"
           # @forInstallationOnly
+
           # @description Specifies the ACTIVEMQ_OPTS value passed to ActiveMQ.
           # @component FTEI ActiveMQ
           # @dataType string
           # @allowedValues Custom JVM settings
-          AMQOpts: "-Dorg.apache.activemq.audit=true -XX:+HeapDumpOnOutOfMemoryError\
-            \ -XX:HeapDumpPath=/opt/Rockwell/ftpc-shared/$KUBERNETES_NAMESPACE/$POD_NAME"
+          AMQOpts: "-Dorg.apache.activemq.audit=true -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/opt/Rockwell/ftpc-shared/$KUBERNETES_NAMESPACE/$POD_NAME"
           externalStorage:
             persistence:
               # @forInstallationOnly
@@ -3477,6 +3773,7 @@ spec:
               # @externalLink Kubernetes documentation | https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-memory
               size: 10Gi
               # @forInstallationOnly
+
               # @description Specifies the list of mount options for the NFS server used for the external persistence for the FTEI ActiveMQ.
               # @description The external persistence is used to store data from multiple pods that is available from outside the cluster (i.e. Heap and Thread Dumps).
               # @component FTEI ActiveMQ
@@ -3493,6 +3790,7 @@ spec:
                 # @allowedValues A valid CSI driver name
                 driver: '{{ .Values.externalStorageDriver }}'
                 # @forInstallationOnly
+
                 # @description Specifies a value the CSI driver can use to uniquely identify the share in the cluster.
                 # @description A recommended way to produce a unique value is to combine the nfs-server address, sub directory name and share name
                 # @description for example {nfs-server-address}#{sub-dir-name}#{share-name}.
@@ -3511,6 +3809,7 @@ spec:
                   # @externalLink  NFS CSI Driver parameters | https://github.com/kubernetes-csi/csi-driver-nfs/blob/master/docs/driver-parameters.md
                   server: '{{ .Values.externalStorageServer }}'
                   # @forInstallationOnly
+
                   # @description Specifies the path to the NFS storage folder used for the external persistence for the FTEI ActiveMQ.
                   # @description The external persistence is used to store data from multiple pods that is available from outside the cluster (i.e. Heap and Thread Dumps).
                   # @component FTEI ActiveMQ
@@ -3525,11 +3824,13 @@ spec:
             # @allowedValues A server URL
             server: '{{ .Values.fullQualifiedDomainName }}'
             # @description Specifies the port for the FTEI ActiveMQ service.
+
             # @component FTEI ActiveMQ
             # @dataType integer
             # @allowedValues Values from 0 to 65535
             port: '{{ .Values.fteiActiveMQPort }}'
             # @description Specifies the jettyport for for the FTEI ActiveMQ service.
+
             # @component FTEI ActiveMQ
             # @dataType integer
             # @allowedValues Values from 0 to 65535
@@ -3542,12 +3843,14 @@ spec:
             # @externalLink Kubernetes documentation | https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-memory
             size: 5Gi
             # @forInstallationOnly
+
             # @description Specifies the storage class name responsible for volume provisioning. If empty, the default class defined in the cluster is used.
             # @component FTEI ActiveMQ
             # @dataType string
             # @allowedValues A specified storage class name
             storageClassName: '{{ .Values.storageClassName }}'
       # @description Specifies the time zone used in containers.
+
       # @component Global
       # @dataType string
       # @allowedValues Values that can be set in the TZ environment variable for Linux. Examples: CET, Europe/Warsaw.
@@ -3555,17 +3858,20 @@ spec:
       # @externalLink TZ Linux environment variable | https://www.gnu.org/software/libc/manual/html_node/TZ-Variable.html
       timezone: '{{ .Values.timezone }}'
       # @description If the value is set to true, during the pre-upgrade phase, if the image version differs, configuration jobs are replaced.
+
       # @component Global
       # @dataType boolean
       # @allowedValues true | false
       clearJobs: false
       # @forInstallationOnly
+
       # @description If the value is set to true, Open Telemetry is enabled.
       # @component Observability
       # @dataType boolean
       # @allowedValues true | false
       opentelemetry: false
       # @description Specifies the OTel exporter configuration.
+
       # @component Observability
       otelExporter:
         # @forInstallationOnly
@@ -3575,12 +3881,14 @@ spec:
         # @allowedValues An URL address
         otlpEndpoint: https://obs-otel:4317
         # @forInstallationOnly
+
         # @description Specifies the OTLP logs endpoint.
         # @component Observability
         # @dataType string
         # @allowedValues An URL address
         otlpLogsEndpoint: https://obs-otel:4317
         # @forInstallationOnly
+
         # @description Specifies the OTLP export interval (in milliseconds).
         # @component Observability
         # @dataType string
@@ -3588,10 +3896,12 @@ spec:
         # @externalLink OpenTelemetry documentation | https://opentelemetry.io/docs/specs/otel/configuration/sdk-environment-variables/#periodic-exporting-metricreader
         otlpExportInterval: 5000
         # @forInstallationOnly
+
         # @description Specifies the OTLP endpoint.
         # @dataType string
         otlpGrpcEndpoint: https://obs-otel:4317
         # @forInstallationOnly
+
         # @description Specifies the OTLP logs endpoint.
         # @dataType string
         otlpHttpEndpoint: https://oba-otel:4318
@@ -3603,12 +3913,14 @@ spec:
         # @allowedValues true/ false
         ftpc: false
         # @forInstallationOnly
+
         # @description Specifies the FTPS dependencies to be added to the IQ tool.
         # @component IQ Tool
         # @dataType boolean
         # @allowedValues true/ false
         ftps: false
         # @forInstallationOnly
+
         # @description Specifies the FTEI dependencies to be added to the IQ tool.
         # @component IQ Tool
         # @dataType boolean
@@ -3622,6 +3934,7 @@ spec:
           # @allowedValues Alphanumeric characters 
           usernameSecretRef: "{{ .Values.baseSecret }}"
           # @description Specifies the Grafana authentication password.
+
           # @component Observability
           # @dataType string
           # @allowedValues Alphanumeric characters   
@@ -3633,6 +3946,7 @@ spec:
           # @allowedValues Alphanumeric characters
           usernameSecretRef: "{{ .Values.baseSecret }}"
           # @description Specifies the Prometheus authentication password.
+
           # @component Observability
           # @dataType string
           # @allowedValues Alphanumeric characters
@@ -3644,6 +3958,7 @@ spec:
           # @allowedValues Alphanumeric characters
           usernameSecretRef: "{{ .Values.baseSecret }}"
           # @description Specifies the AlertManager authentication password.
+
           # @component Observability
           # @dataType string
           # @allowedValues Alphanumeric characters
@@ -3655,11 +3970,13 @@ spec:
           # @allowedValues Alphanumeric characters
           usernameSecretRef: "{{ .Values.baseSecret }}"
           # @description Specifies the Infrastructure Prometheus authentication password.
+
           # @component Observability
           # @dataType string
           # @allowedValues Alphanumeric characters
           passwordSecretRef: "{{ .Values.baseSecret }}"
       # @description Specifies the domain name used for DNS resolution within the cluster.
+
       # @component Observability
       # @dataType string
       # @allowedValues A server URL

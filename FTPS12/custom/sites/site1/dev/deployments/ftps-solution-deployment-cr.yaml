@@ -4,42 +4,48 @@ metadata:
   name: ftps-solution-deployment-cr
 spec:
   kubeconfigSecretRef: site1-dev-ftps-solution-deployment-secrets
-  namespace:
-  releaseName:
+  namespace: ps12rok1
+  releaseName: ps12rok1
   templateValues:
-    alertmanagerReceiverEmail:
-    appServerReplicas:
-    clusterName:
-    databaseName:
-    databasePort:
-    databaseServer:
-    databaseServerType:
-    domain:
-    ebrServiceReplicas:
-    externalIP:
-    externalStorageDriver:
+    alertmanagerReceiverEmail: yogendra.singh@rockwellautomation.com
+    appServerReplicas: 1
+    clusterName: ps12rok1
+    databaseName: FTPS12ROK1
+    databasePort: 1433
+    databaseServer: ps12-sql-cent
+    databaseServerType: mssql
+    domain: domain.com
+    ebrServiceReplicas: 1
+    externalIP: 10.0.1.123
+    externalStorageDriver: nfs.csi.k8s.io
     externalStorageMountOptions:
-    externalStorageServer:
-    externalStorageShare:
-    externalStorageVolumeHandle:
-    fteiActiveMQPort:
+    externalStorageServer: 10.0.0.92
+    externalStorageShare: /
+    externalStorageVolumeHandle: 10.0.0.92#sub-dir-name#ps12rok1
+    fteiActiveMQPort: 61626
     fteiBatchDatabaseName:
     fteiBatchDbDomainName:
     fteiBatchServerUrl:
     fteiOutboundServerURL:
-    fteiSMTPHost:
-    fteiSMTPPort:
-    fteiSMTPReceiver:
-    fteiSMTPSender:
-    fullQualifiedDomainName:
+    fteiSMTPHost: ps12-k8s-rok1
+    fteiSMTPPort: 576
+    fteiSMTPReceiver: yogendra.singh@rockwellautomation.com
+    fteiSMTPSender: yogendra.singh@rockwellautomation.com
+    fullQualifiedDomainName: ps12-k8s-rok1.hmazx14gwriu1lqmftqf1vlbvf.bx.internal.cloudapp.net
     instanceSecret: site1-dev-ftps-solution-deployment-secrets
     keyStore: keystore
-    mailSessionDefinitionsHost:
-    mailSessionDefinitionsPort:
-    namespace:
-    organizationName:
-    registry:
-    storageClassName:
-    timezone:
+    mailSessionDefinitionsHost: ps12-k8s-rok1
+    mailSessionDefinitionsPort: 577
+    namespace: ps12rok1
+    organizationName: AET
+    registry: registry.replicated.com/pharmasuite
+    storageClassName: nfs-client
+    timezone: Europe/Berlin
     triggerTool: idle
     trustStore: ftpc-truststore
+values:
+  global:
+    systemHostname: ps12-k8s-rok2
+    enableIqTool:
+      ftpc: true
+      ftps: true

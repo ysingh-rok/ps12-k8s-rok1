@@ -5,13 +5,14 @@ metadata:
 spec:
   interval: 2m0s
   # Fill/Change path as monitored my micka/flux installation
-  path: <TBD>/custom/sites/site1/dev/post-deployment
+
+  path: FTPS12/custom/sites/site1/dev/post-deployment
   prune: false
   retryInterval: 2m0s
   sourceRef:
     kind: GitRepository
     name: micka-gitrepository
-  targetNamespace: <TBD>
+  targetNamespace: ps12rok1
   kubeConfig:
     secretRef:
       name: site1-dev-ftps-solution-deployment-secrets
