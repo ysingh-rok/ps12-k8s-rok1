@@ -1,16 +1,15 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
 resources:
   - ../../../../base/ftps-solution-1.0.0-8
   - deployments/secrets/site1-dev-ftps-solution-deployment-secrets.yaml
   - post-deployment/flux-kustomization.yaml
-
 patches:
   - path: deployments/ftps-solution-deployment-cr.yaml
     target:
       kind: HelmOperation
       name: ftps-solution-deployment-cr
-
 transformers:
   - deployments/prefix-transformer.yaml
+configurations:
+  - disable-nameref.yaml
